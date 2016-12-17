@@ -1,0 +1,4 @@
+# Don't track build products
+*.js
+*.js.map
+*.scss

@@ -30,7 +30,7 @@ export class Auth {
    * user login in the returned promise.
    * 
    * @return A promise of a status string that describes the user login status. The following are the possible outcomes:
-   *     'conneted': If the user is logged in.
+   *     'connected': If the user is logged in.
    *     'not_authorized': If the user is not logged in.
    *     'unknown': If the user is logged out of facebook.
    */

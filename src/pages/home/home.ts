@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
-import { Facebook } from 'ionic-native';
 
 import { LoginPage } from '../login/login';
+
+import { Auth } from '../../providers/auth';
 
 @Component({
   selector: 'page-home',
@@ -12,10 +13,11 @@ export class HomePage {
 
   constructor(
     private navCtrl: NavController,
-    private toastCtrl: ToastController) {}
+    private toastCtrl: ToastController,
+    private auth: Auth) {}
 
   doLogout() {
-    Facebook.logout().then(
+    this.auth.doLogout().then(
       (response) => this.handleSuccessLogout(response),
       (error) => this.handleFailedLogout(error)
     );

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
-import { Facebook, FacebookLoginResponse } from 'ionic-native';
 
 import { HomePage } from '../home/home';
+
+import { Auth } from '../../providers/auth';
 
 @Component({
   selector: 'page-login',
@@ -12,7 +13,8 @@ export class LoginPage {
 
   constructor(
     private navCtrl: NavController,
-    private toastCtrl: ToastController) {}
+    private toastCtrl: ToastController,
+    private auth: Auth) {}
 
   ionViewDidLoad() {
     console.log('Hello Login Page');
@@ -20,21 +22,23 @@ export class LoginPage {
 
   doFacebookLogin() {
     console.log('Start facebook login ...');
-    Facebook.login(['public_profile']).then(
-      (response: FacebookLoginResponse) => this.handleSuccessfulFacebookLogin(response),
-      (error) => this.handleFailedFacebookLogin(error)
+    this.auth.doLogin().then(
+      (response) => this.handleSuccessfulFacebookLogin(response),
+      (error) => this.handleFailedFacebookLogin(error) 
     );
   }
 
-  private handleSuccessfulFacebookLogin(response: FacebookLoginResponse) {
+  private handleSuccessfulFacebookLogin(response: string) {
     console.log('user data: ' + response);
-    this.navCtrl.setRoot(HomePage);
+    if (response == 'connected') {
+      this.navCtrl.setRoot(HomePage);
+    }
   }
 
   private handleFailedFacebookLogin(error) {
-    console.log('error: ' + error.errorMessage);
+    console.log('error: ' + error);
     let toast = this.toastCtrl.create({
-      message: error.errorMessage,
+      message: error,
       duration: 3000,
       position: 'middle'
     });

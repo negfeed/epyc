@@ -13,7 +13,7 @@ import { Auth } from '../providers/auth';
 })
 export class MyApp {
   @ViewChild('epycNav') nav: NavController;
-  rootPage = HomePage;
+  rootPage = LoginPage;
 
   constructor(platform: Platform, private auth: Auth) {
     platform.ready().then(() => this.onPlatformReady());
@@ -21,16 +21,13 @@ export class MyApp {
 
   private onPlatformReady() {
     this.auth.getLoginStatus().then(
-      (response) => this.handleGetLoginStatusResponse(response),
+      () => this.handleGetLoginStatusResponse(),
       (error) => this.handleGetLoginStatusError(error)
     );
   }
 
-  private handleGetLoginStatusResponse(response) {
-    console.log('login response: ' + response);
-    if (response != 'connected') {
-      this.nav.push(LoginPage);
-    }
+  private handleGetLoginStatusResponse() {
+    this.nav.setRoot(HomePage);
     Splashscreen.hide();
   }
 

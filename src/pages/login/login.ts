@@ -23,16 +23,13 @@ export class LoginPage {
   doFacebookLogin() {
     console.log('Start facebook login ...');
     this.auth.doLogin().then(
-      (response) => this.handleSuccessfulFacebookLogin(response),
+      () => this.handleSuccessfulFacebookLogin(),
       (error) => this.handleFailedFacebookLogin(error) 
     );
   }
 
-  private handleSuccessfulFacebookLogin(response: string) {
-    console.log('user data: ' + response);
-    if (response == 'connected') {
-      this.navCtrl.setRoot(HomePage);
-    }
+  private handleSuccessfulFacebookLogin() {
+    this.navCtrl.setRoot(HomePage);
   }
 
   private handleFailedFacebookLogin(error) {

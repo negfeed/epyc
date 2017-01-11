@@ -1,8 +1,11 @@
 import { Auth } from './auth';
 import { Facebook, FacebookLoginResponse } from 'ionic-native';
+import { AngularFire, AngularFireAuth } from 'angularfire2';
+import { TestBed } from '@angular/core/testing';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
-let ACCESS_TOKEN: string = "kgkh3g42kh4g23kh4g2kh34g2kg4k2h4gkh3g4k2h4gk23h4gk2h34gk234gk2h34AndSoOn";
-let USER_ID: string = "1234567";
+let ACCESS_TOKEN: string = 'kgkh3g42kh4g23kh4g2kh34g2kg4k2h4gkh3g4k2h4gk23h4gk2h34gk234gk2h34AndSoOn';
+let USER_ID: string = '1234567';
 
 let FACEBOOK_LOGIN_STATUS_CONNECTED: FacebookLoginResponse = {
   authResponse: {
@@ -10,33 +13,54 @@ let FACEBOOK_LOGIN_STATUS_CONNECTED: FacebookLoginResponse = {
     accessToken: ACCESS_TOKEN,
     session_key: true,
     expiresIn: 5183738,
-    sig: "...",
-    secret: "fake_secret"
+    sig: '...',
+    secret: 'fake_secret'
   },
-  status: "connected"
+  status: 'connected'
 }
 
 let FACEBOOK_LOGIN_STATUS_NOT_AUTHORIZED: any = {
-  status: "not_authorized"
+  status: 'not_authorized'
 }
 
 let FACEBOOK_LOGIN_STATUS_UNKNOWN: any = {
-  status: "unknown"
+  status: 'unknown'
+}
+
+let FIREBASE_AUTH_STATE: any = {
+  auth: {
+    displayName: 'Mohammad Shamma',
+    photoURL: 'http://fake.com/photo/12345'
+  }
 }
 
 describe('An auth service', () => {
 
   let auth: Auth = null;
+  let angularFireMock = null;
+
+  beforeAll(() => {
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting())
+  });
 
   beforeEach(() => {
-    auth = new Auth();
+    angularFireMock = {
+      auth: jasmine.createSpyObj('auth', ['login', 'logout'])
+    };
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AngularFire, useValue: angularFireMock },
+        Auth
+      ]
+    });
+    auth = TestBed.get(Auth);
   });
 
   it('should report a connected status.', (done) => {
     spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
+    angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
     auth.getLoginStatus().then(
       (status) => {
-        expect(status).toEqual('connected');
         done();
       }
     );
@@ -46,7 +70,8 @@ describe('An auth service', () => {
     beforeEach((done) => {
       spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'logout').and.returnValue(Promise.resolve());
-      spyOn(Facebook, 'login').and.throwError("Should not be called");
+      spyOn(Facebook, 'login').and.throwError('Should not be called');
+      angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
       auth.getLoginStatus().then(
         (status) => {
           done();
@@ -83,12 +108,9 @@ describe('An auth service', () => {
 
   it('should report a not_authorized status.', (done) => {
     spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_NOT_AUTHORIZED));
-    auth.getLoginStatus().then(
-      (status) => {
-        expect(status).toEqual('not_authorized');
-        done();
-      }
-    );
+    auth.getLoginStatus().catch((error) => {
+      done();
+    });
   });
 
   describe('of a not_authorized user', () => {
@@ -97,11 +119,10 @@ describe('An auth service', () => {
       spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_NOT_AUTHORIZED));
       spyOn(Facebook, 'login').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'logout').and.throwError('Should not be called');
-      auth.getLoginStatus().then(
-        (status) => {
-          done();
-        }
-      );
+      angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
+      auth.getLoginStatus().catch((error) => {
+        done();
+      });
     })
 
     it('should not provide user info.', (done) => {
@@ -126,12 +147,9 @@ describe('An auth service', () => {
 
   it('should report an unknown status.', (done) => {
     spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_UNKNOWN));
-    auth.getLoginStatus().then(
-      (status) => {
-        expect(status).toEqual('unknown');
-        done();
-      }
-    );
+    auth.getLoginStatus().catch((error) => {
+      done();
+    });
   });
 
   describe('of an unknown user', () => {
@@ -140,12 +158,10 @@ describe('An auth service', () => {
       spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_UNKNOWN));
       spyOn(Facebook, 'login').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'logout').and.throwError('Should not be called');
-      auth.getLoginStatus().then(
-        (status) => {
-          expect(status).toEqual('unknown');
-          done();
-        }
-      );
+      angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
+      auth.getLoginStatus().catch((error) => {
+        done();
+      });
     });
 
     it('should not provide user info.', (done) => {
@@ -174,6 +190,7 @@ describe('An auth service', () => {
       spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'login').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'logout').and.returnValue(Promise.resolve());
+      angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
       auth.getLoginStatus().then(
         (status) => {
           auth.doLogout().then(() => {
@@ -207,13 +224,10 @@ describe('An auth service', () => {
       spyOn(Facebook, 'getLoginStatus').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_NOT_AUTHORIZED));
       spyOn(Facebook, 'login').and.returnValue(Promise.resolve(FACEBOOK_LOGIN_STATUS_CONNECTED));
       spyOn(Facebook, 'logout').and.returnValue(Promise.resolve());
-      auth.getLoginStatus().then(
-        (status) => {
-          auth.doLogin().then(() => {
-            done();
-          })
-        }
-      );
+      angularFireMock.auth.login.and.returnValue(firebase.Promise.resolve(FIREBASE_AUTH_STATE));
+      auth.doLogin().then(() => {
+        done();
+      });
     });
 
     it('should not login', (done) => {

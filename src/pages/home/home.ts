@@ -14,7 +14,13 @@ export class HomePage {
   constructor(
     private navCtrl: NavController,
     private toastCtrl: ToastController,
-    private auth: Auth) {}
+    private auth: Auth) {
+      auth.getUserInfo().then((authUserInfo) => {
+        this.displayName = authUserInfo.displayName;
+      })
+  }
+
+  private displayName = '';
 
   doLogout() {
     this.auth.doLogout().then(
@@ -29,7 +35,7 @@ export class HomePage {
   }
 
   private handleFailedLogout(error) {
-    console.log('logout error')
+    console.log('logout error: ' + error);
     let toast = this.toastCtrl.create({
       message: 'Error logging out',
       duration: 3000,

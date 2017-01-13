@@ -28,10 +28,11 @@ export class MyApp {
 
   private handleGetLoginStatusResponse() {
     this.nav.setRoot(HomePage);
-    Splashscreen.hide();
+    setTimeout(() => { Splashscreen.hide(); }, 100);
   }
 
   private handleGetLoginStatusError(error) {
     console.log('error: ' + error)
+    setTimeout(() => { Splashscreen.hide(); }, 100);
   }
 }

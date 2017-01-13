@@ -1,6 +1,6 @@
 import { Auth } from './auth';
 import { Facebook, FacebookLoginResponse } from 'ionic-native';
-import { AngularFire, AngularFireAuth } from 'angularfire2';
+import { AngularFire } from 'angularfire2';
 import { TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 

@@ -3,7 +3,7 @@ import { NavController, ToastController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 
-import { Auth } from '../../providers/auth';
+import { Auth } from '../../providers/auth/auth';
 
 @Component({
   selector: 'page-login',

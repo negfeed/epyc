@@ -3,7 +3,7 @@ import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-import { Auth } from '../providers/auth';
+import { Auth } from '../providers/auth/auth';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 // Must export the config

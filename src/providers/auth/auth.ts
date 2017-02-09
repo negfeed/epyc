@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from 'ionic-native';
-import { AngularFire, AuthProviders, AuthMethods } from 'angularfire2';
+import { AngularFire, AuthProviders, FirebaseAuthState, AuthMethods } from 'angularfire2';
 import * as firebase from 'firebase';
 
 export interface AuthUserInfo {
-  userId: string;
-  accessToken: string;
+  uid: string;
   displayName: string;
   photoURL: string;
 }
@@ -21,7 +20,7 @@ export class Auth {
   private facebookLoginResponse: FacebookLoginResponse = null;
 
   // The firebase user profile that is returned after sign in.
-  private firebaseAuthState: any = null;
+  private firebaseAuthState: FirebaseAuthState = null;
 
   constructor(private af: AngularFire) {
     console.log('Hello Account Provider');
@@ -89,8 +88,7 @@ export class Auth {
       return Promise.reject('Cannot get user info when the user is not logged in.');
     }
     return Promise.resolve({
-      userId: this.facebookLoginResponse.authResponse.userID,
-      accessToken: this.facebookLoginResponse.authResponse.accessToken,
+      uid: this.firebaseAuthState.auth.uid,
       displayName: this.firebaseAuthState.auth.displayName,
       photoURL: this.firebaseAuthState.auth.photoURL,
     });
@@ -116,7 +114,7 @@ export class Auth {
     }
   }
 
-  private handleAngularFireSignInResponse(authState): firebase.Promise<string> {
+  private handleAngularFireSignInResponse(authState: FirebaseAuthState): firebase.Promise<string> {
     this.firebaseAuthState = authState;
     this.loggedIn = true;
     return firebase.Promise.resolve();

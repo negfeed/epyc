@@ -7,6 +7,8 @@ import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@ang
 let ACCESS_TOKEN: string = 'kgkh3g42kh4g23kh4g2kh34g2kg4k2h4gkh3g4k2h4gk23h4gk2h34gk234gk2h34AndSoOn';
 let USER_ID: string = '1234567';
 
+let FIREBASE_UID: string = 'f2if24k2xksdfw';
+
 let FACEBOOK_LOGIN_STATUS_CONNECTED: FacebookLoginResponse = {
   authResponse: {
     userID: USER_ID,
@@ -29,6 +31,7 @@ let FACEBOOK_LOGIN_STATUS_UNKNOWN: any = {
 
 let FIREBASE_AUTH_STATE: any = {
   auth: {
+    uid: FIREBASE_UID,
     displayName: 'Mohammad Shamma',
     photoURL: 'http://fake.com/photo/12345'
   }
@@ -81,8 +84,7 @@ describe('An auth service', () => {
 
     it('should provide user info.', (done) => {
       auth.getUserInfo().then((userInfo) => {
-        expect(userInfo.accessToken).toEqual(ACCESS_TOKEN);
-        expect(userInfo.userId).toEqual(USER_ID);
+        expect(userInfo.uid).toEqual(FIREBASE_UID);
         done();
       });
     });
@@ -244,8 +246,7 @@ describe('An auth service', () => {
 
     it('should return user info', (done) => {
       auth.getUserInfo().then((userInfo) => {
-        expect(userInfo.userId).toEqual(USER_ID);
-        expect(userInfo.accessToken).toEqual(ACCESS_TOKEN);
+        expect(userInfo.uid).toEqual(FIREBASE_UID);
         done();
       })
     })

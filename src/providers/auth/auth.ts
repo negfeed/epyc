@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Facebook, FacebookLoginResponse } from 'ionic-native';
-import { AngularFire, AuthProviders, FirebaseAuthState, AuthMethods } from 'angularfire2';
-import * as firebase from 'firebase';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
 
 export interface AuthUserInfo {
   uid: string;
@@ -20,9 +20,11 @@ export class Auth {
   private facebookLoginResponse: FacebookLoginResponse = null;
 
   // The firebase user profile that is returned after sign in.
-  private firebaseAuthState: FirebaseAuthState = null;
+  private currentUser: firebase.User;
 
-  constructor(private af: AngularFire) {
+  constructor(
+    private afa: AngularFireAuth, 
+    private facebook: Facebook) {
     console.log('Hello Account Provider');
   }
   
@@ -36,7 +38,7 @@ export class Auth {
    *     the promise is rejected.
    */
   public getLoginStatus(): firebase.Promise<any> {
-    return Facebook.getLoginStatus().then(
+    return this.facebook.getLoginStatus().then(
       (response) => this.handleLoginStatusResponse(response),
       (error) => this.handleLoginError(error)
     );
@@ -55,7 +57,7 @@ export class Auth {
     if (this.loggedIn) {
       return Promise.reject('User is already logged in.');
     }
-    return Facebook.login(['public_profile', 'email']).then(
+    return this.facebook.login(['public_profile', 'email']).then(
       (response) => this.handleLoginStatusResponse(response));
   }
 
@@ -70,8 +72,8 @@ export class Auth {
     if (!this.loggedIn) {
       return Promise.reject('User is not logged in.');
     }
-    return Facebook.logout().then(() => {
-      this.af.auth.logout();
+    return this.facebook.logout().then(() => {
+      this.afa.auth.signOut();
       this.loggedIn = false;
     });
   }
@@ -88,9 +90,9 @@ export class Auth {
       return Promise.reject('Cannot get user info when the user is not logged in.');
     }
     return Promise.resolve({
-      uid: this.firebaseAuthState.auth.uid,
-      displayName: this.firebaseAuthState.auth.displayName,
-      photoURL: this.firebaseAuthState.auth.photoURL,
+      uid: this.currentUser.uid,
+      displayName: this.currentUser.displayName,
+      photoURL: this.currentUser.photoURL,
     });
   }
 
@@ -100,11 +102,7 @@ export class Auth {
       console.log('facebook response: ' + this.facebookLoginResponse);
       let credential = firebase.auth.FacebookAuthProvider.credential(
           this.facebookLoginResponse.authResponse.accessToken);
-      let authConfiguration = {
-        provider: AuthProviders.Facebook,
-        method: AuthMethods.OAuthToken
-      }
-      return this.af.auth.login(credential, authConfiguration).then(
+      return this.afa.auth.signInWithCredential(credential).then(
         (response) => this.handleAngularFireSignInResponse(response),
         (error) => this.handleLoginError(error)
       )
@@ -114,8 +112,8 @@ export class Auth {
     }
   }
 
-  private handleAngularFireSignInResponse(authState: FirebaseAuthState): firebase.Promise<string> {
-    this.firebaseAuthState = authState;
+  private handleAngularFireSignInResponse(user: firebase.User): firebase.Promise<string> {
+    this.currentUser = user;
     this.loggedIn = true;
     return firebase.Promise.resolve();
   }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, NavController } from 'ionic-angular';
-import { Splashscreen } from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginPage } from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
@@ -15,7 +15,10 @@ export class MyApp {
   @ViewChild('epycNav') nav: NavController;
   rootPage = LoginPage;
 
-  constructor(platform: Platform, private auth: Auth) {
+  constructor(
+    platform: Platform, 
+    private auth: Auth, 
+    private splashScreen: SplashScreen) {
     platform.ready().then(() => this.onPlatformReady());
   }
 
@@ -28,11 +31,11 @@ export class MyApp {
 
   private handleGetLoginStatusResponse() {
     this.nav.setRoot(HomePage);
-    setTimeout(() => { Splashscreen.hide(); }, 100);
+    setTimeout(() => { this.splashScreen.hide(); }, 100);
   }
 
   private handleGetLoginStatusError(error) {
     console.log('error: ' + error)
-    setTimeout(() => { Splashscreen.hide(); }, 100);
+    setTimeout(() => { this.splashScreen.hide(); }, 100);
   }
 }

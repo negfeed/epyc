@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Waiting Room
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <p>Hello to the Waiting Room</p>
+
+  Game creation time: {{ (gameInstance | async)?.creation_timestamp_ms | date:'medium' }}
+</ion-content>

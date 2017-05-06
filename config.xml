@@ -78,14 +78,24 @@
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
-  <plugin name="cordova-plugin-device" spec="~1.1.3"/>
-  <plugin name="cordova-plugin-console" spec="~1.0.4"/>
-  <plugin name="cordova-plugin-whitelist" spec="~1.3.0"/>
-  <plugin name="cordova-plugin-splashscreen" spec="~4.0.0"/>
-  <plugin name="cordova-plugin-statusbar" spec="~2.2.0"/>
-  <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
   <allow-navigation href="http://172.16.42.6:8000"/>
   <allow-navigation href="http://172.16.42.10:8000"/>
+  <allow-navigation href="http://172.16.42.10:8100"/>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
-  <engine name="android" spec="~6.1.0"/>
+  <engine name="android" spec="^6.2.2"/>
+  <plugin name="cordova-plugin-console" spec="~1.0.4"/>
+  <plugin name="cordova-plugin-device" spec="~1.1.3"/>
+  <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
+    <variable name="APP_ID" value="588056351386086"/>
+    <variable name="APP_NAME" value="EPYC"/>
+  </plugin>
+  <plugin name="cordova-plugin-splashscreen" spec="~4.0.0"/>
+  <plugin name="cordova-plugin-statusbar" spec="~2.2.0"/>
+  <plugin name="cordova-plugin-whitelist" spec="~1.3.0"/>
+  <plugin name="ionic-plugin-deeplinks" spec="~1.0.14">
+    <variable name="URL_SCHEME" value="epyc"/>
+    <variable name="DEEPLINK_SCHEME" value="https"/>
+    <variable name="DEEPLINK_HOST" value="epyc.negfeed.com"/>
+  </plugin>
+  <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
 </widget>

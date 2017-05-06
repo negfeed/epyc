@@ -79,6 +79,11 @@ module.exports = function(config) {
     karmaTypescriptConfig: {
       compilerOptions: {
         target: "ES6"
+      },
+      bundlerOptions: {
+          transforms: [
+              require("karma-typescript-es6-transform")()
+          ]
       }
     },
 

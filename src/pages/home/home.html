@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Home
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -11,5 +11,7 @@
   <p>
     {{displayName}}, welcome to EPYC.
   </p>
+  <img [src]="photoURL">
+  <button ion-button (click)="doNewGame()">New Game</button>
   <button ion-button (click)="doLogout()">Logout</button>
 </ion-content>

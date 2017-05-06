@@ -3,41 +3,53 @@ import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
+import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
 import { Auth } from '../providers/auth/auth';
-import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
+import { AppModel } from '../providers/app-model/app-model';
+import { GameModel } from '../providers/game-model/game-model';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { BrowserModule } from '@angular/platform-browser';
+import { Facebook } from '@ionic-native/facebook';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 // Must export the config
 export const firebaseConfig = {
-  apiKey: "AIzaSyDMdMpW7-3bHo66NJlWh0y0Ut-CNKfqce0",
-  authDomain: "epyc-20b49.firebaseapp.com",
-  databaseURL: "https://epyc-20b49.firebaseio.com",
-  storageBucket: "epyc-20b49.appspot.com",
-  messagingSenderId: "760173367530"
+  apiKey: "AIzaSyADo4umy3bmQIG8nZ6UgJuB9y0iR-WvsUo",
+  authDomain: "epyc-9f15f.firebaseapp.com",
+  databaseURL: "https://epyc-9f15f.firebaseio.com",
+  storageBucket: "epyc-9f15f.appspot.com",
+  messagingSenderId: "468473195385"
 };
-
-export const firebaseAuthConfig = {
-  provider: AuthProviders.Facebook,
-  method: AuthMethods.OAuthToken
-}
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    LoginPage
+    LoginPage,
+    WaitingRoomPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig, firebaseAuthConfig)
+    AngularFireModule.initializeApp(firebaseConfig, 'epyc'),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    BrowserModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
     LoginPage,
+    WaitingRoomPage,
   ],
   providers: [
-    Auth
+    Auth,
+    AppModel,
+    GameModel,
+    Facebook,
+    SplashScreen
   ]
 })
 export class AppModule {}

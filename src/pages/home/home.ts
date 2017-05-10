@@ -42,10 +42,9 @@ export class HomePage {
   }
 
   doNewGame() {
-    // - Create new game instance.
-    const gameKey = this.gameModel.createInstance();
-    // - Navigate to game waiting room.
-    this.navCtrl.push(WaitingRoomPage, {gameKey: gameKey});
+    this.gameModel.createInstance().then((gameKey) => {
+      this.navCtrl.push(WaitingRoomPage, {gameKey: gameKey});
+    })
   }
 
   private handleSuccessLogout(response) {

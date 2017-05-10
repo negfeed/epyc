@@ -7,7 +7,29 @@
 </ion-header>
 
 <ion-content padding>
-  <p>Hello to the Waiting Room</p>
-
-  Game creation time: {{ (gameInstance | async)?.creation_timestamp_ms | date:'medium' }}
+  <ion-list>
+    <ion-list-header>Joined ({{ (joinedUsers | async)?.length }}) </ion-list-header>
+    <ion-item *ngFor="let joinedUser of joinedUsers | async">
+      <ion-avatar item-left>
+        <img [src]="joinedUser.photoURL">
+      </ion-avatar>
+      {{ joinedUser.name }}
+      <ion-note item-right>host</ion-note>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>Watching ({{ (watchingUsers | async)?.length }})</ion-list-header>
+    <ion-item *ngFor="let watchingUser of watchingUsers | async">
+      <ion-avatar item-left>
+        <img [src]="watchingUser.photoURL">
+      </ion-avatar>
+      {{ watchingUser.name }}
+      <ion-note item-right>host</ion-note>
+    </ion-item>
+  </ion-list>
+  <!--<textarea rows="18" cols="40" >{{ host | async | json }}</textarea>-->
 </ion-content>
+
+<ion-footer>
+  <button ion-button block>Start Game</button>
+</ion-footer>

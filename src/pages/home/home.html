@@ -1,5 +1,8 @@
 <ion-header>
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>
       Home
     </ion-title>
@@ -7,11 +10,8 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    {{displayName}}, welcome to EPYC.
-  </p>
-  <img [src]="photoURL">
-  <button ion-button (click)="doNewGame()">New Game</button>
-  <button ion-button (click)="doLogout()">Logout</button>
+  <ion-card>
+    <img src="assets/img/home_banner.jpg"/>
+  </ion-card>
+  <button ion-button (click)="doNewGame()" block>New Game</button>
 </ion-content>

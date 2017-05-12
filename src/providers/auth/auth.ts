@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { FirebaseApp } from 'angularfire2';
+import { Platform } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
 
 export interface AuthUserInfo {
@@ -22,10 +25,20 @@ export class Auth {
   // The firebase user profile that is returned after sign in.
   private currentUser: firebase.User;
 
+  // Indicates whether a user is logged in or not.
+  private signedIn: Observable<boolean>;
+
   constructor(
-    private afa: AngularFireAuth, 
-    private facebook: Facebook) {
+      private afa: AngularFireAuth, 
+      private facebook: Facebook,
+      @Inject(FirebaseApp) firebaseApp: any) {
     console.log('Hello Account Provider');
+    this.signedIn = Observable.create((observer) => {
+      return firebaseApp.auth().onAuthStateChanged(
+        user => observer.next(user != null),
+        err => observer.error(err),
+        () => observer.complete());
+    })
   }
   
   /**
@@ -122,5 +135,9 @@ export class Auth {
     this.loggedIn = false;
     console.log('error: ' + error);
     return error;
+  }
+
+  public getSignedIn(): Observable<boolean> {
+    return this.signedIn;
   }
 }

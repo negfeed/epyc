@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { FirebaseApp } from 'angularfire2';
-import { Platform } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
 

@@ -13,6 +13,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { BrowserModule } from '@angular/platform-browser';
 import { Facebook } from '@ionic-native/facebook';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { SocialSharing } from '@ionic-native/social-sharing';
+import { Deeplinks } from '@ionic-native/deeplinks';
 
 // Must export the config
 export const firebaseConfig = {
@@ -49,7 +51,9 @@ export const firebaseConfig = {
     AppModel,
     GameModel,
     Facebook,
-    SplashScreen
+    SplashScreen,
+    SocialSharing,
+    Deeplinks
   ]
 })
 export class AppModule {}

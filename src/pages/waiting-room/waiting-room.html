@@ -14,7 +14,7 @@
         <img [src]="joinedUser.photoURL">
       </ion-avatar>
       {{ joinedUser.name }}
-      <ion-note item-right>host</ion-note>
+      <ion-note item-right *ngIf="joinedUser.host">host</ion-note>
     </ion-item>
   </ion-list>
   <ion-list>
@@ -24,9 +24,12 @@
         <img [src]="watchingUser.photoURL">
       </ion-avatar>
       {{ watchingUser.name }}
-      <ion-note item-right>host</ion-note>
+      <ion-note item-right *ngIf="watchingUser.host">host</ion-note>
     </ion-item>
   </ion-list>
-  <button ion-button block>Start Game</button>
+  <button ion-button block (click)="doShare()" [disabled]="!isJoinable">Share</button>
+  <button ion-button block *ngIf="canStart()" [disabled]="!isJoinable" (click)="doStart()">Start Game</button>
+  <button ion-button block *ngIf="canJoin()" [disabled]="!isJoinable" (click)="doJoin()">Join Game</button>
+  <button ion-button block *ngIf="canLeave()" [disabled]="!isJoinable" (click)="doLeave()">Leave Game</button>
 </ion-content>
 

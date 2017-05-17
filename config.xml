@@ -75,6 +75,7 @@
   <preference name="SplashScreenBackgroundColor" value="0xFF000080"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
   <preference name="SplashScreen" value="screen"/>
+  <preference name="AndroidLaunchMode" value="singleTask"/>
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
@@ -97,8 +98,9 @@
   <plugin name="ionic-plugin-deeplinks" spec="~1.0.14">
     <variable name="URL_SCHEME" value="epyc"/>
     <variable name="DEEPLINK_SCHEME" value="https"/>
-    <variable name="DEEPLINK_HOST" value="epyc.negfeed.com"/>
+    <variable name="DEEPLINK_HOST" value="epyc-9f15f.appspot.com"/>
   </plugin>
   <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
   <plugin name="cordova-plugin-inappbrowser" spec="~1.7.1"/>
+  <plugin name="cordova-plugin-x-socialsharing" spec="~5.1.8"/>
 </widget>

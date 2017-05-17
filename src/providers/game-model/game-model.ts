@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
+import * as firebase from 'firebase/app';
 
 import { Auth } from '../auth/auth';
 
@@ -19,13 +20,13 @@ export enum  GameState {
 }
 
 export interface GameUser {
-  uid: string;
-  displayName: string;
-  photoURL: string;
-  joined: boolean;
+  uid?: string;
+  displayName?: string;
+  photoURL?: string;
+  joined?: boolean;
 }
 
-interface GameUsers {
+export interface GameUsers {
   [index: string]: GameUser;
 }
 
@@ -73,7 +74,27 @@ export class GameModel {
     })
   }
 
-  public loadInstance(key: string): Observable<GameModelInterface> {
+  private _loadInstance(key: string): FirebaseObjectObservable<GameModelInterface> {
     return this.angularFireDatabase.object(this.INSTANCES_PATH + '/' + key);
+  }
+
+  public loadInstance(key: string): Observable<GameModelInterface> {
+    return this._loadInstance(key);
+  }
+
+  public updateState(key: string, state: GameState): firebase.Promise<void> {
+    let gameInstance = this._loadInstance(key);
+    return gameInstance.update({
+      state: state
+    });
+  }
+
+  private _loadUser(gameKey: string, userKey: string): FirebaseObjectObservable<GameModelInterface> {
+    return this.angularFireDatabase.object(this.INSTANCES_PATH + `/${gameKey}/users/${userKey}`);
+  }
+
+  public upsertGameUser(gameKey: string, userKey: string, gameUser: GameUser): firebase.Promise<void> {
+    let user = this._loadUser(gameKey, userKey);
+    return user.update(gameUser);
   }
 }

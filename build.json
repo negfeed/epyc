@@ -1,0 +1,14 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "../debug-keys/dev.keystore",
+            "storePassword": "negfeed123",
+            "alias": "epyc-dev",
+            "password" : "negfeed123"
+        },
+        "release": {
+            "keystore": "../release-keys/release.keystore",
+            "alias": "epyc-release"
+        }
+    }
+}

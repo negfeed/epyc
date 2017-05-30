@@ -4,6 +4,9 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
+import { WaitTurnPage } from '../pages/wait-turn/wait-turn';
+import { DrawPage } from '../pages/draw/draw';
+import { GuessPage } from '../pages/guess/guess';
 import { Auth } from '../providers/auth/auth';
 import { AppModel } from '../providers/app-model/app-model';
 import { GameModel } from '../providers/game-model/game-model';
@@ -30,7 +33,10 @@ export const firebaseConfig = {
     MyApp,
     HomePage,
     LoginPage,
-    WaitingRoomPage
+    WaitingRoomPage,
+    WaitTurnPage,
+    DrawPage,
+    GuessPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -45,6 +51,9 @@ export const firebaseConfig = {
     HomePage,
     LoginPage,
     WaitingRoomPage,
+    WaitTurnPage,
+    DrawPage,
+    GuessPage
   ],
   providers: [
     Auth,

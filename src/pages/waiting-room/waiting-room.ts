@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/first'
 
+import { WaitTurnPage } from '../wait-turn/wait-turn';
+
 import { GameModel, GameModelInterface, GameUser, GameState } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 
@@ -20,7 +22,7 @@ interface DisplayUsers {
 }
 
 @Component({
-  selector: 'waiting-room-login',
+  selector: 'waiting-room',
   templateUrl: 'waiting-room.html'
 })
 export class WaitingRoomPage {
@@ -56,6 +58,10 @@ export class WaitingRoomPage {
             this.isJoined = gameInstance.users[authUserInfo.uid].joined;
           }
           this.isJoinable = (gameInstance.state == GameState.CREATED);
+          if (gameInstance.state == GameState.STARTED && 
+              gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
+            this.nav.push(WaitTurnPage, {gameKey: this.gameKey});
+          }
         });
       });
       let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
@@ -127,7 +133,6 @@ export class WaitingRoomPage {
   }
 
   doStart() {
-    this.gameModel.updateState(this.gameKey, GameState.STARTED);
-    // TODO: Navigate to next view.
+    this.gameModel.start(this.gameKey);
   }
 }

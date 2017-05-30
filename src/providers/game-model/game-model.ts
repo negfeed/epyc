@@ -30,6 +30,30 @@ export interface GameUsers {
   [index: string]: GameUser;
 }
 
+export interface UsersUidOrder extends Array<string> {}
+
+export enum GameAtomType {
+  DRAWING = 1,
+  GUESS = 2,
+}
+
+export interface GameAtom {
+  type: GameAtomType;
+  drawingRef?: string;
+  guess?: string;
+  done?: boolean;
+  authorUid?: string;
+}
+
+export interface GameAtoms extends Array<GameAtom> {}
+
+export interface GameThread {
+  word: string;
+  gameAtoms: GameAtoms;
+}
+
+export interface GameThreads extends Array<GameThread> {}
+
 export interface GameModelInterface {
   $key?: string;
   $value?: ( number | string | boolean );
@@ -45,6 +69,17 @@ export interface GameModelInterface {
 
   // A map from UID to a GameUser interface that contains information about the user.
   users?: GameUsers;
+
+  // The order of the joined users in the game.
+  usersOrder?: UsersUidOrder;
+
+  // The game threads.
+  threads?: GameThreads;
+}
+
+export interface AtomAddress {
+  threadIndex: number;
+  atomIndex: number;
 }
 
 @Injectable()
@@ -82,11 +117,54 @@ export class GameModel {
     return this._loadInstance(key);
   }
 
-  public updateState(key: string, state: GameState): firebase.Promise<void> {
-    let gameInstance = this._loadInstance(key);
-    return gameInstance.update({
-      state: state
-    });
+  private buildEmptyThread(playerCount: number): GameThread {
+    let gameAtoms: Array<GameAtom> = [];
+    for (var index = 0; index < playerCount + 1; index++) {
+      gameAtoms.push({
+        type: (index % 2) == 0 ? GameAtomType.DRAWING: GameAtomType.GUESS,
+        done: false
+      });
+    }
+    return {
+      word: 'duck',
+      gameAtoms: gameAtoms
+    }
+  }
+
+  private buildEmptyThreads(playerCount: number): GameThreads {
+    let gameThreads: Array<GameThread> = [];
+    for (var index = 0; index < playerCount; index++) {
+      gameThreads.push(this.buildEmptyThread(playerCount))
+    }
+    return gameThreads;
+  }
+
+  private shuffleUsers(users: Array<string>) {
+    let userCount = users.length;
+    for (var index = 0; index < users.length; index++) {
+      var otherIndex = Math.floor(Math.random() * userCount);
+      var tmp = users[index];
+      users[index] = users[otherIndex];
+      users[otherIndex] = tmp;
+    }
+  }
+
+  public start(key: string) {
+    let gameInstanceObservable = this._loadInstance(key);
+    gameInstanceObservable.first().subscribe((gameModel: GameModelInterface) => {
+      let usersUidOrder: Array<string> = [];
+      for (var uid in gameModel.users) {
+        if (gameModel.users[uid].joined) {
+          usersUidOrder.push(uid);
+        }
+      }
+      this.shuffleUsers(usersUidOrder)
+      gameInstanceObservable.update({
+        state: GameState.STARTED,
+        usersOrder: usersUidOrder,
+        threads: this.buildEmptyThreads(usersUidOrder.length),
+      });
+    })
   }
 
   private _loadUser(gameKey: string, userKey: string): FirebaseObjectObservable<GameModelInterface> {
@@ -96,5 +174,21 @@ export class GameModel {
   public upsertGameUser(gameKey: string, userKey: string, gameUser: GameUser): firebase.Promise<void> {
     let user = this._loadUser(gameKey, userKey);
     return user.update(gameUser);
+  }
+
+  public static playerIndex(atomAddress: AtomAddress, playersCount: number): number {
+    return (atomAddress.threadIndex - atomAddress.atomIndex) % playersCount
+  }
+
+  public static* playerAtoms(playerIndex: number, playersCount: number): IterableIterator<AtomAddress> {
+    let index = 0;
+    while (index < playersCount) {
+      let atomAddress: AtomAddress = {
+        threadIndex: (0 + index + playerIndex) % playersCount,
+        atomIndex: 0 + index,
+      }
+      index++;
+      yield atomAddress;
+    }
   }
 }

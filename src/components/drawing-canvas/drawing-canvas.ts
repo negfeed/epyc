@@ -14,9 +14,28 @@ function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
 }
 
+function _getPermutations(permutation: Array<number>, remainingNumbers: Array<number>, count): Array<Array<number>> {
+  if (permutation.length == count) {
+    return [permutation.slice()];
+  }
+
+  let results = [];
+  for (var index = 0; index < remainingNumbers.length; index++) {
+    let newRemaining = remainingNumbers.slice();
+    let newPermutation = permutation.slice();
+    newPermutation.push(newRemaining.splice(index, 1)[0])
+    results = results.concat(_getPermutations(newPermutation, newRemaining, count))
+  }
+  return results;
+}
+
 function getPermutations(upperBound: number, count: number): Array<Array<number>> {
-  // TODO
-  return [];
+  let remainingNumbers = []
+  for (var index = 0; index < upperBound; index++) {
+    remainingNumbers.push(index);
+  }
+  let permutations =  _getPermutations([], remainingNumbers, count);
+  return permutations;
 }
 
 @Component({
@@ -55,15 +74,16 @@ export class DrawingCanvas implements OnInit {
 
   private relateToFingers(touchCoordinates: Array<Coordinates>): Array<number> {
     // Calculate distance between every touch and touch.
-    let distanceMatrix: Array<Array<number>> = [[], []];
+    let distanceMatrix: Array<Array<number>> = [];
     for (var touchIndex = 0; touchIndex < touchCoordinates.length; touchIndex++) {
+      distanceMatrix.push([]);
       for (var fingerIndex = 0; fingerIndex < this.fingers.length; fingerIndex++) {
         distanceMatrix[touchIndex].push(calculateDistance(this.fingers[fingerIndex], touchCoordinates[touchIndex]));
       }
     }
 
     // Search for the lowest sum of distances from touches to fingers.
-    let minimumPermutation = [0];
+    let minimumPermutation = null;
     let minimumDistance = Infinity;
     getPermutations(this.fingers.length, touchCoordinates.length).forEach((permutation) => {
       let distance = 0;
@@ -76,6 +96,7 @@ export class DrawingCanvas implements OnInit {
         minimumPermutation = permutation.slice();
       }
     })
+    console.log('changes to fingers: ' + minimumPermutation);
     return minimumPermutation;
   }
 
@@ -116,6 +137,7 @@ export class DrawingCanvas implements OnInit {
     console.log(event.type + '|' + event.changedTouches.length);
     let offset: Offset =  this.canvasPageOffset()
     let changedCoordinates: Array<Coordinates> = [];
+    console.log('changes');
     for (var index = 0; index < event.changedTouches.length; index++) {
       let changeCoordinates = {
         x: event.changedTouches[index].pageX - offset.left,
@@ -124,6 +146,7 @@ export class DrawingCanvas implements OnInit {
       changedCoordinates.push(changeCoordinates);
       console.log('(' + changeCoordinates.x + ', ' + changeCoordinates.y + ')');
     }
+    console.log('fingers')
     for (var index = 0; index < this.fingers.length; index++) {
       console.log('(' + this.fingers[index].x + ', ' + this.fingers[index].y + ')');
     }

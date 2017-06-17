@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Memoize } from 'typescript-memoize';
 
 interface Offset {
   top: number;
@@ -12,30 +13,6 @@ interface Coordinates {
 
 function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number {
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
-}
-
-function _getPermutations(permutation: Array<number>, remainingNumbers: Array<number>, count): Array<Array<number>> {
-  if (permutation.length == count) {
-    return [permutation.slice()];
-  }
-
-  let results = [];
-  for (var index = 0; index < remainingNumbers.length; index++) {
-    let newRemaining = remainingNumbers.slice();
-    let newPermutation = permutation.slice();
-    newPermutation.push(newRemaining.splice(index, 1)[0])
-    results = results.concat(_getPermutations(newPermutation, newRemaining, count))
-  }
-  return results;
-}
-
-function getPermutations(upperBound: number, count: number): Array<Array<number>> {
-  let remainingNumbers = []
-  for (var index = 0; index < upperBound; index++) {
-    remainingNumbers.push(index);
-  }
-  let permutations =  _getPermutations([], remainingNumbers, count);
-  return permutations;
 }
 
 @Component({
@@ -57,6 +34,33 @@ export class DrawingCanvas implements OnInit {
 
   constructor() {
     console.log('Hello DrawingCanvas Component');
+  }
+
+  private static _getPermutations(permutation: Array<number>, remainingNumbers: Array<number>, count): Array<Array<number>> {
+    if (permutation.length == count) {
+      return [permutation.slice()];
+    }
+
+    let results = [];
+    for (var index = 0; index < remainingNumbers.length; index++) {
+      let newRemaining = remainingNumbers.slice();
+      let newPermutation = permutation.slice();
+      newPermutation.push(newRemaining.splice(index, 1)[0])
+      results = results.concat(DrawingCanvas._getPermutations(newPermutation, newRemaining, count))
+    }
+    return results;
+  }
+
+  @Memoize((upperBound: number, count: number) => {
+    return upperBound + ';' + count;
+  })
+  private static getPermutations(upperBound: number, count: number): Array<Array<number>> {
+    let remainingNumbers = []
+    for (var index = 0; index < upperBound; index++) {
+      remainingNumbers.push(index);
+    }
+    let permutations =  DrawingCanvas._getPermutations([], remainingNumbers, count);
+    return permutations;
   }
 
   private canvasPageOffset(): Offset {
@@ -86,7 +90,7 @@ export class DrawingCanvas implements OnInit {
     // Search for the lowest sum of distances from touches to fingers.
     let minimumPermutation = null;
     let minimumDistance = Infinity;
-    getPermutations(this.fingers.length, touchCoordinates.length).forEach((permutation) => {
+    DrawingCanvas.getPermutations(this.fingers.length, touchCoordinates.length).forEach((permutation) => {
       let distance = 0;
       for (var touchIndex = 0; touchIndex < permutation.length; touchIndex++) {
         let fingerIndex = permutation[touchIndex];

@@ -49,9 +49,10 @@ export class DrawingCanvas implements OnInit {
   @ViewChild('drawingCanvas') canvasRef: ElementRef;
 
   ngOnInit(): void {
-    this.canvasRef.nativeElement.width = this.canvasRef.nativeElement.parentElement.offsetWidth;
+    this.canvasRef.nativeElement.width = this.canvasRef.nativeElement.parentElement.clientWidth;
     this.canvasRef.nativeElement.height = this.canvasRef.nativeElement.width;
     this.context = this.canvasRef.nativeElement.getContext('2d');
+    this.context.lineWidth = 1;
   }
 
   constructor() {
@@ -101,7 +102,10 @@ export class DrawingCanvas implements OnInit {
   }
 
   private dot(point: Coordinates) {
-    // TODO
+    this.context.beginPath();
+    this.context.arc(point.x, point.y, 0.5, 0, Math.PI * 2, true);
+    this.context.closePath();
+    this.context.fill();
   }
 
   private stroke(start: Coordinates, finish: Coordinates) {

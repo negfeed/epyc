@@ -5,6 +5,19 @@ export interface Coordinates {
   y: number;
 }
 
+export interface DotDrawingEvent {
+  type: 'dot';
+  location: Coordinates;
+}
+
+export interface LineDrawingEvent {
+  type: 'line';
+  start: Coordinates;
+  end: Coordinates;
+}
+
+type DrawingEvent = DotDrawingEvent | LineDrawingEvent;
+
 @Component({
   selector: 'drawing-canvas',
   templateUrl: 'drawing-canvas.html'
@@ -25,17 +38,33 @@ export class DrawingCanvas implements OnInit {
     console.log('Hello DrawingCanvas Component');
   }
 
-  protected dot(point: Coordinates) {
+  private dot(dotDrawingEvent: DotDrawingEvent) {
     this.context.beginPath();
-    this.context.arc(point.x, point.y, 0.5, 0, Math.PI * 2, true);
+    this.context.arc(dotDrawingEvent.location.x, dotDrawingEvent.location.y, 0.5, 0, Math.PI * 2, true);
     this.context.closePath();
     this.context.fill();
   }
 
-  protected stroke(start: Coordinates, finish: Coordinates) {
-    console.log('stroke from (' + start.x + ', ' + start.y + ') to (' + finish.x + ', ' + finish.y + ')' );
+  private line(lineDrawingEvent: LineDrawingEvent) {
+    let start = lineDrawingEvent.start;
+    let end = lineDrawingEvent.end;
+    console.log('stroke from (' + start.x + ', ' + start.y + ') to (' + end.x + ', ' + end.y + ')' );
     this.context.moveTo(start.x, start.y);
-    this.context.lineTo(finish.x, finish.y);
+    this.context.lineTo(end.x, end.y);
     this.context.stroke();
+  }
+
+  protected processDrawingEvent(drawingEvent: DrawingEvent) {
+    switch(drawingEvent.type) {
+      case 'dot':
+        this.dot(drawingEvent);
+        break;
+      case 'line':
+        this.line(drawingEvent);
+        break;
+      default:
+        console.log('Error: This should not happen!');
+        break;
+    }
   }
 }

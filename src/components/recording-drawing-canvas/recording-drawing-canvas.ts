@@ -96,7 +96,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
 
   private processTouchStart(coordinates: Array<Coordinates>) {
     coordinates.forEach((point) => {
-      this.dot(point);
+      this.processDrawingEvent({
+        type: 'dot',
+        location: point
+      })
     })
     this.fingers = this.fingers.concat(coordinates);
   }
@@ -111,7 +114,11 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private processTouchMove(coordinates: Array<Coordinates>) {
     let fingerIndices = this.relateToFingers(coordinates);
     for (var index = 0; index < fingerIndices.length; index++) {
-      this.stroke(this.fingers[fingerIndices[index]], coordinates[index]);
+      this.processDrawingEvent({
+        type: 'line',
+        start: this.fingers[fingerIndices[index]],
+        end: coordinates[index]
+      });
       this.fingers[fingerIndices[index]] = coordinates[index];
     }
   }

@@ -19,6 +19,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { DrawingCanvas } from '../components/drawing-canvas/drawing-canvas';
+import { RecordingDrawingCanvas } from '../components/recording-drawing-canvas/recording-drawing-canvas';
 
 // Must export the config
 export const firebaseConfig = {
@@ -38,7 +39,8 @@ export const firebaseConfig = {
     WaitTurnPage,
     DrawPage,
     GuessPage,
-    DrawingCanvas
+    DrawingCanvas,
+    RecordingDrawingCanvas
   ],
   imports: [
     IonicModule.forRoot(MyApp),

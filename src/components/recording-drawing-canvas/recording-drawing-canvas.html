@@ -1,0 +1,10 @@
+<div id='canvasContainer'>
+<canvas
+  #drawingCanvas 
+  id='drawingCanvas' 
+  (touchstart)="onTouchEvent($event)"
+  (touchend)="onTouchEvent($event)"
+  (touchmove)="onTouchEvent($event)"
+  (touchcancel)="onTouchEvent($event)">
+</canvas>
+</div>

@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
 
-import { DrawingCanvas, Coordinates } from '../drawing-canvas/drawing-canvas'
-
-interface Offset {
-  top: number;
-  left: number;
-}
+import { DrawingCanvas, Coordinates, Offset } from '../drawing-canvas/drawing-canvas'
 
 function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number {
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
@@ -52,20 +47,6 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     return permutations;
   }
 
-  private canvasPageOffset(): Offset {
-    let element = this.canvasRef.nativeElement;
-    var top = 0, left = 0;
-    do {
-      top += element.offsetTop  || 0;
-      left += element.offsetLeft || 0;
-      element = element.offsetParent;
-    } while(element);
-    return {
-      top: top,
-      left: left
-    };
-  };
-
   private relateToFingers(touchCoordinates: Array<Coordinates>): Array<number> {
     // Calculate distance between every touch and touch.
     let distanceMatrix: Array<Array<number>> = [];
@@ -98,7 +79,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     coordinates.forEach((point) => {
       this.processDrawingEvent({
         type: 'dot',
-        location: point
+        location: this.normalizeCoordinates(point)
       })
     })
     this.fingers = this.fingers.concat(coordinates);
@@ -116,8 +97,8 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     for (var index = 0; index < fingerIndices.length; index++) {
       this.processDrawingEvent({
         type: 'line',
-        start: this.fingers[fingerIndices[index]],
-        end: coordinates[index]
+        start: this.normalizeCoordinates(this.fingers[fingerIndices[index]]),
+        end: this.normalizeCoordinates(coordinates[index])
       });
       this.fingers[fingerIndices[index]] = coordinates[index];
     }

@@ -10,6 +10,7 @@ import { GuessPage } from '../pages/guess/guess';
 import { Auth } from '../providers/auth/auth';
 import { AppModel } from '../providers/app-model/app-model';
 import { GameModel } from '../providers/game-model/game-model';
+import { DrawingModel } from '../providers/drawing-model/drawing-model';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -62,6 +63,7 @@ export const firebaseConfig = {
   providers: [
     Auth,
     AppModel,
+    DrawingModel,
     GameModel,
     Facebook,
     SplashScreen,

@@ -1,11 +1,14 @@
 <ion-header>
   <ion-navbar hideBackButton>
     <ion-title>
-      Draw
+      Draw a {{word}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <recording-drawing-canvas></recording-drawing-canvas>
+  <recording-drawing-canvas drawingKey={{drawingKey}}></recording-drawing-canvas>
+  <button ion-button (click)="next()" color="{{countdownInProgress ? 'danger' : 'default'}}" block>
+    {{countdownInProgress ? 'Wait wait ... ' + countdownValue : 'Next'}}
+  </button>
 </ion-content>

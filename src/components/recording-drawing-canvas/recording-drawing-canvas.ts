@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
+import 'rxjs/add/operator/first'
 
 import { DrawingCanvas, Coordinates, Offset } from '../drawing-canvas/drawing-canvas'
+import { DrawingModel, DrawingModelInterface, DrawingEventList, DrawingEvent } from '../../providers/drawing-model/drawing-model';
 
 function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number {
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
@@ -13,14 +15,33 @@ function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number
 })
 export class RecordingDrawingCanvas extends DrawingCanvas {
 
-  fingers: Array<Coordinates> = [];
+  private fingers: Array<Coordinates> = [];
+  private _drawingKey: string;
+  private nextEventIndex: number = 0;
+  private drawingEvents: Array<DrawingEvent> = null;
+  private drawingEventsList: DrawingEventList = null;
 
-  constructor() {
+  @Input()
+  set drawingKey(drawingKey: string) {
+    if (drawingKey != '') {
+      this._drawingKey = drawingKey;
+      this.drawingModel.loadInstance(drawingKey)
+          .first()
+          .subscribe(
+            (drawingModelInstance: DrawingModelInterface) => this.initializeDrawingState(drawingModelInstance));
+      this.drawingEventsList = this.drawingModel.loadDrawingEvents(drawingKey);
+    }
+  }
+
+  constructor(private drawingModel: DrawingModel) {
     super();
     console.log('Hello RecordingDrawingCanvas Component');
   }
 
-  private static _getPermutations(permutation: Array<number>, remainingNumbers: Array<number>, count): Array<Array<number>> {
+  private static _getPermutations(
+      permutation: Array<number>, 
+      remainingNumbers: Array<number>, 
+      count): Array<Array<number>> {
     if (permutation.length == count) {
       return [permutation.slice()];
     }
@@ -43,7 +64,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     for (var index = 0; index < upperBound; index++) {
       remainingNumbers.push(index);
     }
-    let permutations =  RecordingDrawingCanvas._getPermutations([], remainingNumbers, count);
+    let permutations = RecordingDrawingCanvas._getPermutations([], remainingNumbers, count);
     return permutations;
   }
 
@@ -104,9 +125,25 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     }
   }
 
+  private initializeDrawingState(drawingModelInstance: DrawingModelInterface) {
+    console.log('Hey I got here');
+
+    this.drawingEvents = Object.keys(drawingModelInstance.drawingEvents).map(key=>drawingModelInstance.drawingEvents[key]);
+    this.nextEventIndex = this.drawingEvents.length;
+    this.clear();
+    this.drawingEvents.forEach(drawingEvent => {
+      super.processDrawingEvent(drawingEvent);
+    });
+  }
+
+  protected processDrawingEvent(drawingEvent: DrawingEvent) {
+    this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
+    super.processDrawingEvent(drawingEvent);
+  }
+
   onTouchEvent(event: TouchEvent) {
     console.log(event.type + '|' + event.changedTouches.length);
-    let offset: Offset =  this.canvasPageOffset()
+    let offset: Offset = this.canvasPageOffset()
     let changedCoordinates: Array<Coordinates> = [];
     console.log('changes');
     for (var index = 0; index < event.changedTouches.length; index++) {
@@ -121,7 +158,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     for (var index = 0; index < this.fingers.length; index++) {
       console.log('(' + this.fingers[index].x + ', ' + this.fingers[index].y + ')');
     }
-    switch(event.type) {
+    switch (event.type) {
       case 'touchstart':
         this.processTouchStart(changedCoordinates);
         break;
@@ -133,5 +170,5 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
         this.processTouchMove(changedCoordinates);
         break;
     }
-  }  
+  }
 }

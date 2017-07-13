@@ -1,5 +1,8 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 
+import { DrawingEvent, DotDrawingEvent, LineDrawingEvent } from '../../providers/drawing-model/drawing-model';
+import { NormalizedCoordinates } from '../../providers/drawing-model/drawing-model';
+
 export interface Coordinates {
   x: number;
   y: number;
@@ -9,19 +12,6 @@ export interface Offset {
   top: number;
   left: number;
 }
-
-export interface DotDrawingEvent {
-  type: 'dot';
-  location: Coordinates;
-}
-
-export interface LineDrawingEvent {
-  type: 'line';
-  start: Coordinates;
-  end: Coordinates;
-}
-
-type DrawingEvent = DotDrawingEvent | LineDrawingEvent;
 
 @Component({
   selector: 'drawing-canvas',
@@ -34,6 +24,7 @@ export class DrawingCanvas implements OnInit {
   private sideWidth: number;
 
   ngOnInit(): void {
+    console.log('ngOnInit DrawingCanvas Component');
     this.sideWidth = this.canvasRef.nativeElement.parentElement.clientWidth
     this.canvasRef.nativeElement.width = this.sideWidth;
     this.canvasRef.nativeElement.height = this.sideWidth;
@@ -62,14 +53,14 @@ export class DrawingCanvas implements OnInit {
     this.context.stroke();
   }
 
-  protected normalizeCoordinates(point: Coordinates): Coordinates {
+  protected normalizeCoordinates(point: Coordinates): NormalizedCoordinates {
     return {
       x: point.x / this.sideWidth,
       y: point.y / this.sideWidth
     };
   }
 
-  protected denormalizeCoordinates(point: Coordinates): Coordinates {
+  protected denormalizeCoordinates(point: NormalizedCoordinates): Coordinates {
     return {
       x: point.x * this.sideWidth,
       y: point.y * this.sideWidth
@@ -89,6 +80,10 @@ export class DrawingCanvas implements OnInit {
       left: left
     };
   };
+
+  protected clear() {
+    this.context.clearRect(0, 0, this.sideWidth, this.sideWidth);
+  }
 
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     switch(drawingEvent.type) {

@@ -38,7 +38,7 @@ export enum GameAtomType {
 }
 
 export interface GameAtom {
-  type: GameAtomType;
+  type?: GameAtomType;
   drawingRef?: string;
   guess?: string;
   done?: boolean;
@@ -182,13 +182,30 @@ export class GameModel {
 
   public static* playerAtoms(playerIndex: number, playersCount: number): IterableIterator<AtomAddress> {
     let index = 0;
-    while (index < playersCount) {
+    while (index < playersCount + 1) {
       let atomAddress: AtomAddress = {
-        threadIndex: (0 + index + playerIndex) % playersCount,
-        atomIndex: 0 + index,
+        threadIndex: (index + playerIndex) % playersCount,
+        atomIndex: index,
       }
       index++;
       yield atomAddress;
     }
+  }
+
+  public getAtomKey(gameKey: string, atomAddress: AtomAddress): string {
+    return this.INSTANCES_PATH + `/${gameKey}/threads/${atomAddress.threadIndex}/gameAtoms/${atomAddress.atomIndex}`;
+  }
+
+  private _loadAtom(atomKey: string): FirebaseObjectObservable<GameAtom> {
+    return this.angularFireDatabase.object(atomKey);
+  }
+
+  public loadAtom(atomKey: string): Observable<GameAtom> {
+    return this._loadAtom(atomKey);
+  }
+
+  public upsertAtom(atomKey: string, gameAtom: GameAtom): firebase.Promise<void> {
+    let atom = this._loadAtom(atomKey);
+    return atom.update(gameAtom);
   }
 }

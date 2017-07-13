@@ -3,7 +3,8 @@ import { NavParams, NavController } from 'ionic-angular';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/first'
+import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs/Subject';
 
 import { WaitTurnPage } from '../wait-turn/wait-turn';
 
@@ -33,6 +34,7 @@ export class WaitingRoomPage {
   private isJoined = false;
   private joinedUsers: Observable<DisplayUsers> = null;
   private watchingUsers: Observable<DisplayUsers> = null;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     navParams: NavParams,
@@ -41,9 +43,13 @@ export class WaitingRoomPage {
     private auth: Auth,
     private nav: NavController) {
       this.gameKey = navParams.get('gameKey');
-      let gameInstanceObservable = gameModel.loadInstance(this.gameKey);
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter WaitingRoomPage');
+      let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
       gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
-        auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
+        this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
           if (!(authUserInfo.uid in gameInstance.users)) {
             let gameUser: GameUser = {
               uid: authUserInfo.uid,
@@ -51,7 +57,7 @@ export class WaitingRoomPage {
               photoURL: authUserInfo.photoURL,
               joined: false
             };
-            gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
+            this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
           }
           this.isHost = authUserInfo.uid == gameInstance.creator;
           if (authUserInfo.uid in gameInstance.users) {
@@ -134,5 +140,11 @@ export class WaitingRoomPage {
 
   doStart() {
     this.gameModel.start(this.gameKey);
+  }
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave WaitTurnRoom');
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

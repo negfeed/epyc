@@ -20,7 +20,7 @@ export class DrawPage implements OnInit {
   private gameAtomKey: string;
   word: string;
   drawingKey: string = '';
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<void> = null;
   countdownInProgress: boolean = false;
   countdownValue: number = this.COUNTDOWN_IN_SECONDS;
 
@@ -37,6 +37,7 @@ export class DrawPage implements OnInit {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter DrawPage')
+    this.ngUnsubscribe = new Subject<void>();
     this.gameModel.loadAtom(this.gameAtomKey)
         .takeUntil(this.ngUnsubscribe)
         .subscribe((gameAtom: GameAtom) => {
@@ -77,6 +78,7 @@ export class DrawPage implements OnInit {
     console.log('ionViewWillLeave DrawPage')
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this.countdownInProgress = false;
   }
 
   ngOnInit(): void {

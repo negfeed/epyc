@@ -15,7 +15,7 @@ import { GuessPage } from '../guess/guess';
 export class WaitTurnPage {
 
   private gameKey: string;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<void> = null;
 
   constructor(
       navParams: NavParams,
@@ -27,6 +27,7 @@ export class WaitTurnPage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter WaitTurnPage');
+    this.ngUnsubscribe = new Subject<void>();
     this.gameModel.loadInstance(this.gameKey)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((gameInstance: GameModelInterface) => {

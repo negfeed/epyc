@@ -34,7 +34,7 @@ export class WaitingRoomPage {
   private isJoined = false;
   private joinedUsers: Observable<DisplayUsers> = null;
   private watchingUsers: Observable<DisplayUsers> = null;
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<void> = null;
 
   constructor(
     navParams: NavParams,
@@ -47,56 +47,57 @@ export class WaitingRoomPage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter WaitingRoomPage');
-      let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
-      gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
-        this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
-          if (!(authUserInfo.uid in gameInstance.users)) {
-            let gameUser: GameUser = {
-              uid: authUserInfo.uid,
-              displayName: authUserInfo.displayName,
-              photoURL: authUserInfo.photoURL,
-              joined: false
-            };
-            this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
-          }
-          this.isHost = authUserInfo.uid == gameInstance.creator;
-          if (authUserInfo.uid in gameInstance.users) {
-            this.isJoined = gameInstance.users[authUserInfo.uid].joined;
-          }
-          this.isJoinable = (gameInstance.state == GameState.CREATED);
-          if (gameInstance.state == GameState.STARTED && 
-              gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
-            this.nav.push(WaitTurnPage, {gameKey: this.gameKey});
-          }
-        });
-      });
-      let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
-        let users = new Array<DisplayUser>();
-        for (let uid in gameInstance.users) {
-          let gameUser = gameInstance.users[uid];
-          users.push({
-            name: gameUser.displayName,
-            photoURL: gameUser.photoURL,
-            joined: gameUser.joined,
-            host: uid == gameInstance.creator
-          })
+    this.ngUnsubscribe = new Subject<void>();
+    let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
+    gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
+      this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
+        if (!(authUserInfo.uid in gameInstance.users)) {
+          let gameUser: GameUser = {
+            uid: authUserInfo.uid,
+            displayName: authUserInfo.displayName,
+            photoURL: authUserInfo.photoURL,
+            joined: false
+          };
+          this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
         }
-        return users;
+        this.isHost = authUserInfo.uid == gameInstance.creator;
+        if (authUserInfo.uid in gameInstance.users) {
+          this.isJoined = gameInstance.users[authUserInfo.uid].joined;
+        }
+        this.isJoinable = (gameInstance.state == GameState.CREATED);
+        if (gameInstance.state == GameState.STARTED && 
+            gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
+          this.nav.push(WaitTurnPage, {gameKey: this.gameKey});
+        }
       });
-      this.joinedUsers = users.map((displayUsers: DisplayUsers) => {
-        return Object.keys(displayUsers).map((value, index, array) => {
-          return displayUsers[value];
-        }).filter((value: DisplayUser, index, array) => {
-          return value.joined;
+    });
+    let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
+      let users = new Array<DisplayUser>();
+      for (let uid in gameInstance.users) {
+        let gameUser = gameInstance.users[uid];
+        users.push({
+          name: gameUser.displayName,
+          photoURL: gameUser.photoURL,
+          joined: gameUser.joined,
+          host: uid == gameInstance.creator
         })
-      });
-      this.watchingUsers = users.map((displayUsers: DisplayUsers) => {
-        return Object.keys(displayUsers).map((value, index, array) => {
-          return displayUsers[value];
-        }).filter((value: DisplayUser, index, array) => {
-          return !value.joined;
-        })
-      });
+      }
+      return users;
+    });
+    this.joinedUsers = users.map((displayUsers: DisplayUsers) => {
+      return Object.keys(displayUsers).map((value, index, array) => {
+        return displayUsers[value];
+      }).filter((value: DisplayUser, index, array) => {
+        return value.joined;
+      })
+    });
+    this.watchingUsers = users.map((displayUsers: DisplayUsers) => {
+      return Object.keys(displayUsers).map((value, index, array) => {
+        return displayUsers[value];
+      }).filter((value: DisplayUser, index, array) => {
+        return !value.joined;
+      })
+    });
   }
 
   doShare() {

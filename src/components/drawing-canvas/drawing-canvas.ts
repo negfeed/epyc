@@ -93,6 +93,9 @@ export class DrawingCanvas implements OnInit {
       case 'line':
         this.line(drawingEvent);
         break;
+      case 'pause':
+      case 'resume':
+        break;
       default:
         console.log('Error: This should not happen!');
         break;

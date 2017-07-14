@@ -9,18 +9,30 @@ export interface NormalizedCoordinates {
   y: number;
 }
 
+export interface PauseEvent {
+  type: 'pause';
+  timestamp: number;
+}
+
+export interface ResumeEvent {
+  type: 'resume';
+  timestamp: number;
+}
+
 export interface DotDrawingEvent {
   type: 'dot';
+  timestamp: number;
   location: NormalizedCoordinates;
 }
 
 export interface LineDrawingEvent {
   type: 'line';
+  timestamp: number;
   start: NormalizedCoordinates;
   end: NormalizedCoordinates;
 }
 
-export type DrawingEvent = DotDrawingEvent | LineDrawingEvent;
+export type DrawingEvent = DotDrawingEvent | LineDrawingEvent | PauseEvent | ResumeEvent;
 
 export interface DrawingEvents extends Array<DrawingEvent> {}
 

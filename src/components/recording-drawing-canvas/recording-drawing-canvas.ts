@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Renderer2 } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
 import 'rxjs/add/operator/first'
 
@@ -20,6 +20,8 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private nextEventIndex: number = 0;
   private drawingEvents: Array<DrawingEvent> = null;
   private drawingEventsList: DrawingEventList = null;
+  private stopListeningToPause: () => void;
+  private stopListeningToResume: () => void;
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -33,7 +35,13 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     }
   }
 
-  constructor(private drawingModel: DrawingModel) {
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.stopListeningToPause = this.renderer.listen('document', 'Pause', () => this.handlePause());
+    this.stopListeningToResume = this.renderer.listen('document', 'Resume', () => this.handleResume());
+  }
+
+  constructor(private drawingModel: DrawingModel, private renderer: Renderer2) {
     super();
     console.log('Hello RecordingDrawingCanvas Component');
   }
@@ -100,6 +108,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     coordinates.forEach((point) => {
       this.processDrawingEvent({
         type: 'dot',
+        timestamp: Date.now(),
         location: this.normalizeCoordinates(point)
       })
     })
@@ -118,6 +127,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     for (var index = 0; index < fingerIndices.length; index++) {
       this.processDrawingEvent({
         type: 'line',
+        timestamp: Date.now(),
         start: this.normalizeCoordinates(this.fingers[fingerIndices[index]]),
         end: this.normalizeCoordinates(coordinates[index])
       });
@@ -135,6 +145,23 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
       super.processDrawingEvent(drawingEvent);
     });
   }
+
+  private handlePause() {
+    console.log("Pausing app");
+    this.processDrawingEvent({
+      type: 'pause',
+      timestamp: Date.now()
+    });
+  }
+
+  private handleResume() {
+    console.log("Resuming app");
+    this.processDrawingEvent({
+      type: 'resume',
+      timestamp: Date.now()
+    });
+  }
+
 
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
@@ -170,5 +197,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
         this.processTouchMove(changedCoordinates);
         break;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.stopListeningToPause();
+    this.stopListeningToResume();
   }
 }

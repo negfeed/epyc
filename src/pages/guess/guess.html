@@ -11,5 +11,8 @@
     <ion-input type="text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
     <button ion-button clear item-right color="{{canSubmit() ? 'default' : 'light'}}" (click)="submit()">Submit</button>
   </ion-item>
-  <replaying-drawing-canvas drawingKey={{drawingKey}}></replaying-drawing-canvas>
+  <replaying-drawing-canvas 
+    drawingKey={{drawingKey}} 
+    (onFinishedDrawing)="drawingFinished = true">
+  </replaying-drawing-canvas>
 </ion-content>

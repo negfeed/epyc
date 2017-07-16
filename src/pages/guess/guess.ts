@@ -12,6 +12,7 @@ export class GuessPage {
   private gameAtomKey: string;
   private drawingKey: string;
   private guess: string = '';
+  private drawingFinished: boolean = false;
   
   constructor(navParams: NavParams, private gameModel: GameModel, private navCtrl: NavController) {
     console.log("Hello DrawPage");
@@ -20,7 +21,7 @@ export class GuessPage {
   }
 
   private canSubmit() {
-    return this.guess.trim() != '';
+    return this.guess.trim() != '' && this.drawingFinished;
   }
 
   submit() {

@@ -48,9 +48,13 @@ export class WaitTurnPage {
             if (atomAddress.atomIndex > 0) {
               previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
             }
-            if (!gameAtom.done && (!previousGameAtom || previousGameAtom.done)) {
-              nextAtomAddressToPlay = atomAddress;
-              break;
+            if (!gameAtom.done) {
+              if (!previousGameAtom || previousGameAtom.done) {
+                nextAtomAddressToPlay = atomAddress;
+                break;
+              } else {
+                return;
+              }
             }
           }
           if (nextAtomAddressToPlay == null) {

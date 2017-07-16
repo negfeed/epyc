@@ -1,3 +1,12 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>
+      Guess what is being drawn
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content>
-  TODO: Guess view
+  <replaying-drawing-canvas drawingKey={{drawingKey}}></replaying-drawing-canvas>
+  <p>gameAtomKey: {{gameAtomKey}}</p>
 </ion-content>

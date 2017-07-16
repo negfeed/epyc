@@ -5,6 +5,7 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { WaitingRoomPage } from '../pages/waiting-room/waiting-room';
 import { WaitTurnPage } from '../pages/wait-turn/wait-turn';
+import { WaitGameToEnd } from '../pages/wait-game-to-end/wait-game-to-end';
 import { DrawPage } from '../pages/draw/draw';
 import { GuessPage } from '../pages/guess/guess';
 import { Auth } from '../providers/auth/auth';
@@ -39,6 +40,7 @@ export const firebaseConfig = {
     LoginPage,
     WaitingRoomPage,
     WaitTurnPage,
+    WaitGameToEnd,
     DrawPage,
     GuessPage,
     DrawingCanvas,
@@ -59,6 +61,7 @@ export const firebaseConfig = {
     LoginPage,
     WaitingRoomPage,
     WaitTurnPage,
+    WaitGameToEnd,
     DrawPage,
     GuessPage
   ],

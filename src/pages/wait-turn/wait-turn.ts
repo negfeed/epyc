@@ -7,6 +7,7 @@ import { GameModel, GameModelInterface, AtomAddress, GameThread, GameAtom, GameA
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { DrawPage } from '../draw/draw';
 import { GuessPage } from '../guess/guess';
+import { WaitGameToEnd } from '../wait-game-to-end/wait-game-to-end';
 
 @Component({
   selector: 'wait-turn',
@@ -49,7 +50,7 @@ export class WaitTurnPage {
             }
           }
           if (nextAtomAddressToPlay == null) {
-            // TODO: Navigate to the wait game to end view.
+            this.nav.push(WaitGameToEnd, { gameKey: this.gameKey });
           } else {
             let gameThread: GameThread = gameInstance.threads[nextAtomAddressToPlay.threadIndex];
             let gameAtom: GameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex];

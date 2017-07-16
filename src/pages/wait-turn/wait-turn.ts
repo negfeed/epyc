@@ -44,7 +44,11 @@ export class WaitTurnPage {
             let atomAddress: AtomAddress = next.value;
             let gameThread: GameThread = gameInstance.threads[atomAddress.threadIndex];
             let gameAtom: GameAtom = gameThread.gameAtoms[atomAddress.atomIndex];
-            if (!gameAtom.done) {
+            let previousGameAtom: GameAtom = null;
+            if (atomAddress.atomIndex > 0) {
+              previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
+            }
+            if (!gameAtom.done && (!previousGameAtom || previousGameAtom.done)) {
               nextAtomAddressToPlay = atomAddress;
               break;
             }

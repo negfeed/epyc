@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavParams } from 'ionic-angular';
+import { NavParams, NavController } from 'ionic-angular';
+
+import { GameModel } from '../../providers/game-model/game-model';
 
 @Component({
   selector: 'page-guess',
@@ -9,10 +11,22 @@ export class GuessPage {
 
   private gameAtomKey: string;
   private drawingKey: string;
+  private guess: string = '';
   
-  constructor(navParams: NavParams) {
+  constructor(navParams: NavParams, private gameModel: GameModel, private navCtrl: NavController) {
     console.log("Hello DrawPage");
     this.gameAtomKey = navParams.get('gameAtomKey');
     this.drawingKey = navParams.get('drawingKey');
+  }
+
+  private canSubmit() {
+    return this.guess.trim() != '';
+  }
+
+  submit() {
+    if (this.canSubmit()) {
+      this.gameModel.upsertAtom(this.gameAtomKey, {guess: this.guess, done: true});
+      this.navCtrl.pop();
+    }
   }
 }

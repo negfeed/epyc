@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { DrawingCanvas } from '../drawing-canvas/drawing-canvas'
 import { DrawingModel, DrawingModelInterface, DrawingEvent } from '../../providers/drawing-model/drawing-model';
@@ -11,6 +11,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
 
   private drawingEvents: Array<DrawingEvent> = null;
   private drawingIndex = 0;
+  @Output() onFinishedDrawing = new EventEmitter<boolean>();
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -34,14 +35,20 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
   }
 
   private startDrawing() {
-    if (!this.drawingEvents || this.drawingEvents.length == 0) return;
+    if (!this.drawingEvents || this.drawingEvents.length == 0) {
+      this.onFinishedDrawing.emit(false);
+      return;
+    }
     this.processNextDrawingEvent();
   }
 
   private processNextDrawingEvent() {
     super.processDrawingEvent(this.drawingEvents[this.drawingIndex]);
     this.drawingIndex++;
-    if (this.drawingIndex >= this.drawingEvents.length) return;
+    if (this.drawingIndex >= this.drawingEvents.length) {
+      this.onFinishedDrawing.emit(true);
+      return;
+    }
     setTimeout(
         () => this.processNextDrawingEvent(),
         this.drawingEvents[this.drawingIndex].timestamp - this.drawingEvents[this.drawingIndex - 1].timestamp);

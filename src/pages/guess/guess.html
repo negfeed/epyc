@@ -7,6 +7,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-input type="text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
+    <button ion-button clear item-right color="{{canSubmit() ? 'default' : 'light'}}" (click)="submit()">Submit</button>
+  </ion-item>
   <replaying-drawing-canvas drawingKey={{drawingKey}}></replaying-drawing-canvas>
-  <p>gameAtomKey: {{gameAtomKey}}</p>
 </ion-content>

@@ -13,7 +13,7 @@ import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 })
 export class DrawPage implements OnInit {
 
-  private readonly COUNTDOWN_IN_SECONDS: number = 9;
+  private readonly COUNTDOWN_IN_SECONDS: number = 5;
   private readonly COUNTDOWN_STEP_IN_SECONDS: number = 1;
   private readonly MILLISECONDS_IN_SECOND: number = 1000;
 

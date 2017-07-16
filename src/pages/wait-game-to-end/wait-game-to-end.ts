@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
+import { GameResultsPage } from '../game-results/game-results';
 
 @Component({
   selector: 'page-wait-game-to-end',
@@ -34,6 +35,7 @@ export class WaitGameToEnd {
             }
           });
           if (gameEnded) {
+            this.navCtrl.push(GameResultsPage, { gameKey: this.gameKey });
             // TODO: Push the game results page.
             console.log('Game is done!!')
           }

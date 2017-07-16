@@ -23,6 +23,7 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 import { DrawingCanvas } from '../components/drawing-canvas/drawing-canvas';
 import { RecordingDrawingCanvas } from '../components/recording-drawing-canvas/recording-drawing-canvas';
 import { ReplayingDrawingCanvas } from '../components/replaying-drawing-canvas/replaying-drawing-canvas';
+import { GameResultsPage } from '../pages/game-results/game-results';
 
 // Must export the config
 export const firebaseConfig = {
@@ -45,7 +46,8 @@ export const firebaseConfig = {
     GuessPage,
     DrawingCanvas,
     RecordingDrawingCanvas,
-    ReplayingDrawingCanvas
+    ReplayingDrawingCanvas,
+    GameResultsPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -63,7 +65,8 @@ export const firebaseConfig = {
     WaitTurnPage,
     WaitGameToEnd,
     DrawPage,
-    GuessPage
+    GuessPage,
+    GameResultsPage
   ],
   providers: [
     Auth,

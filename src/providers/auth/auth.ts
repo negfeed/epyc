@@ -104,7 +104,7 @@ export class Auth {
     return Promise.resolve({
       uid: this.currentUser.uid,
       displayName: this.currentUser.displayName,
-      photoURL: this.currentUser.photoURL,
+      photoURL: this.currentUser.providerData[0].photoURL,
     });
   }
 

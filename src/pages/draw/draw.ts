@@ -23,6 +23,7 @@ export class DrawPage implements OnInit {
   private ngUnsubscribe: Subject<void> = null;
   countdownInProgress: boolean = false;
   countdownValue: number = this.COUNTDOWN_IN_SECONDS;
+  private somethingIsDrawn = false;
 
   constructor(
       navParams: NavParams, 
@@ -50,6 +51,7 @@ export class DrawPage implements OnInit {
   }
 
   next() {
+    if (!this.canSubmit()) return;
     if (this.countdownInProgress) {
       this.countdownInProgress = false;
     } else {
@@ -83,5 +85,13 @@ export class DrawPage implements OnInit {
 
   ngOnInit(): void {
     console.log("ngOnInit DrawPage");
+  }
+
+  onSomethingIsDrawn(somethingIsDrawn: boolean) {
+    this.somethingIsDrawn = somethingIsDrawn;
+  }
+
+  private canSubmit() {
+    return this.somethingIsDrawn;
   }
 }

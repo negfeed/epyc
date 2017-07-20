@@ -7,8 +7,11 @@
 </ion-header>
 
 <ion-content padding>
-  <recording-drawing-canvas drawingKey={{drawingKey}}></recording-drawing-canvas>
-  <button ion-button (click)="next()" color="{{countdownInProgress ? 'danger' : 'default'}}" block>
+  <recording-drawing-canvas
+    drawingKey={{drawingKey}}
+    (onSomethingIsDrawn)="onSomethingIsDrawn($event)">
+  </recording-drawing-canvas>
+  <button ion-button (click)="next()" color="{{!canSubmit() ? 'light' : (countdownInProgress ? 'danger' : 'default')}}" block>
     {{countdownInProgress ? 'Wait wait ... ' + countdownValue : 'Next'}}
   </button>
 </ion-content>

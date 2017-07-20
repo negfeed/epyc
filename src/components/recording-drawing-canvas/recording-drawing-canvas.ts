@@ -1,4 +1,4 @@
-import { Component, Input, Renderer2 } from '@angular/core';
+import { Component, Input, Renderer2, Output, EventEmitter } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
 import 'rxjs/add/operator/first'
 
@@ -20,6 +20,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private nextEventIndex: number = 0;
   private drawingEvents: Array<DrawingEvent> = null;
   private drawingEventsList: DrawingEventList = null;
+  @Output() onSomethingIsDrawn = new EventEmitter<boolean>();
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -136,6 +137,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     this.nextEventIndex = this.drawingEvents.length;
     this.clear();
     this.drawingEvents.forEach(drawingEvent => {
+      this.onSomethingIsDrawn.emit(true);
       super.processDrawingEvent(drawingEvent);
     });
   }
@@ -143,6 +145,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
     super.processDrawingEvent(drawingEvent);
+    this.onSomethingIsDrawn.emit(true);
   }
 
   onTouchEvent(event: TouchEvent) {

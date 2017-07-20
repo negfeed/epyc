@@ -24,6 +24,7 @@ import { DrawingCanvas } from '../components/drawing-canvas/drawing-canvas';
 import { RecordingDrawingCanvas } from '../components/recording-drawing-canvas/recording-drawing-canvas';
 import { ReplayingDrawingCanvas } from '../components/replaying-drawing-canvas/replaying-drawing-canvas';
 import { GameResultsPage } from '../pages/game-results/game-results';
+import { ThreadResultsPage } from '../pages/thread-results/thread-results';
 
 // Must export the config
 export const firebaseConfig = {
@@ -47,7 +48,8 @@ export const firebaseConfig = {
     DrawingCanvas,
     RecordingDrawingCanvas,
     ReplayingDrawingCanvas,
-    GameResultsPage
+    GameResultsPage,
+    ThreadResultsPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -66,7 +68,8 @@ export const firebaseConfig = {
     WaitGameToEnd,
     DrawPage,
     GuessPage,
-    GameResultsPage
+    GameResultsPage,
+    ThreadResultsPage
   ],
   providers: [
     Auth,

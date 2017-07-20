@@ -36,7 +36,6 @@ export class WaitGameToEnd {
           });
           if (gameEnded) {
             this.navCtrl.push(GameResultsPage, { gameKey: this.gameKey });
-            // TODO: Push the game results page.
             console.log('Game is done!!')
           }
         });

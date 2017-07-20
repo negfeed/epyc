@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/takeUntil';
+
+import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
+import { ThreadResultsPage } from '../thread-results/thread-results';
 
 @Component({
   selector: 'page-game-results',
@@ -7,14 +14,45 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class GameResultsPage {
 
-  constructor(private navCtrl: NavController, private navParams: NavParams) {
+  private gameKey: string = '';
+  private ngUnsubscribe: Subject<void> = null;
+  private gameInstance: GameModelInterface = null;
+  private words: Observable<Array<string>> = null;
+
+  constructor(
+      private navCtrl: NavController,
+      private navParams: NavParams,
+      private gameModel: GameModel) {
+    this.gameKey = navParams.get('gameKey');
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GameResults');
+    this.ngUnsubscribe = new Subject<void>();
+    let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
+    gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
+      this.gameInstance = gameInstance;
+    });
+    this.words = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
+      let words = new Array<string>();
+      gameInstance.threads.forEach((gameThread: GameThread) => {
+        words.push(gameThread.word);
+      });
+      return words;
+    });
+  }
+
+  itemSelected(threadIndex: number) {
+    this.navCtrl.push(ThreadResultsPage, { gameInstance: this.gameInstance, threadIndex: threadIndex });
   }
 
   goHome() {
     this.navCtrl.popToRoot();
+  }
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave WaitTurnRoom');
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

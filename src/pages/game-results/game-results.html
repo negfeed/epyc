@@ -8,5 +8,10 @@
 
 
 <ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let word of (words | async); let i = index" (click)="itemSelected(i)">
+      {{ word }}
+    </button>
+  </ion-list>
   <button ion-button (click)="goHome()" block>Go back to home</button>
 </ion-content>

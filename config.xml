@@ -87,6 +87,7 @@
   <allow-navigation href="http://172.16.42.8:8100"/>
   <allow-navigation href="http://172.31.98.89:8100"/>
   <allow-navigation href="http://192.168.43.151:8100"/>
+  <allow-navigation href="http://192.168.1.171:8100"/>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
   <engine name="android" spec="^6.2.2"/>
   <plugin name="cordova-plugin-console" spec="~1.0.4"/>

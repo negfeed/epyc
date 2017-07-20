@@ -6,9 +6,9 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-item>
-    <ion-input type="text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
+    <ion-input type="text" class="guess-text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
     <button ion-button clear item-right color="{{canSubmit() ? 'default' : 'light'}}" (click)="submit()">Submit</button>
   </ion-item>
   <replaying-drawing-canvas 

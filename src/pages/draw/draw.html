@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <recording-drawing-canvas drawingKey={{drawingKey}}></recording-drawing-canvas>
   <button ion-button (click)="next()" color="{{countdownInProgress ? 'danger' : 'default'}}" block>
     {{countdownInProgress ? 'Wait wait ... ' + countdownValue : 'Next'}}

@@ -136,9 +136,11 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   }
 
   private initializeDrawingState(drawingModelInstance: DrawingModelInterface) {
-    console.log('Hey I got here');
-
-    this.drawingEvents = Object.keys(drawingModelInstance.drawingEvents).map(key=>drawingModelInstance.drawingEvents[key]);
+    this.drawingEvents = [];
+    if (drawingModelInstance.drawingEvents) {
+      this.drawingEvents = Object.keys(drawingModelInstance.drawingEvents).map(
+          key=>drawingModelInstance.drawingEvents[key]);
+    }
     this.nextEventIndex = this.drawingEvents.length;
     this.clear();
     this.drawingEvents.forEach(drawingEvent => {

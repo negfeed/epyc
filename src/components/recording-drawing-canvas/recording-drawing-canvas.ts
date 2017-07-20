@@ -20,8 +20,6 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private nextEventIndex: number = 0;
   private drawingEvents: Array<DrawingEvent> = null;
   private drawingEventsList: DrawingEventList = null;
-  private stopListeningToPause: () => void;
-  private stopListeningToResume: () => void;
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -33,12 +31,6 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
             (drawingModelInstance: DrawingModelInterface) => this.initializeDrawingState(drawingModelInstance));
       this.drawingEventsList = this.drawingModel.loadDrawingEvents(drawingKey);
     }
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-    this.stopListeningToPause = this.renderer.listen('document', 'Pause', () => this.handlePause());
-    this.stopListeningToResume = this.renderer.listen('document', 'Resume', () => this.handleResume());
   }
 
   constructor(private drawingModel: DrawingModel, private renderer: Renderer2) {
@@ -148,23 +140,6 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     });
   }
 
-  private handlePause() {
-    console.log("Pausing app");
-    this.processDrawingEvent({
-      type: 'pause',
-      timestamp: Date.now()
-    });
-  }
-
-  private handleResume() {
-    console.log("Resuming app");
-    this.processDrawingEvent({
-      type: 'resume',
-      timestamp: Date.now()
-    });
-  }
-
-
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
     super.processDrawingEvent(drawingEvent);
@@ -199,10 +174,5 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
         this.processTouchMove(changedCoordinates);
         break;
     }
-  }
-
-  ngOnDestroy(): void {
-    this.stopListeningToPause();
-    this.stopListeningToResume();
   }
 }

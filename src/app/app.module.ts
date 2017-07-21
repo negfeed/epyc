@@ -25,6 +25,7 @@ import { RecordingDrawingCanvas } from '../components/recording-drawing-canvas/r
 import { ReplayingDrawingCanvas } from '../components/replaying-drawing-canvas/replaying-drawing-canvas';
 import { GameResultsPage } from '../pages/game-results/game-results';
 import { ThreadResultsPage } from '../pages/thread-results/thread-results';
+import { Words } from '../providers/words/words'
 
 // Must export the config
 export const firebaseConfig = {
@@ -79,7 +80,8 @@ export const firebaseConfig = {
     Facebook,
     SplashScreen,
     SocialSharing,
-    Deeplinks
+    Deeplinks,
+    Words
   ]
 })
 export class AppModule {}

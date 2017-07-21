@@ -36,7 +36,7 @@ export class GameResultsPage {
     this.words = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
       let words = new Array<string>();
       gameInstance.threads.forEach((gameThread: GameThread) => {
-        words.push(gameThread.word);
+        words.push(this.capitalizeFirstLetter(gameThread.word));
       });
       return words;
     });
@@ -54,5 +54,9 @@ export class GameResultsPage {
     console.log('ionViewWillLeave WaitTurnRoom');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  private capitalizeFirstLetter(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1);
   }
 }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
 
 import { Auth } from '../auth/auth';
+import { Words } from '../words/words';
 
 export enum  GameState {
   // The game's initial state is CREATED. The game should still be joinable in this state.
@@ -87,7 +88,7 @@ export class GameModel {
 
   private readonly INSTANCES_PATH: string = "/games";
 
-  constructor(private angularFireDatabase: AngularFireDatabase, private auth: Auth) {}
+  constructor(private angularFireDatabase: AngularFireDatabase, private auth: Auth, private words: Words) {}
 
   public createInstance(): Promise<string> {
     return this.auth.getUserInfo().then((authUserInfo) => {
@@ -126,7 +127,7 @@ export class GameModel {
       });
     }
     return {
-      word: 'duck',
+      word: this.words.getWord(),
       gameAtoms: gameAtoms
     }
   }

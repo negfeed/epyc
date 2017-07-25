@@ -13,5 +13,15 @@
   <ion-card>
     <img src="assets/img/home_banner.jpg"/>
   </ion-card>
-  <button ion-button (click)="doNewGame()" block>New Game</button>
+  <ion-card>
+    <ion-card-header>
+      <b>Last Few Games</b>
+    </ion-card-header>
+    <ion-list>
+      <button ion-item *ngFor="let gameLink of gameLinks | async" (click)="goToGame(gameLink.gameInstanceReference)">
+        {{ gameLink.join_timestamp_ms | date: 'yMdjm' }}
+      </button>
+    </ion-list>
+  </ion-card>
+  <button ion-button (click)="doNewGame()" block>New Game</button>  
 </ion-content>

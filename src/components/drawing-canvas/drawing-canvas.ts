@@ -25,7 +25,7 @@ export class DrawingCanvas implements OnInit {
 
   ngOnInit(): void {
     console.log('ngOnInit DrawingCanvas Component');
-    this.sideWidth = this.canvasRef.nativeElement.parentElement.clientWidth
+    this.sideWidth = this.canvasRef.nativeElement.parentElement.clientWidth;
     this.canvasRef.nativeElement.width = this.sideWidth;
     this.canvasRef.nativeElement.height = this.sideWidth;
     this.context = this.canvasRef.nativeElement.getContext('2d');

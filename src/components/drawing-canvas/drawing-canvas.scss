@@ -1,7 +1,6 @@
-#drawingCanvas {
-  background-color: #FFFFF0;
-}
-
 #canvasContainer {
+  #drawingCanvas {
+    border: 1px solid lightgray;
+  }
   width: 100%;
 }

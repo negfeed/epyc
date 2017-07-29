@@ -1,10 +1,16 @@
 <div id='canvasContainer'>
-<canvas
-  #drawingCanvas 
-  id='drawingCanvas' 
-  (touchstart)="onTouchEvent($event)"
-  (touchend)="onTouchEvent($event)"
-  (touchmove)="onTouchEvent($event)"
-  (touchcancel)="onTouchEvent($event)">
-</canvas>
+  <canvas
+    #drawingCanvas 
+    id='drawingCanvas'
+    z-index=0>
+  </canvas>
+  <canvas 
+    #overlayCanvas
+    id='overlayCanvas' 
+    z-index=1
+    (touchstart)="onTouchEvent($event)"
+    (touchend)="onTouchEvent($event)"
+    (touchmove)="onTouchEvent($event)"
+    (touchcancel)="onTouchEvent($event)">
+  </canvas>
 </div>

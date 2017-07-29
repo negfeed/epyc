@@ -19,17 +19,23 @@ export interface Offset {
 })
 export class DrawingCanvas implements OnInit {
 
-  private context:CanvasRenderingContext2D;
-  @ViewChild('drawingCanvas') private canvasRef: ElementRef;
+  private drawingContext: CanvasRenderingContext2D;
+  @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
+  @ViewChild('overlayCanvas') private overlayCanvasRef: ElementRef;
   private sideWidth: number;
 
   ngOnInit(): void {
     console.log('ngOnInit DrawingCanvas Component');
-    this.sideWidth = this.canvasRef.nativeElement.parentElement.clientWidth;
-    this.canvasRef.nativeElement.width = this.sideWidth;
-    this.canvasRef.nativeElement.height = this.sideWidth;
-    this.context = this.canvasRef.nativeElement.getContext('2d');
-    this.context.lineWidth = 1;
+    this.sideWidth = this.drawingCanvasRef.nativeElement.parentElement.clientWidth;
+    this.drawingCanvasRef.nativeElement.parentElement.style.height = `${this.sideWidth}px`;
+    // The height and widths of the canvas components should be 2 less than the parent
+    // to account for the 1px border lines.
+    this.drawingCanvasRef.nativeElement.width = this.sideWidth - 2;
+    this.drawingCanvasRef.nativeElement.height = this.sideWidth - 2;
+    this.overlayCanvasRef.nativeElement.width = this.sideWidth - 2;
+    this.overlayCanvasRef.nativeElement.height = this.sideWidth - 2;
+    this.drawingContext = this.drawingCanvasRef.nativeElement.getContext('2d');
+    this.drawingContext.lineWidth = 1;
   }
 
   constructor() {
@@ -38,19 +44,19 @@ export class DrawingCanvas implements OnInit {
 
   private dot(dotDrawingEvent: DotDrawingEvent) {
     let pointLocation = this.denormalizeCoordinates(dotDrawingEvent.location);
-    this.context.beginPath();
-    this.context.arc(pointLocation.x, pointLocation.y, 0.5, 0, Math.PI * 2, true);
-    this.context.closePath();
-    this.context.fill();
+    this.drawingContext.beginPath();
+    this.drawingContext.arc(pointLocation.x, pointLocation.y, 0.5, 0, Math.PI * 2, true);
+    this.drawingContext.closePath();
+    this.drawingContext.fill();
   }
 
   private line(lineDrawingEvent: LineDrawingEvent) {
     let start = this.denormalizeCoordinates(lineDrawingEvent.start);
     let end = this.denormalizeCoordinates(lineDrawingEvent.end);
     console.log('stroke from (' + start.x + ', ' + start.y + ') to (' + end.x + ', ' + end.y + ')' );
-    this.context.moveTo(start.x, start.y);
-    this.context.lineTo(end.x, end.y);
-    this.context.stroke();
+    this.drawingContext.moveTo(start.x, start.y);
+    this.drawingContext.lineTo(end.x, end.y);
+    this.drawingContext.stroke();
   }
 
   protected normalizeCoordinates(point: Coordinates): NormalizedCoordinates {
@@ -68,7 +74,7 @@ export class DrawingCanvas implements OnInit {
   }
 
   protected canvasPageOffset(): Offset {
-    let element = this.canvasRef.nativeElement;
+    let element = this.drawingCanvasRef.nativeElement;
     var top = 0, left = 0;
     do {
       top += element.offsetTop  || 0;
@@ -82,7 +88,7 @@ export class DrawingCanvas implements OnInit {
   };
 
   protected clear() {
-    this.context.clearRect(0, 0, this.sideWidth, this.sideWidth);
+    this.drawingContext.clearRect(0, 0, this.sideWidth, this.sideWidth);
   }
 
   protected processDrawingEvent(drawingEvent: DrawingEvent) {

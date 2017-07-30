@@ -134,7 +134,7 @@ export class DrawingCanvas implements OnInit {
     let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
 
     this.clearProgressArea();
-    this.overlayContext.fillStyle = 'rgba(225,0,0,0.2)';
+    this.overlayContext.fillStyle = 'rgba(0,0,225,0.2)';
     this.overlayContext.fillRect(
         0,
         progressBarY, 

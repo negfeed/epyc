@@ -58,6 +58,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
 
   private startDrawing() {
     if (!this.drawingEvents || this.drawingEvents.length == 0) {
+      this.updateProgress(100);
       this.onFinishedDrawing.emit(false);
       return;
     }
@@ -67,7 +68,9 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
   private processNextDrawingEvent() {
     super.processDrawingEvent(this.drawingEvents[this.drawingIndex]);
     this.drawingIndex++;
+    this.updateProgress(100 * (this.drawingIndex / this.drawingEvents.length));
     if (this.drawingIndex >= this.drawingEvents.length) {
+      this.updateProgress(100);
       this.onFinishedDrawing.emit(true);
       return;
     }

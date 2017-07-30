@@ -19,7 +19,13 @@ export interface Offset {
 })
 export class DrawingCanvas implements OnInit {
 
+  private readonly PROGRESS_BAR_NORMALIZED_HEIGHT: number = 0.03;
+  // This progress area height is used to clear the progress bar. Clearing a rectangle of the same exact height
+  // as the progress bar doesn't seem to do the job. It causes thick line to accrue on the top of the progress bar.
+  private readonly PROGRESS_BAR_NORMALIZED_AREA_HEIGHT: number = this.PROGRESS_BAR_NORMALIZED_HEIGHT + 0.01;
+
   private drawingContext: CanvasRenderingContext2D;
+  private overlayContext: CanvasRenderingContext2D;
   @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
   @ViewChild('overlayCanvas') private overlayCanvasRef: ElementRef;
   private sideWidth: number;
@@ -35,7 +41,10 @@ export class DrawingCanvas implements OnInit {
     this.overlayCanvasRef.nativeElement.width = this.sideWidth - 2;
     this.overlayCanvasRef.nativeElement.height = this.sideWidth - 2;
     this.drawingContext = this.drawingCanvasRef.nativeElement.getContext('2d');
-    this.drawingContext.lineWidth = 1;
+    this.overlayContext = this.overlayCanvasRef.nativeElement.getContext('2d');
+    this.drawingContext.lineWidth = 2;
+    this.drawingContext.lineCap = 'round';
+    this.drawingContext.lineJoin = 'round';
   }
 
   constructor() {
@@ -44,8 +53,9 @@ export class DrawingCanvas implements OnInit {
 
   private dot(dotDrawingEvent: DotDrawingEvent) {
     let pointLocation = this.denormalizeCoordinates(dotDrawingEvent.location);
-    this.drawingContext.beginPath();
-    this.drawingContext.arc(pointLocation.x, pointLocation.y, 0.5, 0, Math.PI * 2, true);
+    this.drawingContext.moveTo(pointLocation.x, pointLocation.y);
+    this.drawingContext.lineTo(pointLocation.x, pointLocation.y);
+    this.drawingContext.stroke();
     this.drawingContext.closePath();
     this.drawingContext.fill();
   }
@@ -59,17 +69,25 @@ export class DrawingCanvas implements OnInit {
     this.drawingContext.stroke();
   }
 
+  private normalizeDrawingValue(value: number): number {
+    return value / this.sideWidth;
+  }
+
+  private denormalizeDrawingValue(value: number): number {
+    return value * this.sideWidth;
+  }
+
   protected normalizeCoordinates(point: Coordinates): NormalizedCoordinates {
     return {
-      x: point.x / this.sideWidth,
-      y: point.y / this.sideWidth
+      x: this.normalizeDrawingValue(point.x),
+      y: this.normalizeDrawingValue(point.y)
     };
   }
 
   protected denormalizeCoordinates(point: NormalizedCoordinates): Coordinates {
     return {
-      x: point.x * this.sideWidth,
-      y: point.y * this.sideWidth
+      x: this.denormalizeDrawingValue(point.x),
+      y: this.denormalizeDrawingValue(point.y)
     };
   }
 
@@ -103,5 +121,28 @@ export class DrawingCanvas implements OnInit {
         console.log('Error: This should not happen!');
         break;
     }
+  }
+
+  private clearProgressArea() {
+    let progressBarNormalizedY: number = 1 - (this.PROGRESS_BAR_NORMALIZED_AREA_HEIGHT);
+    let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
+    this.overlayContext.clearRect(0, progressBarY, this.sideWidth, this.sideWidth);
+  }
+
+  private drawProgress(percentage: number) {
+    let progressBarNormalizedY: number = 1 - this.PROGRESS_BAR_NORMALIZED_HEIGHT;
+    let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
+
+    this.clearProgressArea();
+    this.overlayContext.fillStyle = 'rgba(225,0,0,0.2)';
+    this.overlayContext.fillRect(
+        0,
+        progressBarY, 
+        this.sideWidth * (percentage / 100.0),
+        this.sideWidth);
+  }
+
+  protected updateProgress(percentage: number) {
+    this.drawProgress(Math.floor(percentage));
   }
 }

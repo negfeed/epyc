@@ -9,13 +9,19 @@ function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
 }
 
+interface FingerState {
+  lastKnownCoordinates: Coordinates;
+  lastProcessedCoordinates: Coordinates;
+}
+
 @Component({
   selector: 'recording-drawing-canvas',
   templateUrl: 'recording-drawing-canvas.html'
 })
 export class RecordingDrawingCanvas extends DrawingCanvas {
 
-  private fingers: Array<Coordinates> = [];
+  private fingersState: Map<string, FingerState> = new Map();
+  private biggestFingerKey: number = 0;
   private _drawingKey: string;
   private nextEventIndex: number = 0;
   private drawingEvents: Array<DrawingEvent> = null;
@@ -69,63 +75,93 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     return permutations;
   }
 
-  private relateToFingers(touchCoordinates: Array<Coordinates>): Array<number> {
-    // Calculate distance between every touch and touch.
-    let distanceMatrix: Array<Array<number>> = [];
+  private updateHighestReplayedPath(path: string) {
+    let pathAsNumber: number = parseInt(path)
+    if (pathAsNumber > this.biggestFingerKey) {
+      this.biggestFingerKey = pathAsNumber;
+    }
+  }
+
+  private nextFingerKey(): string {
+    this.biggestFingerKey++;
+    return this.biggestFingerKey.toString();
+  }
+
+  private relateToFingers(touchCoordinates: Array<Coordinates>): Array<string> {
+    // Calculate distance between every touch and finger.
+    let distanceMatrix: Array<Map<string, number>> = [];
     for (var touchIndex = 0; touchIndex < touchCoordinates.length; touchIndex++) {
-      distanceMatrix.push([]);
-      for (var fingerIndex = 0; fingerIndex < this.fingers.length; fingerIndex++) {
-        distanceMatrix[touchIndex].push(calculateDistance(this.fingers[fingerIndex], touchCoordinates[touchIndex]));
-      }
+      distanceMatrix.push(new Map());
+      this.fingersState.forEach((fingerState: FingerState, fingerKey: string) => {
+        distanceMatrix[touchIndex].set(
+            fingerKey, 
+            calculateDistance(this.fingersState.get(fingerKey).lastKnownCoordinates, touchCoordinates[touchIndex]));
+      });
     }
 
     // Search for the lowest sum of distances from touches to fingers.
-    let minimumPermutation = null;
+    let minimumPermutation: Array<number> = null;
     let minimumDistance = Infinity;
-    RecordingDrawingCanvas.getPermutations(this.fingers.length, touchCoordinates.length).forEach((permutation) => {
+    let fingerKeys = Array.from(this.fingersState.keys());
+    RecordingDrawingCanvas.getPermutations(fingerKeys.length, touchCoordinates.length).forEach((permutation) => {
       let distance = 0;
       for (var touchIndex = 0; touchIndex < permutation.length; touchIndex++) {
-        let fingerIndex = permutation[touchIndex];
-        distance += distanceMatrix[touchIndex][fingerIndex];
+        let fingerKeyIndex: number = permutation[touchIndex];
+        distance += distanceMatrix[touchIndex].get(fingerKeys[fingerKeyIndex]);
       }
       if (distance < minimumDistance) {
         minimumDistance = distance;
         minimumPermutation = permutation.slice();
       }
-    })
-    console.log('changes to fingers: ' + minimumPermutation);
-    return minimumPermutation;
+    });
+    
+    // Convert the minimum permutation from finger key index values to finger keys.
+    let minimumPermutationAsFingerKeys = []
+    minimumPermutation.forEach((fingerKeyIndex: number) => {
+      minimumPermutationAsFingerKeys.push(fingerKeys[fingerKeyIndex]);
+    });
+    console.log('changes to fingers: ' + minimumPermutationAsFingerKeys);
+    return minimumPermutationAsFingerKeys;
   }
 
   private processTouchStart(coordinates: Array<Coordinates>) {
-    coordinates.forEach((point) => {
+    coordinates.forEach((point: Coordinates) => {
+      let fingerKey = this.nextFingerKey();
       this.processDrawingEvent({
         type: 'dot',
         timestamp: Date.now(),
+        path: fingerKey,
         location: this.normalizeCoordinates(point)
-      })
-    })
-    this.fingers = this.fingers.concat(coordinates);
+      });
+      this.fingersState.set(
+          fingerKey,
+          {
+            lastKnownCoordinates: point,
+            lastProcessedCoordinates: point
+          });
+    });
   }
 
   private processTouchEnd(coordinates: Array<Coordinates>) {
-    let fingerIndices = this.relateToFingers(coordinates).sort();
-    for (var index = fingerIndices.length - 1; index >= 0; index--) {
-      this.fingers.splice(fingerIndices[index], 1);
-    }
+    let fingerKeys = this.relateToFingers(coordinates);
+    fingerKeys.forEach((fingerKey: string) => {
+      this.fingersState.delete(fingerKey);
+    });
   }
 
   private processTouchMove(coordinates: Array<Coordinates>) {
-    let fingerIndices = this.relateToFingers(coordinates);
-    for (var index = 0; index < fingerIndices.length; index++) {
+    let fingerKeys: Array<string> = this.relateToFingers(coordinates);
+    fingerKeys.forEach((fingerKey: string, index: number) => {
       this.processDrawingEvent({
         type: 'line',
         timestamp: Date.now(),
-        start: this.normalizeCoordinates(this.fingers[fingerIndices[index]]),
+        path: fingerKey,
+        start: this.normalizeCoordinates(this.fingersState.get(fingerKey).lastProcessedCoordinates),
         end: this.normalizeCoordinates(coordinates[index])
       });
-      this.fingers[fingerIndices[index]] = coordinates[index];
-    }
+      this.fingersState.get(fingerKey).lastKnownCoordinates = coordinates[index];
+      this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
+    });
   }
 
   private initializeDrawingState(drawingModelInstance: DrawingModelInterface) {
@@ -138,6 +174,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     this.clear();
     this.drawingEvents.forEach(drawingEvent => {
       this.onSomethingIsDrawn.emit(true);
+      this.updateHighestReplayedPath(drawingEvent.path);
       super.processDrawingEvent(drawingEvent);
     });
   }
@@ -161,10 +198,12 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
       changedCoordinates.push(changeCoordinates);
       console.log('(' + changeCoordinates.x + ', ' + changeCoordinates.y + ')');
     }
-    console.log('fingers')
-    for (var index = 0; index < this.fingers.length; index++) {
-      console.log('(' + this.fingers[index].x + ', ' + this.fingers[index].y + ')');
-    }
+    console.log('finger states:');
+    this.fingersState.forEach((fingerState: FingerState, key: string) => {
+      console.log(`finger key: ${key}`);
+      console.log(`last known coordinates: (${fingerState.lastKnownCoordinates.x}, ${fingerState.lastKnownCoordinates.y})`);
+    })
+
     switch (event.type) {
       case 'touchstart':
         this.processTouchStart(changedCoordinates);

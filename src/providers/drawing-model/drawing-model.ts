@@ -12,12 +12,14 @@ export interface NormalizedCoordinates {
 export interface DotDrawingEvent {
   type: 'dot';
   timestamp: number;
+  path: string;
   location: NormalizedCoordinates;
 }
 
 export interface LineDrawingEvent {
   type: 'line';
   timestamp: number;
+  path: string;
   start: NormalizedCoordinates;
   end: NormalizedCoordinates;
 }

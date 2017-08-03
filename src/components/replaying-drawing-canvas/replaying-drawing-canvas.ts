@@ -18,6 +18,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
 
   private totalReplayPeriods: number;
   private replayPeriodCounter: number;
+  private stopDrawingFlag: boolean = false;
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -100,8 +101,20 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
     this.replayPeriodCounter++;
     this.updateProgress(100 * (this.replayPeriodCounter / this.totalReplayPeriods));
     
+    if (this.stopDrawingFlag) {
+      return;
+    }
+
     setTimeout(
         () => this.processNextDrawingPeriod(),
         this.REPLAY_PERIOD_IN_MILLIS);
+  }
+
+  private stopDrawing() {
+    this.stopDrawingFlag = true;
+  }
+
+  ngOnDestroy() {
+    this.stopDrawing();
   }
 }

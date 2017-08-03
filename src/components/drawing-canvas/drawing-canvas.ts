@@ -68,6 +68,7 @@ export class DrawingCanvas implements OnInit {
       });
       path.strokeColor = 'black';
       this.paths.set(pointDrawingEvent.path, path);
+      this.paperScope.project.activeLayer.addChild(path);
     }
 
     // Add point to the path.
@@ -148,6 +149,7 @@ export class DrawingCanvas implements OnInit {
         ],
         fillColor: new Color(0, 0, 225, 0.2),
       });
+      this.paperScope.project.activeLayer.addChild(this.progressPath);
     }
     this.progressPath.segments[2].point.x = this.sideWidth * (percentage / 100.0);
     this.progressPath.segments[3].point.x = this.sideWidth * (percentage / 100.0);

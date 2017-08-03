@@ -19,6 +19,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
   private totalReplayPeriods: number;
   private replayPeriodCounter: number;
   private stopDrawingFlag: boolean = false;
+  private touchCount: number = 0;
 
   @Input()
   set drawingKey(drawingKey: string) {
@@ -92,14 +93,19 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
       }
     }
 
-    if (this.replayPeriodCounter == this.totalReplayPeriods) {
+    if (this.replayPeriodCounter >= this.totalReplayPeriods) {
       this.updateProgress(100);
       this.onFinishedDrawing.emit(true);
       return;
     }
 
-    this.replayPeriodCounter++;
     this.updateProgress(100 * (this.replayPeriodCounter / this.totalReplayPeriods));
+
+    if (this.touchCount == 0) {
+      this.replayPeriodCounter++;
+    } else {
+      this.replayPeriodCounter += 5;
+    }
     
     if (this.stopDrawingFlag) {
       return;
@@ -112,6 +118,17 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
 
   private stopDrawing() {
     this.stopDrawingFlag = true;
+  }
+
+  onTouchEvent(event: TouchEvent) {
+    switch (event.type) {
+      case 'touchstart':
+        this.touchCount++;
+        break;
+      case 'touchend':
+        this.touchCount--;
+        break;
+    }
   }
 
   ngOnDestroy() {

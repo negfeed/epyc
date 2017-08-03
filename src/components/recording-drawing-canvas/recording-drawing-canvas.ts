@@ -20,6 +20,8 @@ interface FingerState {
 })
 export class RecordingDrawingCanvas extends DrawingCanvas {
 
+  private readonly MINIMUM_PROCESSING_DISTANCE = 5;
+
   private fingersState: Map<string, FingerState> = new Map();
   private biggestFingerKey: number = 0;
   private _drawingKey: string;
@@ -143,13 +145,6 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   }
 
   private processTouchEnd(coordinates: Array<Coordinates>) {
-    let fingerKeys = this.relateToFingers(coordinates);
-    fingerKeys.forEach((fingerKey: string) => {
-      this.fingersState.delete(fingerKey);
-    });
-  }
-
-  private processTouchMove(coordinates: Array<Coordinates>) {
     let fingerKeys: Array<string> = this.relateToFingers(coordinates);
     fingerKeys.forEach((fingerKey: string, index: number) => {
       this.processDrawingEvent({
@@ -159,8 +154,34 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
         start: this.normalizeCoordinates(this.fingersState.get(fingerKey).lastProcessedCoordinates),
         end: this.normalizeCoordinates(coordinates[index])
       });
+      this.fingersState.delete(fingerKey);
+    });
+  }
+
+  private touchIsBeyondMinimumProcessingDistance(
+      lastProcessedCoordinates: Coordinates,
+      currentCoordinates: Coordinates): boolean {
+    let xDelta = lastProcessedCoordinates.x - currentCoordinates.x;
+    let yDelta = lastProcessedCoordinates.y - currentCoordinates.y;
+    return Math.pow(this.MINIMUM_PROCESSING_DISTANCE, 2) < Math.pow(xDelta, 2) + Math.pow(yDelta, 2);    
+  }
+
+  private processTouchMove(coordinates: Array<Coordinates>) {
+    let fingerKeys: Array<string> = this.relateToFingers(coordinates);
+    fingerKeys.forEach((fingerKey: string, index: number) => {
+      if (this.touchIsBeyondMinimumProcessingDistance(
+              this.fingersState.get(fingerKey).lastProcessedCoordinates,
+              coordinates[index])) {
+        this.processDrawingEvent({
+          type: 'line',
+          timestamp: Date.now(),
+          path: fingerKey,
+          start: this.normalizeCoordinates(this.fingersState.get(fingerKey).lastProcessedCoordinates),
+          end: this.normalizeCoordinates(coordinates[index])
+        });
+        this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
+      }
       this.fingersState.get(fingerKey).lastKnownCoordinates = coordinates[index];
-      this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
     });
   }
 

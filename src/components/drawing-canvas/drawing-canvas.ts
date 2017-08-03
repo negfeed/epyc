@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { PaperScope, Path, Point } from 'paper';
 
-import { DrawingEvent, DotDrawingEvent, LineDrawingEvent } from '../../providers/drawing-model/drawing-model';
+import { DrawingEvent, PointDrawingEvent } from '../../providers/drawing-model/drawing-model';
 import { NormalizedCoordinates } from '../../providers/drawing-model/drawing-model';
 
 export interface Coordinates {
@@ -30,6 +31,9 @@ export class DrawingCanvas implements OnInit {
   @ViewChild('overlayCanvas') private overlayCanvasRef: ElementRef;
   private sideWidth: number;
 
+  private paperScope: PaperScope = new PaperScope();
+  private paths: Map<string, Path> = new Map();
+
   ngOnInit(): void {
     console.log('ngOnInit DrawingCanvas Component');
     this.sideWidth = this.drawingCanvasRef.nativeElement.parentElement.clientWidth;
@@ -42,31 +46,42 @@ export class DrawingCanvas implements OnInit {
     this.overlayCanvasRef.nativeElement.height = this.sideWidth - 2;
     this.drawingContext = this.drawingCanvasRef.nativeElement.getContext('2d');
     this.overlayContext = this.overlayCanvasRef.nativeElement.getContext('2d');
-    this.drawingContext.lineWidth = 2;
-    this.drawingContext.lineCap = 'round';
-    this.drawingContext.lineJoin = 'round';
+
+    this.paperScope.setup(this.drawingCanvasRef.nativeElement);
   }
 
   constructor() {
     console.log('Hello DrawingCanvas Component');
   }
 
-  private dot(dotDrawingEvent: DotDrawingEvent) {
-    let pointLocation = this.denormalizeCoordinates(dotDrawingEvent.location);
-    this.drawingContext.moveTo(pointLocation.x, pointLocation.y);
-    this.drawingContext.lineTo(pointLocation.x, pointLocation.y);
-    this.drawingContext.stroke();
-    this.drawingContext.closePath();
-    this.drawingContext.fill();
-  }
+  private point(pointDrawingEvent: PointDrawingEvent) {
+    let path: Path = null;
 
-  private line(lineDrawingEvent: LineDrawingEvent) {
-    let start = this.denormalizeCoordinates(lineDrawingEvent.start);
-    let end = this.denormalizeCoordinates(lineDrawingEvent.end);
-    console.log('stroke from (' + start.x + ', ' + start.y + ') to (' + end.x + ', ' + end.y + ')' );
-    this.drawingContext.moveTo(start.x, start.y);
-    this.drawingContext.lineTo(end.x, end.y);
-    this.drawingContext.stroke();
+    // Lookup the event path.
+    if (this.paths.has(pointDrawingEvent.path)) {
+      path = this.paths.get(pointDrawingEvent.path);
+    }
+
+    // If it doesn't exist, create one.
+    if (!path) {
+      path = new Path({
+        strokeColor: 'black',
+        strokeWidth: 3,
+        strokeCap: 'round'
+      });
+      path.strokeColor = 'black';
+      this.paths.set(pointDrawingEvent.path, path);
+    }
+
+    // Add point to the path.
+    let point = this.denormalizeCoordinates(pointDrawingEvent.point);
+    path.add(new Point(point.x, point.y));
+
+    // Call smooth.
+    path.smooth();
+
+    console.log(`Adding point (${pointDrawingEvent.point.x}, ${pointDrawingEvent.point.y}) ` + 
+                `to path ${pointDrawingEvent.path}`);
   }
 
   private normalizeDrawingValue(value: number): number {
@@ -106,16 +121,13 @@ export class DrawingCanvas implements OnInit {
   };
 
   protected clear() {
-    this.drawingContext.clearRect(0, 0, this.sideWidth, this.sideWidth);
+    this.paperScope.project.activeLayer.removeChildren();
   }
 
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     switch(drawingEvent.type) {
-      case 'dot':
-        this.dot(drawingEvent);
-        break;
-      case 'line':
-        this.line(drawingEvent);
+      case 'point':
+        this.point(drawingEvent);
         break;
       default:
         console.log('Error: This should not happen!');

@@ -9,22 +9,14 @@ export interface NormalizedCoordinates {
   y: number;
 }
 
-export interface DotDrawingEvent {
-  type: 'dot';
+export interface PointDrawingEvent {
+  type: 'point';
   timestamp: number;
   path: string;
-  location: NormalizedCoordinates;
+  point: NormalizedCoordinates;
 }
 
-export interface LineDrawingEvent {
-  type: 'line';
-  timestamp: number;
-  path: string;
-  start: NormalizedCoordinates;
-  end: NormalizedCoordinates;
-}
-
-export type DrawingEvent = DotDrawingEvent | LineDrawingEvent;
+export type DrawingEvent = PointDrawingEvent;
 
 export interface DrawingEvents extends Array<DrawingEvent> {}
 

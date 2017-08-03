@@ -20,7 +20,7 @@ interface FingerState {
 })
 export class RecordingDrawingCanvas extends DrawingCanvas {
 
-  private readonly MINIMUM_PROCESSING_DISTANCE = 5;
+  private readonly MINIMUM_PROCESSING_DISTANCE = 6;
 
   private fingersState: Map<string, FingerState> = new Map();
   private biggestFingerKey: number = 0;
@@ -130,10 +130,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     coordinates.forEach((point: Coordinates) => {
       let fingerKey = this.nextFingerKey();
       this.processDrawingEvent({
-        type: 'dot',
+        type: 'point',
         timestamp: Date.now(),
         path: fingerKey,
-        location: this.normalizeCoordinates(point)
+        point: this.normalizeCoordinates(point)
       });
       this.fingersState.set(
           fingerKey,
@@ -148,11 +148,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     let fingerKeys: Array<string> = this.relateToFingers(coordinates);
     fingerKeys.forEach((fingerKey: string, index: number) => {
       this.processDrawingEvent({
-        type: 'line',
+        type: 'point',
         timestamp: Date.now(),
         path: fingerKey,
-        start: this.normalizeCoordinates(this.fingersState.get(fingerKey).lastProcessedCoordinates),
-        end: this.normalizeCoordinates(coordinates[index])
+        point: this.normalizeCoordinates(coordinates[index])
       });
       this.fingersState.delete(fingerKey);
     });
@@ -173,11 +172,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
               this.fingersState.get(fingerKey).lastProcessedCoordinates,
               coordinates[index])) {
         this.processDrawingEvent({
-          type: 'line',
+          type: 'point',
           timestamp: Date.now(),
           path: fingerKey,
-          start: this.normalizeCoordinates(this.fingersState.get(fingerKey).lastProcessedCoordinates),
-          end: this.normalizeCoordinates(coordinates[index])
+          point: this.normalizeCoordinates(coordinates[index])
         });
         this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
       }

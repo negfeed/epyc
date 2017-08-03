@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { PaperScope, Path, Point } from 'paper';
+import { PaperScope, Path, Point, Layer, Color } from 'paper';
 
 import { DrawingEvent, PointDrawingEvent } from '../../providers/drawing-model/drawing-model';
 import { NormalizedCoordinates } from '../../providers/drawing-model/drawing-model';
@@ -21,18 +21,14 @@ export interface Offset {
 export class DrawingCanvas implements OnInit {
 
   private readonly PROGRESS_BAR_NORMALIZED_HEIGHT: number = 0.03;
-  // This progress area height is used to clear the progress bar. Clearing a rectangle of the same exact height
-  // as the progress bar doesn't seem to do the job. It causes thick line to accrue on the top of the progress bar.
-  private readonly PROGRESS_BAR_NORMALIZED_AREA_HEIGHT: number = this.PROGRESS_BAR_NORMALIZED_HEIGHT + 0.01;
 
   private drawingContext: CanvasRenderingContext2D;
-  private overlayContext: CanvasRenderingContext2D;
   @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
-  @ViewChild('overlayCanvas') private overlayCanvasRef: ElementRef;
   private sideWidth: number;
 
   private paperScope: PaperScope = new PaperScope();
   private paths: Map<string, Path> = new Map();
+  private progressPath: Path = null;
 
   ngOnInit(): void {
     console.log('ngOnInit DrawingCanvas Component');
@@ -42,12 +38,12 @@ export class DrawingCanvas implements OnInit {
     // to account for the 1px border lines.
     this.drawingCanvasRef.nativeElement.width = this.sideWidth - 2;
     this.drawingCanvasRef.nativeElement.height = this.sideWidth - 2;
-    this.overlayCanvasRef.nativeElement.width = this.sideWidth - 2;
-    this.overlayCanvasRef.nativeElement.height = this.sideWidth - 2;
     this.drawingContext = this.drawingCanvasRef.nativeElement.getContext('2d');
-    this.overlayContext = this.overlayCanvasRef.nativeElement.getContext('2d');
 
     this.paperScope.setup(this.drawingCanvasRef.nativeElement);
+    this.paperScope.project.activeLayer.name = 'drawingLayer';
+    let progressLayer = new Layer();
+    progressLayer.name = 'progressLayer';
   }
 
   constructor() {
@@ -56,6 +52,7 @@ export class DrawingCanvas implements OnInit {
 
   private point(pointDrawingEvent: PointDrawingEvent) {
     let path: Path = null;
+    this.paperScope.project.layers['drawingLayer'].activate();
 
     // Lookup the event path.
     if (this.paths.has(pointDrawingEvent.path)) {
@@ -135,23 +132,25 @@ export class DrawingCanvas implements OnInit {
     }
   }
 
-  private clearProgressArea() {
-    let progressBarNormalizedY: number = 1 - (this.PROGRESS_BAR_NORMALIZED_AREA_HEIGHT);
-    let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
-    this.overlayContext.clearRect(0, progressBarY, this.sideWidth, this.sideWidth);
-  }
-
   private drawProgress(percentage: number) {
+    this.paperScope.project.layers['progressLayer'].activate();
+
     let progressBarNormalizedY: number = 1 - this.PROGRESS_BAR_NORMALIZED_HEIGHT;
     let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
 
-    this.clearProgressArea();
-    this.overlayContext.fillStyle = 'rgba(0,0,225,0.2)';
-    this.overlayContext.fillRect(
-        0,
-        progressBarY, 
-        this.sideWidth * (percentage / 100.0),
-        this.sideWidth);
+    if (!this.progressPath) {
+      this.progressPath = new Path({
+        segments: [
+          [0, progressBarY],
+          [0, this.sideWidth],
+          [0, this.sideWidth],
+          [0, progressBarY]
+        ],
+        fillColor: new Color(0, 0, 225, 0.2),
+      });
+    }
+    this.progressPath.segments[2].point.x = this.sideWidth * (percentage / 100.0);
+    this.progressPath.segments[3].point.x = this.sideWidth * (percentage / 100.0);
   }
 
   protected updateProgress(percentage: number) {

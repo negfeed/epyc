@@ -66,10 +66,9 @@ export class DrawPage implements OnInit {
     this.countdownValue -= this.COUNTDOWN_STEP_IN_SECONDS;
     if (this.countdownValue <= 0) {
       console.log('Moving away from drawing page.');
-      this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
-        this.gameModel.upsertAtom(this.gameAtomKey, {done: true, authorUid: authUserInfo.uid}).then(() => {
-          this.nav.pop();
-        })
+      let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+      this.gameModel.upsertAtom(this.gameAtomKey, {done: true, authorUid: authUserInfo.uid}).then(() => {
+        this.nav.pop();
       });
     } else {
       setTimeout(() => this.handleCountdown(), this.COUNTDOWN_STEP_IN_SECONDS * this.MILLISECONDS_IN_SECOND);

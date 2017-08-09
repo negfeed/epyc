@@ -84,11 +84,8 @@ describe('An auth service', () => {
       );
     });
 
-    it('should provide user info.', (done) => {
-      auth.getUserInfo().then((userInfo) => {
-        expect(userInfo.uid).toEqual(FIREBASE_UID);
-        done();
-      });
+    it('should provide user info.', () => {
+      expect(auth.getUserInfo().uid).toEqual(FIREBASE_UID);
     });
 
     it('should logout', (done) => {
@@ -129,11 +126,8 @@ describe('An auth service', () => {
       });
     })
 
-    it('should not provide user info.', (done) => {
-      auth.getUserInfo().catch(
-        (error) => {
-          done();
-        });
+    it('should not provide user info.', () => {
+      expect(auth.getUserInfo()).toThrowError(Error, 'Cannot get user info when the user is not logged in.')
     });
 
     it('should login.', (done) => {
@@ -169,10 +163,7 @@ describe('An auth service', () => {
     });
 
     it('should not provide user info.', (done) => {
-      auth.getUserInfo().catch(
-        (error) => {
-          done();
-        });
+      expect(auth.getUserInfo()).toThrowError(Error, 'Cannot get user info when the user is not logged in.')
     });
 
     it('should login.', (done) => {
@@ -216,10 +207,8 @@ describe('An auth service', () => {
       })
     })
 
-    it('should not return user info', (done) => {
-      auth.getUserInfo().catch(() => {
-        done();
-      })
+    it('should not return user info', () => {
+      expect(auth.getUserInfo()).toThrowError(Error, 'Cannot get user info when the user is not logged in.');
     })
   });
 
@@ -246,11 +235,8 @@ describe('An auth service', () => {
       })
     });
 
-    it('should return user info', (done) => {
-      auth.getUserInfo().then((userInfo) => {
-        expect(userInfo.uid).toEqual(FIREBASE_UID);
-        done();
-      })
+    it('should return user info', () => {
+      expect(auth.getUserInfo().uid).toEqual(FIREBASE_UID);
     })
   });
 });

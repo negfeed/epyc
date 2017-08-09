@@ -52,27 +52,26 @@ export class WaitingRoomPage {
     this.ngUnsubscribe = new Subject<void>();
     let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
     gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
-      this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
-        if (!(authUserInfo.uid in gameInstance.users)) {
-          let gameUser: GameUser = {
-            uid: authUserInfo.uid,
-            displayName: authUserInfo.displayName,
-            photoURL: authUserInfo.photoURL,
-            joined: false
-          };
-          this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
-        }
-        this.isHost = authUserInfo.uid == gameInstance.creator;
-        if (authUserInfo.uid in gameInstance.users) {
-          this.isJoined = gameInstance.users[authUserInfo.uid].joined;
-        }
-        this.isJoinable = (gameInstance.state == GameState.CREATED);
-        if (gameInstance.state == GameState.STARTED && 
-            gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
-          this.appModel.insertJoinGame(authUserInfo.uid, this.gameKey);
-          this.nav.push(WaitTurnPage, { gameKey: this.gameKey });
-        }
-      });
+      let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+      if (!(authUserInfo.uid in gameInstance.users)) {
+        let gameUser: GameUser = {
+          uid: authUserInfo.uid,
+          displayName: authUserInfo.displayName,
+          photoURL: authUserInfo.photoURL,
+          joined: false
+        };
+        this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
+      }
+      this.isHost = authUserInfo.uid == gameInstance.creator;
+      if (authUserInfo.uid in gameInstance.users) {
+        this.isJoined = gameInstance.users[authUserInfo.uid].joined;
+      }
+      this.isJoinable = (gameInstance.state == GameState.CREATED);
+      if (gameInstance.state == GameState.STARTED && 
+          gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
+        this.appModel.insertJoinGame(authUserInfo.uid, this.gameKey);
+        this.nav.push(WaitTurnPage, { gameKey: this.gameKey });
+      }
     });
     let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
       let users = new Array<DisplayUser>();
@@ -117,12 +116,10 @@ export class WaitingRoomPage {
   }
 
   doJoin() {
-    this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {      
-      let gameUser: GameUser = {
-        joined: true
-      };
-      this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
-    });
+    let gameUser: GameUser = {
+      joined: true
+    };
+    this.gameModel.upsertGameUser(this.gameKey, this.auth.getUserInfo().uid, gameUser);
   }
 
   canLeave(): boolean {
@@ -130,12 +127,10 @@ export class WaitingRoomPage {
   }
 
   doLeave() {
-    this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {      
-      let gameUser: GameUser = {
-        joined: false
-      };
-      this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
-    });
+    let gameUser: GameUser = {
+      joined: false
+    };
+    this.gameModel.upsertGameUser(this.gameKey, this.auth.getUserInfo().uid, gameUser);
   }
 
   canStart(): boolean {

@@ -32,69 +32,68 @@ export class WaitTurnPage {
     this.gameModel.loadInstance(this.gameKey)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((gameInstance: GameModelInterface) => {
-        this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
-          let playersCount = gameInstance.usersOrder.length;
-          let playerIndex = gameInstance.usersOrder.indexOf(authUserInfo.uid);
-          let playerAtomsIterator = GameModel.playerAtoms(playerIndex, playersCount);
-          var nextAtomAddressToPlay: AtomAddress = null;
-          while (true) {
-            let next = playerAtomsIterator.next()
-            if (next.done)
+        let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+        let playersCount = gameInstance.usersOrder.length;
+        let playerIndex = gameInstance.usersOrder.indexOf(authUserInfo.uid);
+        let playerAtomsIterator = GameModel.playerAtoms(playerIndex, playersCount);
+        var nextAtomAddressToPlay: AtomAddress = null;
+        while (true) {
+          let next = playerAtomsIterator.next()
+          if (next.done)
+            break;
+          let atomAddress: AtomAddress = next.value;
+          let gameThread: GameThread = gameInstance.threads[atomAddress.threadIndex];
+          let gameAtom: GameAtom = gameThread.gameAtoms[atomAddress.atomIndex];
+          let previousGameAtom: GameAtom = null;
+          if (atomAddress.atomIndex > 0) {
+            previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
+          }
+          if (!gameAtom.done) {
+            if (!previousGameAtom || previousGameAtom.done) {
+              nextAtomAddressToPlay = atomAddress;
               break;
-            let atomAddress: AtomAddress = next.value;
-            let gameThread: GameThread = gameInstance.threads[atomAddress.threadIndex];
-            let gameAtom: GameAtom = gameThread.gameAtoms[atomAddress.atomIndex];
-            let previousGameAtom: GameAtom = null;
-            if (atomAddress.atomIndex > 0) {
-              previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
-            }
-            if (!gameAtom.done) {
-              if (!previousGameAtom || previousGameAtom.done) {
-                nextAtomAddressToPlay = atomAddress;
-                break;
-              } else {
-                return;
-              }
-            }
-          }
-          if (nextAtomAddressToPlay == null) {
-            this.nav.push(WaitGameToEnd, { gameKey: this.gameKey });
-          } else {
-            let gameThread: GameThread = gameInstance.threads[nextAtomAddressToPlay.threadIndex];
-            let gameAtom: GameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex];
-            let previousGameAtom: GameAtom = null;
-            if (nextAtomAddressToPlay.atomIndex > 0) {
-              previousGameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex - 1];
-            }
-
-            if (gameAtom.type == GameAtomType.DRAWING) {
-              let word: string = null;
-              if (nextAtomAddressToPlay.atomIndex == 0) {
-                word = gameThread.word;
-              } else {
-                word = previousGameAtom.guess;
-              }
-              this.nav.push(
-                DrawPage,
-                {
-                  gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
-                  word: word
-                });
-            } else if (gameAtom.type == GameAtomType.GUESS) {
-              if (previousGameAtom == null) {
-                console.log("Error: previous game atom is expected for word guesses.")
-              }
-              this.nav.push(
-                GuessPage, 
-                { 
-                  gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
-                  drawingKey: previousGameAtom.drawingRef 
-                });
             } else {
-              console.log("Error: Unrecognized atom type: " + gameAtom.type)
+              return;
             }
           }
-        });
+        }
+        if (nextAtomAddressToPlay == null) {
+          this.nav.push(WaitGameToEnd, { gameKey: this.gameKey });
+        } else {
+          let gameThread: GameThread = gameInstance.threads[nextAtomAddressToPlay.threadIndex];
+          let gameAtom: GameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex];
+          let previousGameAtom: GameAtom = null;
+          if (nextAtomAddressToPlay.atomIndex > 0) {
+            previousGameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex - 1];
+          }
+
+          if (gameAtom.type == GameAtomType.DRAWING) {
+            let word: string = null;
+            if (nextAtomAddressToPlay.atomIndex == 0) {
+              word = gameThread.word;
+            } else {
+              word = previousGameAtom.guess;
+            }
+            this.nav.push(
+              DrawPage,
+              {
+                gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
+                word: word
+              });
+          } else if (gameAtom.type == GameAtomType.GUESS) {
+            if (previousGameAtom == null) {
+              console.log("Error: previous game atom is expected for word guesses.")
+            }
+            this.nav.push(
+              GuessPage, 
+              { 
+                gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
+                drawingKey: previousGameAtom.drawingRef 
+              });
+          } else {
+            console.log("Error: Unrecognized atom type: " + gameAtom.type)
+          }
+        }
       });
   }
 

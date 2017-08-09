@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { WaitingRoomPage } from '../waiting-room/waiting-room';
 
-import { Auth } from '../../providers/auth/auth';
+import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { AppModel, Game } from '../../providers/app-model/app-model';
 import { GameModel } from '../../providers/game-model/game-model';
 
@@ -33,24 +33,22 @@ export class HomePage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter HomePage');
     this.ngUnsubscribe = new Subject<void>();
-    this.auth.getUserInfo().then((authUserInfo) => {
-      this.appModel.checkIn(authUserInfo.uid);
-      this.gameLinks = this.appModel.queryLastFewGames(authUserInfo.uid)
-          .takeUntil(this.ngUnsubscribe)
-          .map((gameList: Game[]) => {
-            let gameLinks: Array<GameLink> = [];
-            gameList.forEach((game: Game) => {
-              gameLinks.push({ gameInstanceReference: game.$key, join_timestamp_ms: game.join_timestamp_ms });
-            })
-            return gameLinks;
+    let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+    this.appModel.checkIn(authUserInfo.uid);
+    this.gameLinks = this.appModel.queryLastFewGames(authUserInfo.uid)
+        .takeUntil(this.ngUnsubscribe)
+        .map((gameList: Game[]) => {
+          let gameLinks: Array<GameLink> = [];
+          gameList.forEach((game: Game) => {
+            gameLinks.push({ gameInstanceReference: game.$key, join_timestamp_ms: game.join_timestamp_ms });
           })
-    });
+          return gameLinks;
+        });
   }
 
   doNewGame() {
-    this.gameModel.createInstance().then((gameKey) => {
-      this.navCtrl.push(WaitingRoomPage, { gameKey: gameKey });
-    })
+    let gameKey: string = this.gameModel.createInstance();
+    this.navCtrl.push(WaitingRoomPage, { gameKey: gameKey });
   }
 
   goToGame(gameInstanceReference: string) {

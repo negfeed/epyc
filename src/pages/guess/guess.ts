@@ -31,12 +31,11 @@ export class GuessPage {
 
   submit() {
     if (this.canSubmit()) {
-      this.auth.getUserInfo().then((authUserInfo: AuthUserInfo) => {
-        this.gameModel.upsertAtom(this.gameAtomKey, { guess: this.guess, done: true, authorUid: authUserInfo.uid })
-            .then(() => {
-              this.navCtrl.pop();
-            });
-      });
+      let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+      this.gameModel.upsertAtom(this.gameAtomKey, { guess: this.guess, done: true, authorUid: authUserInfo.uid })
+          .then(() => {
+            this.navCtrl.pop();
+          });
     }
   }
 }

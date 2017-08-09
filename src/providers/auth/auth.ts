@@ -95,17 +95,17 @@ export class Auth {
    * 
    * This method will return the locally cached user authentication information.
    * 
-   * @return A promise that holds a user info interface of the interface type AuthUserInfo.
+   * @return The user info of the type AuthUserInfo.
    */
-  public getUserInfo(): Promise<AuthUserInfo> {
+  public getUserInfo(): AuthUserInfo {
     if (!this.loggedIn) {
-      return Promise.reject('Cannot get user info when the user is not logged in.');
+      throw new Error('Cannot get user info when the user is not logged in.');
     }
-    return Promise.resolve({
+    return {
       uid: this.currentUser.uid,
       displayName: this.currentUser.displayName,
       photoURL: this.currentUser.providerData[0].photoURL,
-    });
+    };
   }
 
   private handleLoginStatusResponse(response: FacebookLoginResponse): firebase.Promise<any> {

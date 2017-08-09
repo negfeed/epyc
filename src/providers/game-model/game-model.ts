@@ -3,7 +3,7 @@ import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/data
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
 
-import { Auth } from '../auth/auth';
+import { Auth, AuthUserInfo } from '../auth/auth';
 import { Words } from '../words/words';
 
 export enum  GameState {
@@ -90,24 +90,23 @@ export class GameModel {
 
   constructor(private angularFireDatabase: AngularFireDatabase, private auth: Auth, private words: Words) {}
 
-  public createInstance(): Promise<string> {
-    return this.auth.getUserInfo().then((authUserInfo) => {
-      let users = {}
-      let gameUser: GameUser = {
-        uid: authUserInfo.uid,
-        displayName: authUserInfo.displayName,
-        photoURL: authUserInfo.photoURL,
-        joined: true
-      }
-      users[authUserInfo.uid] = gameUser;
-      var gameInstance: GameModelInterface = {
-        state: GameState.CREATED,
-        creator: authUserInfo.uid,
-        creation_timestamp_ms: Date.now(),
-        users: users
-      };
-      return this.angularFireDatabase.list(this.INSTANCES_PATH).push(gameInstance).key;
-    })
+  public createInstance(): string {
+    let users = {};
+    let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+    let gameUser: GameUser = {
+      uid: authUserInfo.uid,
+      displayName: authUserInfo.displayName,
+      photoURL: authUserInfo.photoURL,
+      joined: true
+    }
+    users[authUserInfo.uid] = gameUser;
+    var gameInstance: GameModelInterface = {
+      state: GameState.CREATED,
+      creator: authUserInfo.uid,
+      creation_timestamp_ms: Date.now(),
+      users: users
+    };
+    return this.angularFireDatabase.list(this.INSTANCES_PATH).push(gameInstance).key;
   }
 
   private _loadInstance(key: string): FirebaseObjectObservable<GameModelInterface> {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { AppModel, Game } from '../../providers/app-model/app-model';

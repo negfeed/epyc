@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavParams, NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavParams, NavController, Navbar } from 'ionic-angular';
 
 import { GameModel } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 @IonicPage()
 @Component({
@@ -16,14 +17,21 @@ export class GuessPage {
   private guess: string = '';
   private drawingFinished: boolean = false;
   
+  @ViewChild(Navbar) navbar: Navbar
+
   constructor(
       navParams: NavParams,
       private gameModel: GameModel,
       private navCtrl: NavController,
-      private auth: Auth) {
+      private auth: Auth,
+      private gameNavCtrl: GameNavigationController) {
     console.log("Hello DrawPage");
     this.gameAtomKey = navParams.get('gameAtomKey');
     this.drawingKey = navParams.get('drawingKey');
+  }
+
+  ionViewDidEnter() {
+    this.navbar.backButtonClick = () => this.backButtonAction();    
   }
 
   private canSubmit() {
@@ -38,5 +46,9 @@ export class GuessPage {
             this.navCtrl.pop();
           });
     }
+  }
+
+  private backButtonAction() {
+    this.gameNavCtrl.leaveGame();
   }
 }

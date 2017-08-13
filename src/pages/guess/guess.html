@@ -1,16 +1,16 @@
 <ion-header>
-  <ion-navbar hideBackButton>
-    <ion-title>
-      Guess what is being drawn
-    </ion-title>
+  <ion-navbar>
+      <ion-title>Guess what is being drawn</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-input type="text" class="guess-text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
-    <button ion-button clear item-right color="{{canSubmit() ? 'default' : 'light'}}" (click)="submit()">Submit</button>
-  </ion-item>
+  <ion-card>
+    <ion-item>
+      <ion-input type="text" class="guess-text" placeholder="Enter your guess here" [(ngModel)]="guess" ></ion-input>
+      <button ion-button clear item-right color="{{canSubmit() ? 'default' : 'light'}}" (click)="submit()">Submit</button>
+    </ion-item>
+  </ion-card>
   <replaying-drawing-canvas 
     drawingKey={{drawingKey}} 
     (onFinishedDrawing)="drawingFinished = true">

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 @IonicPage()
 @Component({
@@ -14,10 +15,13 @@ export class WaitGameToEndPage {
   private gameKey: string;
   private ngUnsubscribe: Subject<void> = null;
 
+  @ViewChild(Navbar) navbar: Navbar
+
   constructor(
       private navCtrl: NavController, 
       private navParams: NavParams,
-      private gameModel: GameModel) {
+      private gameModel: GameModel,
+      private gameNavCtrl: GameNavigationController) {
     this.gameKey = navParams.get('gameKey');
   }
 
@@ -39,11 +43,16 @@ export class WaitGameToEndPage {
             console.log('Game is done!!')
           }
         });
+    this.navbar.backButtonClick = () => this.backButtonAction();
   }
 
   ionViewWillLeave() {
     console.log('ionViewWillLeave WaitGameToEndPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  private backButtonAction() {
+    this.gameNavCtrl.leaveGame();
   }
 }

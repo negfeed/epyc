@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, NavController, MenuController } from 'ionic-angular';
+import { App, Nav, Platform, NavController, MenuController, ViewController } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Deeplinks } from '@ionic-native/deeplinks';
 
@@ -15,6 +15,7 @@ export class MyApp {
   anonymousPages: Array<{title: string, component: any}>;
 
   constructor(
+    private app: App,
     private platform: Platform, 
     private auth: Auth, 
     private splashScreen: SplashScreen,
@@ -49,6 +50,17 @@ export class MyApp {
       console.log('Successfully matched route:', match);
     }, (nomatch) => {
       console.log('Got a deeplink that didn\'t match', nomatch);
+    });
+    this.platform.registerBackButtonAction(() => {
+      let nav = this.app.getActiveNav();
+      let activeView: ViewController = nav.getActive();
+      if (typeof activeView.instance.backButtonAction === 'function') {
+        activeView.instance.backButtonAction();
+      } else if (nav.canGoBack()) {
+        nav.pop();
+      } else {
+        this.platform.exitApp();
+      }
     });
   }
 

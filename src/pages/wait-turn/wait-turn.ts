@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavParams, NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavParams, NavController, Navbar } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, AtomAddress, GameThread, GameAtom, GameAtomType } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 @IonicPage()
 @Component({
@@ -16,11 +17,14 @@ export class WaitTurnPage {
   private gameKey: string;
   private ngUnsubscribe: Subject<void> = null;
 
+  @ViewChild(Navbar) navbar: Navbar
+
   constructor(
       navParams: NavParams,
       private gameModel: GameModel,
       private auth: Auth,
-      private nav: NavController) {
+      private nav: NavController,
+      private gameNavCtrl: GameNavigationController) {
     this.gameKey = navParams.get('gameKey');
   }
 
@@ -93,11 +97,16 @@ export class WaitTurnPage {
           }
         }
       });
+    this.navbar.backButtonClick = () => this.backButtonAction();
   }
 
   ionViewWillLeave() {
     console.log('ionViewWillLeave WaitTurnPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  private backButtonAction() {
+    this.gameNavCtrl.leaveGame();
   }
 }

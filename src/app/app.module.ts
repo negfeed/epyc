@@ -14,6 +14,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { Words } from '../providers/words/words'
+import { GameNavigationController } from '../providers/game-navigation-controller/game-navigation-controller';
 
 // Must export the config
 export const firebaseConfig = {
@@ -48,7 +49,8 @@ export const firebaseConfig = {
     SplashScreen,
     SocialSharing,
     Deeplinks,
-    Words
+    Words,
+    GameNavigationController
   ]
 })
 export class AppModule {}

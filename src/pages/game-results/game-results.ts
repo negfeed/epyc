@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/takeUntil';
 
 import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 @IonicPage()
 @Component({
@@ -19,10 +20,13 @@ export class GameResultsPage {
   private gameInstance: GameModelInterface = null;
   private words: Observable<Array<string>> = null;
 
+  @ViewChild(Navbar) navbar: Navbar
+
   constructor(
       private navCtrl: NavController,
       private navParams: NavParams,
-      private gameModel: GameModel) {
+      private gameModel: GameModel,
+      private gameNavCtrl: GameNavigationController) {
     this.gameKey = navParams.get('gameKey');
   }
 
@@ -40,6 +44,7 @@ export class GameResultsPage {
       });
       return words;
     });
+    this.navbar.backButtonClick = () => this.backButtonAction();
   }
 
   itemSelected(threadIndex: number) {
@@ -58,5 +63,9 @@ export class GameResultsPage {
 
   private capitalizeFirstLetter(word: string): string {
     return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+  private backButtonAction() {
+    this.gameNavCtrl.leaveGame();
   }
 }

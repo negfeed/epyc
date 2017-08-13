@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavParams, NavController } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonicPage, NavParams, NavController, Navbar } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameAtom } from '../../providers/game-model/game-model';
 import { DrawingModel } from '../../providers/drawing-model/drawing-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 @IonicPage()
 @Component({
@@ -26,12 +27,15 @@ export class DrawPage implements OnInit {
   countdownValue: number = this.COUNTDOWN_IN_SECONDS;
   private somethingIsDrawn = false;
 
+  @ViewChild(Navbar) navbar: Navbar
+
   constructor(
       navParams: NavParams, 
       private gameModel: GameModel, 
       private drawingModel: DrawingModel,
       private auth: Auth,
-      private nav: NavController) {
+      private nav: NavController,
+      private gameNavCtrl: GameNavigationController) {
     console.log("Hello DrawPage");
     this.gameAtomKey = navParams.get('gameAtomKey');
     this.word = navParams.get('word');
@@ -49,6 +53,7 @@ export class DrawPage implements OnInit {
         this.gameModel.upsertAtom(this.gameAtomKey, {drawingRef: this.drawingModel.createInstance()})
       }
     });
+    this.navbar.backButtonClick = () => this.backButtonAction();
   }
 
   next() {
@@ -93,5 +98,9 @@ export class DrawPage implements OnInit {
 
   private canSubmit() {
     return this.somethingIsDrawn;
+  }
+
+  private backButtonAction() {
+    this.gameNavCtrl.leaveGame();
   }
 }

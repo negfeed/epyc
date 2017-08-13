@@ -20,23 +20,15 @@ interface GameLink {
 })
 export class HomePage {
 
-  private ngUnsubscribe: Subject<void> = null;
   private gameLinks: Observable<Array<GameLink>>;
 
   constructor(
-    private navCtrl: NavController,
-    private auth: Auth,
-    private appModel: AppModel,
-    private gameModel: GameModel) {
-  }
-
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter HomePage');
-    this.ngUnsubscribe = new Subject<void>();
+      private navCtrl: NavController,
+      private auth: Auth,
+      private appModel: AppModel,
+      private gameModel: GameModel) {
     let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-    this.appModel.checkIn(authUserInfo.uid);
     this.gameLinks = this.appModel.queryLastFewGames(authUserInfo.uid)
-        .takeUntil(this.ngUnsubscribe)
         .map((gameList: Game[]) => {
           let gameLinks: Array<GameLink> = [];
           gameList.forEach((game: Game) => {
@@ -44,6 +36,12 @@ export class HomePage {
           })
           return gameLinks;
         });
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter HomePage');
+    let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+    this.appModel.checkIn(authUserInfo.uid);
   }
 
   doNewGame() {
@@ -57,7 +55,5 @@ export class HomePage {
 
   ionViewWillLeave() {
     console.log('ionViewWillLeave HomePage');
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 }

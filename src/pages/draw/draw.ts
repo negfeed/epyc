@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
@@ -7,6 +7,7 @@ import { GameModel, GameAtom } from '../../providers/game-model/game-model';
 import { DrawingModel } from '../../providers/drawing-model/drawing-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 
+@IonicPage()
 @Component({
   selector: 'page-draw',
   templateUrl: 'draw.html'

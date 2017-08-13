@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
-
-import { WaitTurnPage } from '../wait-turn/wait-turn';
 
 import { GameModel, GameModelInterface, GameUser, GameState } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
@@ -23,6 +21,7 @@ interface DisplayUsers {
   [index: number]: DisplayUser;
 }
 
+@IonicPage()
 @Component({
   selector: 'waiting-room',
   templateUrl: 'waiting-room.html'
@@ -70,7 +69,7 @@ export class WaitingRoomPage {
       if (gameInstance.state == GameState.STARTED && 
           gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
         this.appModel.insertJoinGame(authUserInfo.uid, this.gameKey);
-        this.nav.push(WaitTurnPage, { gameKey: this.gameKey });
+        this.nav.push('WaitTurnPage', { gameKey: this.gameKey });
       }
     });
     let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {

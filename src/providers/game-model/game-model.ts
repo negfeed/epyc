@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/first';
 import * as firebase from 'firebase/app';
 
 import { Auth, AuthUserInfo } from '../auth/auth';

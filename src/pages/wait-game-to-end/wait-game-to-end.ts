@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
-import { GameResultsPage } from '../game-results/game-results';
 
+@IonicPage()
 @Component({
   selector: 'page-wait-game-to-end',
   templateUrl: 'wait-game-to-end.html',
 })
-export class WaitGameToEnd {
+export class WaitGameToEndPage {
 
   private gameKey: string;
   private ngUnsubscribe: Subject<void> = null;
@@ -22,7 +22,7 @@ export class WaitGameToEnd {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WaitGameToEnd');
+    console.log('ionViewDidLoad WaitGameToEndPage');
     this.ngUnsubscribe = new Subject<void>();
     this.gameModel.loadInstance(this.gameKey)
         .takeUntil(this.ngUnsubscribe)
@@ -35,14 +35,14 @@ export class WaitGameToEnd {
             }
           });
           if (gameEnded) {
-            this.navCtrl.push(GameResultsPage, { gameKey: this.gameKey });
+            this.navCtrl.push('GameResultsPage', { gameKey: this.gameKey });
             console.log('Game is done!!')
           }
         });
   }
 
   ionViewWillLeave() {
-    console.log('ionViewWillLeave WaitGameToEnd');
+    console.log('ionViewWillLeave WaitGameToEndPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

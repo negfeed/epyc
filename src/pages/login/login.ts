@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
-
-import { HomePage } from '../home/home';
+import { IonicPage, NavController, ToastController } from 'ionic-angular';
 
 import { Auth } from '../../providers/auth/auth';
 
+@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -29,7 +28,7 @@ export class LoginPage {
   }
 
   private handleSuccessfulFacebookLogin() {
-    this.navCtrl.setRoot(HomePage);
+    this.navCtrl.setRoot('HomePage');
   }
 
   private handleFailedFacebookLogin(error) {

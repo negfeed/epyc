@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, NavController } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, AtomAddress, GameThread, GameAtom, GameAtomType } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
-import { DrawPage } from '../draw/draw';
-import { GuessPage } from '../guess/guess';
-import { WaitGameToEnd } from '../wait-game-to-end/wait-game-to-end';
 
+@IonicPage()
 @Component({
   selector: 'wait-turn',
   templateUrl: 'wait-turn.html'
@@ -58,7 +56,7 @@ export class WaitTurnPage {
           }
         }
         if (nextAtomAddressToPlay == null) {
-          this.nav.push(WaitGameToEnd, { gameKey: this.gameKey });
+          this.nav.push('WaitGameToEndPage', { gameKey: this.gameKey });
         } else {
           let gameThread: GameThread = gameInstance.threads[nextAtomAddressToPlay.threadIndex];
           let gameAtom: GameAtom = gameThread.gameAtoms[nextAtomAddressToPlay.atomIndex];
@@ -75,7 +73,7 @@ export class WaitTurnPage {
               word = previousGameAtom.guess;
             }
             this.nav.push(
-              DrawPage,
+              'DrawPage',
               {
                 gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
                 word: word
@@ -85,7 +83,7 @@ export class WaitTurnPage {
               console.log("Error: previous game atom is expected for word guesses.")
             }
             this.nav.push(
-              GuessPage, 
+              'GuessPage', 
               { 
                 gameAtomKey: this.gameModel.getAtomKey(this.gameKey, nextAtomAddressToPlay),
                 drawingKey: previousGameAtom.drawingRef 

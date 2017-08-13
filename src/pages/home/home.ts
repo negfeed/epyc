@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-
-import { WaitingRoomPage } from '../waiting-room/waiting-room';
 
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { AppModel, Game } from '../../providers/app-model/app-model';
@@ -14,6 +12,7 @@ interface GameLink {
   join_timestamp_ms: number
 }
 
+@IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -48,11 +47,11 @@ export class HomePage {
 
   doNewGame() {
     let gameKey: string = this.gameModel.createInstance();
-    this.navCtrl.push(WaitingRoomPage, { gameKey: gameKey });
+    this.navCtrl.push('WaitingRoomPage', { gameKey: gameKey });
   }
 
   goToGame(gameInstanceReference: string) {
-    this.navCtrl.push(WaitingRoomPage, { gameKey: gameInstanceReference });
+    this.navCtrl.push('WaitingRoomPage', { gameKey: gameInstanceReference });
   }
 
   ionViewWillLeave() {

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/takeUntil';
 
 import { GameModel, GameModelInterface, GameThread } from '../../providers/game-model/game-model';
-import { ThreadResultsPage } from '../thread-results/thread-results';
 
+@IonicPage()
 @Component({
   selector: 'page-game-results',
   templateUrl: 'game-results.html',
@@ -43,7 +43,7 @@ export class GameResultsPage {
   }
 
   itemSelected(threadIndex: number) {
-    this.navCtrl.push(ThreadResultsPage, { gameInstance: this.gameInstance, threadIndex: threadIndex });
+    this.navCtrl.push('ThreadResultsPage', { gameInstance: this.gameInstance, threadIndex: threadIndex });
   }
 
   goHome() {

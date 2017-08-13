@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { GameModelInterface, GameThread, GameAtom, GameAtomType } from '../../providers/game-model/game-model';
 
@@ -12,6 +12,7 @@ interface DisplayGameAtom {
   authorPhotoURL: string;
 }
 
+@IonicPage()
 @Component({
   selector: 'page-thread-results',
   templateUrl: 'thread-results.html',

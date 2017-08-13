@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, NavController } from 'ionic-angular';
 
 import { GameModel } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 
+@IonicPage()
 @Component({
   selector: 'page-guess',
   templateUrl: 'guess.html'

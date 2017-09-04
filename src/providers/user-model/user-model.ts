@@ -20,7 +20,7 @@ export interface AppModelInterface {
 }
 
 @Injectable()
-export class AppModel {
+export class UserModel {
 
   private readonly INSTANCES_PATH: string = "/users";
 

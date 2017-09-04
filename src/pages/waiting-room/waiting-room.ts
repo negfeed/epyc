@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, GameUser, GameState } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
-import { AppModel } from '../../providers/app-model/app-model';
+import { UserModel } from '../../providers/user-model/user-model';
 
 interface DisplayUser {
   name: string;
@@ -42,7 +42,7 @@ export class WaitingRoomPage {
     private socialSharing: SocialSharing,
     private auth: Auth,
     private nav: NavController,
-    private appModel: AppModel) {
+    private userModel: UserModel) {
       this.gameKey = navParams.get('gameKey');
   }
 
@@ -68,7 +68,7 @@ export class WaitingRoomPage {
       this.isJoinable = (gameInstance.state == GameState.CREATED);
       if (gameInstance.state == GameState.STARTED && 
           gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
-        this.appModel.insertJoinGame(authUserInfo.uid, this.gameKey);
+        this.userModel.insertJoinGame(authUserInfo.uid, this.gameKey);
         this.nav.push('WaitTurnPage', { gameKey: this.gameKey });
       }
     });

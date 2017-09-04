@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
-import { AppModel, Game } from '../../providers/app-model/app-model';
+import { UserModel, Game } from '../../providers/user-model/user-model';
 import { GameModel } from '../../providers/game-model/game-model';
 
 interface GameLink {
@@ -25,10 +25,10 @@ export class HomePage {
   constructor(
       private navCtrl: NavController,
       private auth: Auth,
-      private appModel: AppModel,
+      private userModel: UserModel,
       private gameModel: GameModel) {
     let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-    this.gameLinks = this.appModel.queryLastFewGames(authUserInfo.uid)
+    this.gameLinks = this.userModel.queryLastFewGames(authUserInfo.uid)
         .map((gameList: Game[]) => {
           let gameLinks: Array<GameLink> = [];
           gameList.forEach((game: Game) => {
@@ -41,7 +41,7 @@ export class HomePage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter HomePage');
     let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-    this.appModel.checkIn(authUserInfo.uid);
+    this.userModel.checkIn(authUserInfo.uid);
   }
 
   doNewGame() {

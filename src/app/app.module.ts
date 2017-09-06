@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Auth } from '../providers/auth/auth';
-import { AppModel } from '../providers/app-model/app-model';
+import { UserModel } from '../providers/user-model/user-model';
 import { GameModel } from '../providers/game-model/game-model';
 import { DrawingModel } from '../providers/drawing-model/drawing-model';
 import { AngularFireModule } from 'angularfire2';
@@ -42,7 +42,7 @@ export const firebaseConfig = {
   ],
   providers: [
     Auth,
-    AppModel,
+    UserModel,
     DrawingModel,
     GameModel,
     Facebook,

@@ -1,4 +1,4 @@
-import { Component, Input, Renderer2, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
 import 'rxjs/add/operator/first'
 
@@ -42,7 +42,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     }
   }
 
-  constructor(private drawingModel: DrawingModel, private renderer: Renderer2) {
+  constructor(private drawingModel: DrawingModel) {
     super();
     console.log('Hello RecordingDrawingCanvas Component');
   }

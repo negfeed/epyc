@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 
-import { Auth } from '../auth/auth';
-
 export interface NormalizedCoordinates {
   x: number;
   y: number;
@@ -37,7 +35,7 @@ export class DrawingModel {
 
   private readonly INSTANCES_PATH: string = "/drawings";
 
-  constructor(private angularFireDatabase: AngularFireDatabase, private auth: Auth) {
+  constructor(private angularFireDatabase: AngularFireDatabase) {
     console.log('Hello DrawingModel Provider');
   }
 

@@ -30,8 +30,8 @@ export class GameResultsPage {
     this.gameKey = navParams.get('gameKey');
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad GameResults');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter GameResults');
     this.ngUnsubscribe = new Subject<void>();
     let gameInstanceObservable = this.gameModel.loadInstance(this.gameKey).takeUntil(this.ngUnsubscribe);
     gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {

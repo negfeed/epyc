@@ -41,7 +41,6 @@ export class WaitingRoomPage {
       private gameModel: GameModel,
       private socialSharing: SocialSharing,
       private auth: Auth,
-      private nav: NavController,
       private gameNavCtrl: GameNavigationController) {
     this.gameKey = navParams.get('gameKey');
   }

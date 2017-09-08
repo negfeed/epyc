@@ -15,7 +15,7 @@ export class LoginPage {
     private toastCtrl: ToastController,
     private auth: Auth) {}
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     console.log('Hello Login Page');
   }
 

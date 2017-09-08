@@ -20,8 +20,8 @@ export class WaitGameToEndPage {
     this.gameKey = navParams.get('gameKey');
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad WaitGameToEndPage');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter WaitGameToEndPage');
     this.navbar.backButtonClick = () => this.backButtonAction();
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'WaitGameToEndPage');
   }

@@ -39,8 +39,4 @@ export class ThreadResultsPage {
       });
     });
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ThreadResults');
-  }
 }

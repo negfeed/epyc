@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonicPage, NavParams, NavController, Navbar } from 'ionic-angular';
+import { IonicPage, NavParams, Navbar } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
-import { GameModel, GameAtom } from '../../providers/game-model/game-model';
+import { GameModel, GameAtom, AtomAddress } from '../../providers/game-model/game-model';
 import { DrawingModel } from '../../providers/drawing-model/drawing-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
@@ -19,7 +19,9 @@ export class DrawPage implements OnInit {
   private readonly COUNTDOWN_STEP_IN_SECONDS: number = 1;
   private readonly MILLISECONDS_IN_SECOND: number = 1000;
 
-  private gameAtomKey: string;
+  private gameKey: string;
+  private atomAddress: AtomAddress;
+  private atomKey: string;
   word: string;
   drawingKey: string = '';
   private ngUnsubscribe: Subject<void> = null;
@@ -34,26 +36,28 @@ export class DrawPage implements OnInit {
       private gameModel: GameModel, 
       private drawingModel: DrawingModel,
       private auth: Auth,
-      private nav: NavController,
       private gameNavCtrl: GameNavigationController) {
     console.log("Hello DrawPage");
-    this.gameAtomKey = navParams.get('gameAtomKey');
+    this.gameKey = navParams.get('gameKey');
+    this.atomAddress = navParams.get('atomAddress');
+    this.atomKey = this.gameModel.getAtomKey(this.gameKey, this.atomAddress);
     this.word = navParams.get('word');
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter DrawPage')
     this.ngUnsubscribe = new Subject<void>();
-    this.gameModel.loadAtom(this.gameAtomKey)
+    this.gameModel.loadAtom(this.atomKey)
         .takeUntil(this.ngUnsubscribe)
         .subscribe((gameAtom: GameAtom) => {
       if (gameAtom.drawingRef) {
         this.drawingKey = gameAtom.drawingRef;
       } else {
-        this.gameModel.upsertAtom(this.gameAtomKey, {drawingRef: this.drawingModel.createInstance()})
+        this.gameModel.upsertAtom(this.atomKey, {drawingRef: this.drawingModel.createInstance()})
       }
     });
     this.navbar.backButtonClick = () => this.backButtonAction();
+    this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'DrawPage');
   }
 
   next() {
@@ -73,9 +77,7 @@ export class DrawPage implements OnInit {
     if (this.countdownValue <= 0) {
       console.log('Moving away from drawing page.');
       let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      this.gameModel.upsertAtom(this.gameAtomKey, {done: true, authorUid: authUserInfo.uid}).then(() => {
-        this.nav.pop();
-      });
+      this.gameModel.upsertAtom(this.atomKey, {done: true, authorUid: authUserInfo.uid});
     } else {
       setTimeout(() => this.handleCountdown(), this.COUNTDOWN_STEP_IN_SECONDS * this.MILLISECONDS_IN_SECOND);
     }
@@ -86,6 +88,7 @@ export class DrawPage implements OnInit {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.countdownInProgress = false;
+    this.gameNavCtrl.cancelObserveAndNavigateToNextPage();
   }
 
   ngOnInit(): void {

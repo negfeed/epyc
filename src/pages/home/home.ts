@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
-import { Subject } from 'rxjs/Subject';
+import { IonicPage } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { UserModel, Game } from '../../providers/user-model/user-model';
 import { GameModel } from '../../providers/game-model/game-model';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 interface GameLink {
   gameInstanceReference: string,
@@ -23,10 +23,10 @@ export class HomePage {
   private gameLinks: Observable<Array<GameLink>>;
 
   constructor(
-      private navCtrl: NavController,
       private auth: Auth,
       private userModel: UserModel,
-      private gameModel: GameModel) {
+      private gameModel: GameModel,
+      private gameNavigationController: GameNavigationController) {
     let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
     this.gameLinks = this.userModel.queryLastFewGames(authUserInfo.uid)
         .map((gameList: Game[]) => {
@@ -46,11 +46,11 @@ export class HomePage {
 
   doNewGame() {
     let gameKey: string = this.gameModel.createInstance();
-    this.navCtrl.push('WaitingRoomPage', { gameKey: gameKey });
+    this.gameNavigationController.navigateToGame(gameKey);
   }
 
-  goToGame(gameInstanceReference: string) {
-    this.navCtrl.push('WaitingRoomPage', { gameKey: gameInstanceReference });
+  goToGame(gameKey: string) {
+    this.gameNavigationController.navigateToGame(gameKey);
   }
 
   ionViewWillLeave() {

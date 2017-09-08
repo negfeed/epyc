@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavParams } from 'ionic-angular';
 
 import { GameModelInterface, GameThread, GameAtom, GameAtomType } from '../../providers/game-model/game-model';
 
@@ -22,7 +22,7 @@ export class ThreadResultsPage {
   private word: string = null;
   private atoms: Array<DisplayGameAtom> = null;
 
-  constructor(private navCtrl: NavController, private navParams: NavParams) {
+  constructor(navParams: NavParams) {
     let gameInstance: GameModelInterface = navParams.get('gameInstance');
     let threadIndex: number = navParams.get('threadIndex');
     let gameThread = gameInstance.threads[threadIndex];

@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { GameModel, GameModelInterface, GameUser, GameState } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
-import { UserModel } from '../../providers/user-model/user-model';
+import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
 interface DisplayUser {
   name: string;
@@ -37,13 +37,13 @@ export class WaitingRoomPage {
   private ngUnsubscribe: Subject<void> = null;
 
   constructor(
-    navParams: NavParams,
-    private gameModel: GameModel,
-    private socialSharing: SocialSharing,
-    private auth: Auth,
-    private nav: NavController,
-    private userModel: UserModel) {
-      this.gameKey = navParams.get('gameKey');
+      navParams: NavParams,
+      private gameModel: GameModel,
+      private socialSharing: SocialSharing,
+      private auth: Auth,
+      private nav: NavController,
+      private gameNavCtrl: GameNavigationController) {
+    this.gameKey = navParams.get('gameKey');
   }
 
   ionViewDidEnter() {
@@ -66,11 +66,6 @@ export class WaitingRoomPage {
         this.isJoined = gameInstance.users[authUserInfo.uid].joined;
       }
       this.isJoinable = (gameInstance.state == GameState.CREATED);
-      if (gameInstance.state == GameState.STARTED && 
-          gameInstance.usersOrder.some(userId => userId == authUserInfo.uid)) {
-        this.userModel.insertJoinGame(authUserInfo.uid, this.gameKey);
-        this.nav.push('WaitTurnPage', { gameKey: this.gameKey });
-      }
     });
     let users = gameInstanceObservable.map((gameInstance: GameModelInterface) => {
       let users = new Array<DisplayUser>();
@@ -99,6 +94,7 @@ export class WaitingRoomPage {
         return !value.joined;
       })
     });
+    this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'WaitingRoomPage');
   }
 
   doShare() {
@@ -144,5 +140,6 @@ export class WaitingRoomPage {
     console.log('ionViewWillLeave WaitTurnRoom');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this.gameNavCtrl.cancelObserveAndNavigateToNextPage();    
   }
 }

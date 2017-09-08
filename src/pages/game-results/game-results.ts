@@ -24,7 +24,7 @@ export class GameResultsPage {
 
   constructor(
       private navCtrl: NavController,
-      private navParams: NavParams,
+      navParams: NavParams,
       private gameModel: GameModel,
       private gameNavCtrl: GameNavigationController) {
     this.gameKey = navParams.get('gameKey');

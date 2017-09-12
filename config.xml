@@ -79,15 +79,7 @@
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>
-  <allow-navigation href="http://172.16.42.6:8000"/>
-  <allow-navigation href="http://172.16.42.10:8000"/>
-  <allow-navigation href="http://172.16.42.10:8100"/>
-  <allow-navigation href="http://172.16.42.10:8110"/>
-  <allow-navigation href="http://172.16.42.10:8111"/>
-  <allow-navigation href="http://172.16.42.8:8100"/>
-  <allow-navigation href="http://172.31.98.89:8100"/>
-  <allow-navigation href="http://192.168.43.151:8100"/>
-  <allow-navigation href="http://192.168.1.171:8100"/>
+  <allow-navigation href="*"/>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
   <engine name="android" spec="^6.2.2"/>
   <plugin name="cordova-plugin-console" spec="~1.0.4"/>

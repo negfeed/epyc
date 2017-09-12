@@ -21,6 +21,8 @@ interface GameLink {
 export class HomePage {
 
   private gameLinks: Observable<Array<GameLink>>;
+  private userName: string;
+  private userPhotoUrl: string;
 
   constructor(
       private auth: Auth,
@@ -28,6 +30,8 @@ export class HomePage {
       private gameModel: GameModel,
       private gameNavigationController: GameNavigationController) {
     let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+    this.userName = authUserInfo.displayName;
+    this.userPhotoUrl = authUserInfo.photoURL;
     this.gameLinks = this.userModel.queryLastFewGames(authUserInfo.uid)
         .map((gameList: Game[]) => {
           let gameLinks: Array<GameLink> = [];

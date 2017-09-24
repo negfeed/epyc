@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding no-bounce>
   <ion-list>
     <ion-list-header>Joined ({{ (joinedUsers | async)?.length }}) </ion-list-header>
     <ion-item *ngFor="let joinedUser of joinedUsers | async">

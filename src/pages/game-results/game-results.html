@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding no-bounce>
   <ion-list>
     <button ion-item *ngFor="let word of (words | async); let i = index" (click)="itemSelected(i)">
       {{ word }}

@@ -39,11 +39,22 @@ export enum GameAtomType {
   GUESS = 2,
 }
 
+export enum GameAtomState {
+  // The player has not started playing the game atom. 
+  NOT_STARTED = 1,
+
+  // The player has started playing the game atom.
+  STARTED = 2,
+
+  // The player has finished playing the game atom.
+  DONE = 3,
+}
+
 export interface GameAtom {
   type?: GameAtomType;
   drawingRef?: string;
   guess?: string;
-  done?: boolean;
+  state?: GameAtomState
   authorUid?: string;
 }
 
@@ -82,6 +93,12 @@ export interface GameModelInterface {
 export interface AtomAddress {
   threadIndex: number;
   atomIndex: number;
+}
+
+export interface NextAtom {
+  address: AtomAddress;
+  readyToPlay: boolean;
+  allAtomsDone: boolean;
 }
 
 @Injectable()
@@ -123,7 +140,7 @@ export class GameModel {
     for (var index = 0; index < playerCount + 1; index++) {
       gameAtoms.push({
         type: (index % 2) == 0 ? GameAtomType.DRAWING: GameAtomType.GUESS,
-        done: false
+        state: GameAtomState.NOT_STARTED
       });
     }
     return {
@@ -177,11 +194,11 @@ export class GameModel {
     return user.update(gameUser);
   }
 
-  public static playerIndex(atomAddress: AtomAddress, playersCount: number): number {
-    return (atomAddress.threadIndex - atomAddress.atomIndex) % playersCount
+  public static atomPlayerIndex(atomAddress: AtomAddress, playersCount: number): number {
+    return (atomAddress.threadIndex - atomAddress.atomIndex + playersCount) % playersCount
   }
 
-  public static* playerAtoms(playerIndex: number, playersCount: number): IterableIterator<AtomAddress> {
+  public static* playerAtomAddresses(playerIndex: number, playersCount: number): IterableIterator<AtomAddress> {
     let index = 0;
     while (index < playersCount + 1) {
       let atomAddress: AtomAddress = {
@@ -191,6 +208,39 @@ export class GameModel {
       index++;
       yield atomAddress;
     }
+  }
+
+  public static getNextAtom(gameInstance: GameModelInterface, userId: string): NextAtom {
+    let playersCount = gameInstance.usersOrder.length;
+    let playerIndex = gameInstance.usersOrder.indexOf(userId);
+    let playerAtomsIterator = GameModel.playerAtomAddresses(playerIndex, playersCount);
+    let nextAtomAddressToPlay: AtomAddress = null;
+    let allAtomsDone: boolean = false;
+    let readyToPlay = false;
+    while (true) {
+      let next = playerAtomsIterator.next()
+      if (next.done) {
+        allAtomsDone = true;
+        break;
+      }
+      let atomAddress: AtomAddress = next.value;
+      let gameThread: GameThread = gameInstance.threads[atomAddress.threadIndex];
+      let gameAtom: GameAtom = gameThread.gameAtoms[atomAddress.atomIndex];
+
+      let previousGameAtom: GameAtom = null;
+      if (atomAddress.atomIndex > 0) {
+        previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
+      }
+
+      if (gameAtom.state != GameAtomState.DONE) {
+        nextAtomAddressToPlay = atomAddress;
+        if (!previousGameAtom || previousGameAtom.state == GameAtomState.DONE) {
+          readyToPlay = true;
+        }
+        break;
+      }
+    }
+    return { address: nextAtomAddressToPlay, allAtomsDone: allAtomsDone, readyToPlay: readyToPlay };
   }
 
   public getAtomKey(gameKey: string, atomAddress: AtomAddress): string {

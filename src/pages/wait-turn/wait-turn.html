@@ -5,5 +5,23 @@
 </ion-header>
 
 <ion-content no-bounce>
-  Waiting for another player to finish ...
+  <ion-list>
+    <ion-list-header>Thread {{ threadNumber }}</ion-list-header>
+    <ng-container *ngFor="let step of steps | async">
+      <ion-item [ngSwitch]="step.state">
+        <ion-avatar item-left>
+          <img [src]="step.playerPhotoURL">
+        </ion-avatar>
+        <h2>{{ step.playerName }}</h2>
+        <p *ngSwitchCase="stateEnum.DONE">Done</p>
+        <p *ngSwitchCase="stateEnum.TURN_TO_PLAY">Turn to Play ...</p>
+        <p *ngSwitchCase="stateEnum.STARTED">In Progress ...</p>
+        <p *ngSwitchCase="stateEnum.NOT_STARTED">Not Started</p>
+        <ion-icon *ngSwitchCase="stateEnum.DONE" name="checkbox-outline" item-end></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.TURN_TO_PLAY" name="pause" item-end></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.STARTED" name="play" item-end></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.NOT_STARTED" name="square-outline" item-end></ion-icon>
+      </ion-item>  
+    </ng-container>
+  </ion-list>
 </ion-content>

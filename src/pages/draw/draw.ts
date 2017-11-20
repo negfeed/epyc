@@ -3,7 +3,7 @@ import { IonicPage, NavParams, Navbar } from 'ionic-angular';
 import 'rxjs/add/operator/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
-import { GameModel, GameAtom, AtomAddress } from '../../providers/game-model/game-model';
+import { GameModel, GameAtom, AtomAddress, GameAtomState } from '../../providers/game-model/game-model';
 import { DrawingModel } from '../../providers/drawing-model/drawing-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
@@ -56,6 +56,7 @@ export class DrawPage implements OnInit {
         this.gameModel.upsertAtom(this.atomKey, {drawingRef: this.drawingModel.createInstance()})
       }
     });
+    this.gameModel.upsertAtom(this.atomKey, {state: GameAtomState.STARTED});
     this.navbar.backButtonClick = () => this.backButtonAction();
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'DrawPage');
   }
@@ -77,7 +78,7 @@ export class DrawPage implements OnInit {
     if (this.countdownValue <= 0) {
       console.log('Moving away from drawing page.');
       let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      this.gameModel.upsertAtom(this.atomKey, {done: true, authorUid: authUserInfo.uid});
+      this.gameModel.upsertAtom(this.atomKey, {state: GameAtomState.DONE, authorUid: authUserInfo.uid});
     } else {
       setTimeout(() => this.handleCountdown(), this.COUNTDOWN_STEP_IN_SECONDS * this.MILLISECONDS_IN_SECOND);
     }

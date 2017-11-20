@@ -3,7 +3,7 @@ import { App, AlertController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { Subject } from 'rxjs/Subject';
 
-import { GameModel, GameModelInterface, GameState, GameThread, GameAtom, AtomAddress, GameAtomType } from '../../providers/game-model/game-model';
+import { GameModel, GameModelInterface, GameState, GameThread, GameAtom, AtomAddress, NextAtom, GameAtomType, GameAtomState } from '../../providers/game-model/game-model';
 import { UserModel } from '../../providers/user-model/user-model';
 import { Auth, AuthUserInfo } from '../auth/auth';
 
@@ -18,11 +18,6 @@ type GamePageName = (
 interface NavigationTarget {
   pageName: GamePageName;
   parameters: any;
-}
-
-interface NextAtom {
-  address: AtomAddress;
-  allAtomsDone: boolean;
 }
 
 @Injectable()
@@ -47,43 +42,11 @@ export class GameNavigationController {
     let gameDone: boolean = true;
     gameInstance.threads.forEach((gameThread: GameThread) => {
       let atomsInThread: number = gameThread.gameAtoms.length;
-      if (!gameThread.gameAtoms[atomsInThread - 1].done) {
+      if (gameThread.gameAtoms[atomsInThread - 1].state != GameAtomState.DONE) {
         gameDone = false;
       }
     });
     return gameDone;
-  }
-
-  private getNextAtom(gameInstance: GameModelInterface): NextAtom {
-    let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-    let playersCount = gameInstance.usersOrder.length;
-    let playerIndex = gameInstance.usersOrder.indexOf(authUserInfo.uid);
-    let playerAtomsIterator = GameModel.playerAtoms(playerIndex, playersCount);
-    let nextAtomAddressToPlay: AtomAddress = null;
-    let allAtomsDone: boolean = false;
-    while (true) {
-      let next = playerAtomsIterator.next()
-      if (next.done) {
-        allAtomsDone = true;
-        break;
-      }
-      let atomAddress: AtomAddress = next.value;
-      let gameThread: GameThread = gameInstance.threads[atomAddress.threadIndex];
-      let gameAtom: GameAtom = gameThread.gameAtoms[atomAddress.atomIndex];
-
-      let previousGameAtom: GameAtom = null;
-      if (atomAddress.atomIndex > 0) {
-        previousGameAtom = gameThread.gameAtoms[atomAddress.atomIndex - 1];
-      }
-
-      if (!gameAtom.done) {
-        if (!previousGameAtom || previousGameAtom.done) {
-          nextAtomAddressToPlay = atomAddress;
-        }
-        break;
-      }
-    }
-    return { address: nextAtomAddressToPlay, allAtomsDone: allAtomsDone };
   }
 
   private getNavigationTargetFromGameState(gameInstance: GameModelInterface): NavigationTarget {
@@ -101,16 +64,16 @@ export class GameNavigationController {
         }
       }
 
-      let nextAtom: NextAtom = this.getNextAtom(gameInstance);
+      let nextAtom: NextAtom = GameModel.getNextAtom(gameInstance, this.auth.getUserInfo().uid);
 
-      if (!nextAtom.address && nextAtom.allAtomsDone) {
+      if (nextAtom.allAtomsDone) {
         return {
           pageName: 'WaitGameToEndPage',
           parameters: { gameKey: gameInstance.$key }
         }
       }
 
-      if (!nextAtom.address && !nextAtom.allAtomsDone) {
+      if (!nextAtom.readyToPlay) {
         return {
           pageName: 'WaitTurnPage',
           parameters: { gameKey: gameInstance.$key }

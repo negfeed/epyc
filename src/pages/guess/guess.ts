@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavParams, Navbar } from 'ionic-angular';
 
-import { GameModel, AtomAddress } from '../../providers/game-model/game-model';
+import { GameModel, AtomAddress, GameAtomState } from '../../providers/game-model/game-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
 
@@ -36,6 +36,7 @@ export class GuessPage {
   ionViewDidEnter() {
     this.navbar.backButtonClick = () => this.backButtonAction();
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'GuessPage');
+    this.gameModel.upsertAtom(this.atomKey, { state: GameAtomState.STARTED });
   }
 
   private canSubmit() {
@@ -45,7 +46,7 @@ export class GuessPage {
   submit() {
     if (this.canSubmit()) {
       let authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      this.gameModel.upsertAtom(this.atomKey, { guess: this.guess, done: true, authorUid: authUserInfo.uid });
+      this.gameModel.upsertAtom(this.atomKey, { guess: this.guess, state: GameAtomState.DONE, authorUid: authUserInfo.uid });
     }
   }
 

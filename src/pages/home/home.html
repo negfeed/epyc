@@ -24,7 +24,7 @@
     </ion-card-header>
     <ion-list>
       <button ion-item *ngFor="let gameLink of gameLinks | async" (click)="goToGame(gameLink.gameInstanceReference)">
-        {{ gameLink.join_timestamp_ms | date: 'yMdjm' }}
+        {{ gameLink.join_timestamp_ms | date: 'y/M/d h:mm a' }}
       </button>
     </ion-list>
   </ion-card>

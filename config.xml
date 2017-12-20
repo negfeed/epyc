@@ -2,7 +2,7 @@
 <widget id="com.negfeed.epyc" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>epyc</name>
     <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="mohammad@negfeed.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -81,6 +81,7 @@
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="AndroidLaunchMode" value="singleTask" />
+    <preference name="orientation" value="portrait" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>

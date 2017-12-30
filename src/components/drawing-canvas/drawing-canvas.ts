@@ -22,13 +22,16 @@ export class DrawingCanvas implements OnInit {
 
   private readonly PROGRESS_BAR_NORMALIZED_HEIGHT: number = 0.03;
 
-  private drawingContext: CanvasRenderingContext2D;
   @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
   private sideWidth: number;
 
   private paperScope: PaperScope = new PaperScope();
-  private paths: Map<string, Path> = new Map();
-  private progressPath: Path = null;
+
+  // A map of paperjs paths that represent the drawing. Each path is represents a finger stroke on the screen.
+  private drawingPaths: Map<string, Path> = new Map();
+
+  // The paperjs path that represents the progress bar (replay mode).
+  private progressBarPath: Path = null;
 
   ngOnInit(): void {
     console.log('ngOnInit DrawingCanvas Component');
@@ -38,25 +41,25 @@ export class DrawingCanvas implements OnInit {
     // to account for the 1px border lines.
     this.drawingCanvasRef.nativeElement.width = this.sideWidth - 2;
     this.drawingCanvasRef.nativeElement.height = this.sideWidth - 2;
-    this.drawingContext = this.drawingCanvasRef.nativeElement.getContext('2d');
 
     this.paperScope.setup(this.drawingCanvasRef.nativeElement);
     this.paperScope.project.activeLayer.name = 'drawingLayer';
-    let progressLayer = new Layer();
-    progressLayer.name = 'progressLayer';
+    let progressBarLayer = new Layer();
+    progressBarLayer.name = 'progressBarLayer';
   }
 
   constructor() {
     console.log('Hello DrawingCanvas Component');
   }
 
-  private point(pointDrawingEvent: PointDrawingEvent) {
+  // Processes drawing a point event, a point event can be emitted on touch start, end or move.
+  private drawPoint(pointDrawingEvent: PointDrawingEvent) {
     let path: Path = null;
     this.paperScope.project.layers['drawingLayer'].activate();
 
     // Lookup the event path.
-    if (this.paths.has(pointDrawingEvent.path)) {
-      path = this.paths.get(pointDrawingEvent.path);
+    if (this.drawingPaths.has(pointDrawingEvent.pathName)) {
+      path = this.drawingPaths.get(pointDrawingEvent.pathName);
     }
 
     // If it doesn't exist, create one.
@@ -67,19 +70,17 @@ export class DrawingCanvas implements OnInit {
         strokeCap: 'round'
       });
       path.strokeColor = 'black';
-      this.paths.set(pointDrawingEvent.path, path);
+      this.drawingPaths.set(pointDrawingEvent.pathName, path);
       this.paperScope.project.activeLayer.addChild(path);
     }
 
     // Add point to the path.
     let point = this.denormalizeCoordinates(pointDrawingEvent.point);
     path.add(new Point(point.x, point.y));
-
-    // Call smooth.
     path.smooth();
 
     console.log(`Adding point (${pointDrawingEvent.point.x}, ${pointDrawingEvent.point.y}) ` + 
-                `to path ${pointDrawingEvent.path}`);
+                `to path ${pointDrawingEvent.pathName}`);
   }
 
   private normalizeDrawingValue(value: number): number {
@@ -104,7 +105,7 @@ export class DrawingCanvas implements OnInit {
     };
   }
 
-  protected canvasPageOffset(): Offset {
+  protected getCanvasPageOffset(): Offset {
     let element = this.drawingCanvasRef.nativeElement;
     var top = 0, left = 0;
     do {
@@ -118,14 +119,15 @@ export class DrawingCanvas implements OnInit {
     };
   };
 
-  protected clear() {
+  protected clearDrawing() {
+    this.paperScope.project.layers['drawingLayer'].activate();
     this.paperScope.project.activeLayer.removeChildren();
   }
 
   protected processDrawingEvent(drawingEvent: DrawingEvent) {
     switch(drawingEvent.type) {
       case 'point':
-        this.point(drawingEvent);
+        this.drawPoint(drawingEvent);
         break;
       default:
         console.log('Error: This should not happen!');
@@ -134,13 +136,13 @@ export class DrawingCanvas implements OnInit {
   }
 
   private drawProgress(percentage: number) {
-    this.paperScope.project.layers['progressLayer'].activate();
+    this.paperScope.project.layers['progressBarLayer'].activate();
 
     let progressBarNormalizedY: number = 1 - this.PROGRESS_BAR_NORMALIZED_HEIGHT;
     let progressBarY: number = this.denormalizeDrawingValue(progressBarNormalizedY);
 
-    if (!this.progressPath) {
-      this.progressPath = new Path({
+    if (!this.progressBarPath) {
+      this.progressBarPath = new Path({
         segments: [
           [0, progressBarY],
           [0, this.sideWidth],
@@ -149,10 +151,10 @@ export class DrawingCanvas implements OnInit {
         ],
         fillColor: new Color(0, 0, 225, 0.2),
       });
-      this.paperScope.project.activeLayer.addChild(this.progressPath);
+      this.paperScope.project.activeLayer.addChild(this.progressBarPath);
     }
-    this.progressPath.segments[2].point.x = this.sideWidth * (percentage / 100.0);
-    this.progressPath.segments[3].point.x = this.sideWidth * (percentage / 100.0);
+    this.progressBarPath.segments[2].point.x = this.sideWidth * (percentage / 100.0);
+    this.progressBarPath.segments[3].point.x = this.sideWidth * (percentage / 100.0);
   }
 
   protected updateProgress(percentage: number) {

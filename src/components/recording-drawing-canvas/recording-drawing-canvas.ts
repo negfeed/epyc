@@ -26,8 +26,19 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private biggestFingerKey: number = 0;
   private _drawingKey: string;
   private nextEventIndex: number = 0;
+
+  // The drawing events array as extracted from the drawing model at the time of loading the component.
+  // This list is often empty, unless the user re-navigates to the recording canvas after having drawn
+  // something.
   private drawingEvents: Array<DrawingEvent> = null;
+
+  // The drawing event list as read from Angularfire list() method. This is used for recording drawing
+  // events. Lists retrieved with the list() method can have items appended to it without overriding
+  // pre-existing elements in the list.
   private drawingEventsList: DrawingEventList = null;
+
+  // Indicates whether the user drew something. This is used in the drawing page to control whether the
+  // user could proceed to the next step.
   @Output() onSomethingIsDrawn = new EventEmitter<boolean>();
 
   @Input()
@@ -132,7 +143,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
       this.processDrawingEvent({
         type: 'point',
         timestamp: Date.now(),
-        path: fingerKey,
+        pathName: fingerKey,
         point: this.normalizeCoordinates(point)
       });
       this.fingersState.set(
@@ -150,14 +161,14 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
       this.processDrawingEvent({
         type: 'point',
         timestamp: Date.now(),
-        path: fingerKey,
+        pathName: fingerKey,
         point: this.normalizeCoordinates(coordinates[index])
       });
       this.fingersState.delete(fingerKey);
     });
   }
 
-  private touchIsBeyondMinimumProcessingDistance(
+  private isTouchBeyondMinimumProcessingDistance(
       lastProcessedCoordinates: Coordinates,
       currentCoordinates: Coordinates): boolean {
     let xDelta = lastProcessedCoordinates.x - currentCoordinates.x;
@@ -168,13 +179,13 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private processTouchMove(coordinates: Array<Coordinates>) {
     let fingerKeys: Array<string> = this.relateToFingers(coordinates);
     fingerKeys.forEach((fingerKey: string, index: number) => {
-      if (this.touchIsBeyondMinimumProcessingDistance(
+      if (this.isTouchBeyondMinimumProcessingDistance(
               this.fingersState.get(fingerKey).lastProcessedCoordinates,
               coordinates[index])) {
         this.processDrawingEvent({
           type: 'point',
           timestamp: Date.now(),
-          path: fingerKey,
+          pathName: fingerKey,
           point: this.normalizeCoordinates(coordinates[index])
         });
         this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
@@ -190,10 +201,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
           key=>drawingModelInstance.drawingEvents[key]);
     }
     this.nextEventIndex = this.drawingEvents.length;
-    this.clear();
+    this.clearDrawing();
     this.drawingEvents.forEach(drawingEvent => {
       this.onSomethingIsDrawn.emit(true);
-      this.updateHighestReplayedPath(drawingEvent.path);
+      this.updateHighestReplayedPath(drawingEvent.pathName);
       super.processDrawingEvent(drawingEvent);
     });
   }
@@ -206,7 +217,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
 
   onTouchEvent(event: TouchEvent) {
     console.log(event.type + '|' + event.changedTouches.length);
-    let offset: Offset = this.canvasPageOffset()
+    let offset: Offset = this.getCanvasPageOffset()
     let changedCoordinates: Array<Coordinates> = [];
     console.log('changes');
     for (var index = 0; index < event.changedTouches.length; index++) {

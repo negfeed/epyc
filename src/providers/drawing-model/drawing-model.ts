@@ -10,7 +10,7 @@ export interface NormalizedCoordinates {
 export interface PointDrawingEvent {
   type: 'point';
   timestamp: number;
-  path: string;
+  pathName: string;
   point: NormalizedCoordinates;
 }
 

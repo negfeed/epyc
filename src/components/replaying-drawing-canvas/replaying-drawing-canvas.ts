@@ -36,7 +36,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
     console.log('Hello ReplayingDrawingCanvas Component');
   }
 
-  private preprocessDrawingEvents() {
+  private normalizeDrawingEventsTimestamps() {
     let processedDrawingEvents: Array<DrawingEvent> = [];
     let initialTimestamp: number;
     this.drawingEvents.forEach((drawingEvent: DrawingEvent, index: number, drawingEvents: Array<DrawingEvent>) => {
@@ -67,7 +67,7 @@ export class ReplayingDrawingCanvas extends DrawingCanvas {
   private initializeDrawingState(drawingModelInstance: DrawingModelInterface) {
     this.drawingEvents = Object.keys(drawingModelInstance.drawingEvents)
         .map(key=>drawingModelInstance.drawingEvents[key]);
-    this.preprocessDrawingEvents();
+    this.normalizeDrawingEventsTimestamps();
     this.initializePeriodicReplayer();
     this.startDrawing();
   }

@@ -4,7 +4,12 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content padding no-bounce>
-
+  <ion-list>
+    <ion-list-header>Waiting for others to complete their turns.</ion-list-header>
+    <ion-item *ngFor="let thread of threads | async">
+      <h2>Thread {{thread.threadNumber}}</h2>
+      <p>{{thread.completedStepsCount}} out of {{thread.totalStepsCount}} turns completed.</p>
+    </ion-item>
+  </ion-list>
 </ion-content>

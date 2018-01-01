@@ -1,9 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Memoize } from 'typescript-memoize';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/first'
 
 import { DrawingCanvas, Coordinates, Offset } from '../drawing-canvas/drawing-canvas'
-import { DrawingModel, DrawingModelInterface, DrawingEventList, DrawingEvent } from '../../providers/drawing-model/drawing-model';
+import { DrawingModel, DrawingModelInterface, DrawingEventList, DrawingEvent, PointDrawingEvent } from '../../providers/drawing-model/drawing-model';
+import { DrawingController, DrawingMode, DoEvent } from '../../providers/drawing-controller/drawing-controller'
+import { DrawingControlBarComponent } from '../drawing-control-bar/drawing-control-bar';
 
 function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number {
   return Math.abs(pointOne.x - pointTwo.x) + Math.abs(pointOne.y - pointTwo.y);
@@ -12,13 +15,14 @@ function calculateDistance(pointOne: Coordinates, pointTwo: Coordinates): number
 interface FingerState {
   lastKnownCoordinates: Coordinates;
   lastProcessedCoordinates: Coordinates;
+  drawingMode: DrawingMode;
 }
 
 @Component({
   selector: 'recording-drawing-canvas',
   templateUrl: 'recording-drawing-canvas.html'
 })
-export class RecordingDrawingCanvas extends DrawingCanvas {
+export class RecordingDrawingCanvas extends DrawingCanvas implements OnInit, OnDestroy {
 
   private readonly MINIMUM_PROCESSING_DISTANCE = 6;
 
@@ -37,6 +41,10 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   // pre-existing elements in the list.
   private drawingEventsList: DrawingEventList = null;
 
+  private drawingMode: DrawingMode = DrawingMode.DRAW;
+
+  private ngUnsubscribe: Subject<void> = null;
+
   // Indicates whether the user drew something. This is used in the drawing page to control whether the
   // user could proceed to the next step.
   @Output() onSomethingIsDrawn = new EventEmitter<boolean>();
@@ -53,9 +61,44 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     }
   }
 
-  constructor(private drawingModel: DrawingModel) {
+  constructor(
+      private drawingModel: DrawingModel,
+      private drawingController: DrawingController) {
     super();
     console.log('Hello RecordingDrawingCanvas Component');
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+    this.ngUnsubscribe = new Subject<void>();
+    this.drawingController.drawingMode$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((drawingMode: DrawingMode) => {
+          this.drawingMode = drawingMode;
+        })
+    this.drawingController.doEvent$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((doEvent: DoEvent) => {
+          if (doEvent == DoEvent.UNKNOWN) return;
+          // Undos/Redos mid-path drawing is not supported.
+          if (this.fingersState.size > 0) return;
+          if (doEvent == DoEvent.UNDO) {
+            this.storeAndProcessDrawingEvent({
+              type: 'undo',
+              timestamp: Date.now()
+            });              
+          } else if (doEvent == DoEvent.REDO) {
+            this.storeAndProcessDrawingEvent({
+              type: 'redo',
+              timestamp: Date.now()
+            });              
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   private static _getPermutations(
@@ -140,17 +183,27 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private processTouchStart(coordinates: Array<Coordinates>) {
     coordinates.forEach((point: Coordinates) => {
       let fingerKey = this.nextFingerKey();
-      this.processDrawingEvent({
-        type: 'point',
-        timestamp: Date.now(),
-        pathName: fingerKey,
-        point: this.normalizeCoordinates(point)
-      });
+      if (this.drawingMode == DrawingMode.DRAW) {
+        this.storeAndProcessDrawingEvent({
+          type: 'point',
+          timestamp: Date.now(),
+          pathName: fingerKey,
+          point: this.normalizeCoordinates(point)
+        });  
+      } else if (this.drawingMode == DrawingMode.ERASE) {
+        this.storeAndProcessDrawingEvent({
+          type: 'erase',
+          timestamp: Date.now(),
+          pathName: fingerKey,
+          point: this.normalizeCoordinates(point)
+        });
+      }
       this.fingersState.set(
           fingerKey,
           {
             lastKnownCoordinates: point,
-            lastProcessedCoordinates: point
+            lastProcessedCoordinates: point,
+            drawingMode: this.drawingMode,
           });
     });
   }
@@ -158,12 +211,22 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private processTouchEnd(coordinates: Array<Coordinates>) {
     let fingerKeys: Array<string> = this.relateToFingers(coordinates);
     fingerKeys.forEach((fingerKey: string, index: number) => {
-      this.processDrawingEvent({
-        type: 'point',
-        timestamp: Date.now(),
-        pathName: fingerKey,
-        point: this.normalizeCoordinates(coordinates[index])
-      });
+      let drawingMode: DrawingMode = this.fingersState.get(fingerKey).drawingMode;
+      if (drawingMode == DrawingMode.DRAW) {
+        this.storeAndProcessDrawingEvent({
+          type: 'point',
+          timestamp: Date.now(),
+          pathName: fingerKey,
+          point: this.normalizeCoordinates(coordinates[index])
+        });  
+      } else if (drawingMode == DrawingMode.ERASE) {
+        this.storeAndProcessDrawingEvent({
+          type: 'erase',
+          timestamp: Date.now(),
+          pathName: fingerKey,
+          point: this.normalizeCoordinates(coordinates[index])
+        });  
+      }
       this.fingersState.delete(fingerKey);
     });
   }
@@ -179,15 +242,26 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
   private processTouchMove(coordinates: Array<Coordinates>) {
     let fingerKeys: Array<string> = this.relateToFingers(coordinates);
     fingerKeys.forEach((fingerKey: string, index: number) => {
+      let drawingMode: DrawingMode = this.fingersState.get(fingerKey).drawingMode;
       if (this.isTouchBeyondMinimumProcessingDistance(
               this.fingersState.get(fingerKey).lastProcessedCoordinates,
               coordinates[index])) {
-        this.processDrawingEvent({
-          type: 'point',
-          timestamp: Date.now(),
-          pathName: fingerKey,
-          point: this.normalizeCoordinates(coordinates[index])
-        });
+        let type: string = null;
+        if (drawingMode == DrawingMode.DRAW) {
+          this.storeAndProcessDrawingEvent({
+            type: 'point',
+            timestamp: Date.now(),
+            pathName: fingerKey,
+            point: this.normalizeCoordinates(coordinates[index])
+          });  
+        } else if (drawingMode == DrawingMode.ERASE) {
+          this.storeAndProcessDrawingEvent({
+            type: 'erase',
+            timestamp: Date.now(),
+            pathName: fingerKey,
+            point: this.normalizeCoordinates(coordinates[index])
+          });            
+        }
         this.fingersState.get(fingerKey).lastProcessedCoordinates = coordinates[index];
       }
       this.fingersState.get(fingerKey).lastKnownCoordinates = coordinates[index];
@@ -203,13 +277,17 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
     this.nextEventIndex = this.drawingEvents.length;
     this.clearDrawing();
     this.drawingEvents.forEach(drawingEvent => {
-      this.onSomethingIsDrawn.emit(true);
-      this.updateHighestReplayedPath(drawingEvent.pathName);
+      if (drawingEvent.type == 'point') {
+        let pointDrawingEvent: PointDrawingEvent = drawingEvent;
+        // TODO(mshamma): Replace the emit condition to take into account undo events.
+        this.onSomethingIsDrawn.emit(true);
+        this.updateHighestReplayedPath(pointDrawingEvent.pathName);
+      }
       super.processDrawingEvent(drawingEvent);
     });
   }
 
-  protected processDrawingEvent(drawingEvent: DrawingEvent) {
+  private storeAndProcessDrawingEvent(drawingEvent: DrawingEvent) {
     this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
     super.processDrawingEvent(drawingEvent);
     this.onSomethingIsDrawn.emit(true);
@@ -246,5 +324,13 @@ export class RecordingDrawingCanvas extends DrawingCanvas {
         this.processTouchMove(changedCoordinates);
         break;
     }
+  }
+
+  protected setUndoAvailability(undoAvailable: boolean) {
+    this.drawingController.updateUndoAvailability(undoAvailable);
+  }
+
+  protected setRedoAvailability(redoAvailable: boolean) {
+    this.drawingController.updateRedoAvailability(redoAvailable);
   }
 }

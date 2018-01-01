@@ -7,7 +7,7 @@ import * as firebase from 'firebase/app';
 import { Auth, AuthUserInfo } from '../auth/auth';
 import { Words } from '../words/words';
 
-export enum  GameState {
+export enum GameState {
   // The game's initial state is CREATED. The game should still be joinable in this state.
   CREATED = 1,
 

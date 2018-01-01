@@ -14,7 +14,24 @@ export interface PointDrawingEvent {
   point: NormalizedCoordinates;
 }
 
-export type DrawingEvent = PointDrawingEvent;
+export interface EraseDrawingEvent {
+  type: 'erase';
+  timestamp: number;
+  pathName: string;
+  point: NormalizedCoordinates;
+}
+
+export interface UndoDrawingEvent {
+  type: 'undo';
+  timestamp: number;
+}
+
+export interface RedoDrawingEvent {
+  type: 'redo';
+  timestamp: number;
+}
+
+export type DrawingEvent = PointDrawingEvent | EraseDrawingEvent | UndoDrawingEvent | RedoDrawingEvent;
 
 export interface DrawingEvents extends Array<DrawingEvent> {}
 

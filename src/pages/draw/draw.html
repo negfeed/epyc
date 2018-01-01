@@ -9,6 +9,7 @@
     drawingKey={{drawingKey}}
     (onSomethingIsDrawn)="onSomethingIsDrawn($event)">
   </recording-drawing-canvas>
+  <drawing-control-bar></drawing-control-bar>
   <button ion-button (click)="next()" color="{{!canSubmit() ? 'light' : (countdownInProgress ? 'danger' : 'default')}}" block>
     {{countdownInProgress ? 'Wait wait ... ' + countdownValue : 'Next'}}
   </button>

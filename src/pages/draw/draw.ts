@@ -7,11 +7,13 @@ import { GameModel, GameAtom, AtomAddress, GameAtomState } from '../../providers
 import { DrawingModel } from '../../providers/drawing-model/drawing-model';
 import { Auth, AuthUserInfo } from '../../providers/auth/auth';
 import { GameNavigationController } from '../../providers/game-navigation-controller/game-navigation-controller';
+import { DrawingController } from '../../providers/drawing-controller/drawing-controller';
 
 @IonicPage()
 @Component({
   selector: 'page-draw',
-  templateUrl: 'draw.html'
+  templateUrl: 'draw.html',
+  providers: [ DrawingController ]
 })
 export class DrawPage implements OnInit {
 

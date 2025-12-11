@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="user-profile" *ngIf="userName">
+    <ion-avatar>
+      <img [src]="userPhotoUrl" alt="User Avatar" *ngIf="userPhotoUrl">
+    </ion-avatar>
+    <h2>Welcome, {{ userName }}</h2>
+  </div>
+
+  <ion-button expand="block" (click)="doNewGame()">Start New Game</ion-button>
+
+  <ion-list *ngIf="gameLinks$ | async as gameLinks">
+    <ion-list-header>
+      <ion-label>Recent Games</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let link of gameLinks" (click)="goToGame(link.gameInstanceReference)" button detail>
+      <ion-label>
+        <h2>Game ID: {{ link.gameInstanceReference }}</h2>
+        <p>{{ link.join_timestamp_ms | date:'short' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

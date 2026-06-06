@@ -11,8 +11,8 @@ import {
 } from '@angular/fire/auth';
 import { Capacitor } from '@capacitor/core';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 export type AuthProviderId = 'google' | 'apple';
 
@@ -40,16 +40,22 @@ export class Auth {
   private loggedIn = false;
   private currentUser: User | null = null;
 
+  // Single source of truth for the signed-in state. Fed by the one authState
+  // subscription below so that `currentUser`/`loggedIn` are always updated
+  // before subscribers are notified (avoids cross-subscription ordering races).
+  private signedIn$ = new BehaviorSubject<boolean>(false);
+
   constructor() {
     authState(this.fireAuth).subscribe((user) => {
       this.currentUser = user;
       this.loggedIn = user != null;
+      this.signedIn$.next(this.loggedIn);
     });
   }
 
   /** Emits whether a user is currently signed in. */
   public getSignedIn(): Observable<boolean> {
-    return authState(this.fireAuth).pipe(map((user) => user != null));
+    return this.signedIn$.asObservable();
   }
 
   /**
@@ -58,23 +64,21 @@ export class Auth {
    */
   public getLoginStatus(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const subscription = authState(this.fireAuth).subscribe({
-        next: (user) => {
-          subscription.unsubscribe();
-          if (user) {
-            this.currentUser = user;
-            this.loggedIn = true;
-            resolve();
-          } else {
-            this.loggedIn = false;
-            reject('No active session.');
-          }
-        },
-        error: (err) => {
-          subscription.unsubscribe();
-          reject(err);
-        },
-      });
+      authState(this.fireAuth)
+        .pipe(first())
+        .subscribe({
+          next: (user) => {
+            if (user) {
+              this.currentUser = user;
+              this.loggedIn = true;
+              resolve();
+            } else {
+              this.loggedIn = false;
+              reject('No active session.');
+            }
+          },
+          error: (err) => reject(err),
+        });
     });
   }
 

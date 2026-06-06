@@ -1,0 +1,11 @@
+#canvasContainer {
+  width: 100%;
+  position: relative;
+
+  canvas {
+    border: 1px solid lightgray;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

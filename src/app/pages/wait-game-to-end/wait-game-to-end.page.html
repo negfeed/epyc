@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="backButtonAction()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Waiting for game to end</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-list-header>Waiting for others to complete their turns.</ion-list-header>
+    <ion-item *ngFor="let thread of threads | async">
+      <h2>Thread {{ thread.threadNumber }}</h2>
+      <p>{{ thread.completedStepsCount }} out of {{ thread.totalStepsCount }} turns completed.</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

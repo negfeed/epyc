@@ -1,0 +1,18 @@
+<ion-toolbar>
+  <ion-segment [(ngModel)]="drawingMode" (ionChange)="onDrawingModeChange($event.detail.value)">
+    <ion-segment-button value="draw">
+      <ion-label>Draw</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="erase">
+      <ion-label>Erase</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-buttons slot="end">
+    <ion-button [disabled]="!undoEnabled" (click)="onUndoClick()">
+      <ion-icon slot="icon-only" name="undo"></ion-icon>
+    </ion-button>
+    <ion-button [disabled]="!redoEnabled" (click)="onRedoClick()">
+      <ion-icon slot="icon-only" name="redo"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>

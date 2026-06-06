@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="backButtonAction()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Guess what is being drawn</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-item>
+      <ion-input
+        type="text"
+        class="guess-text"
+        placeholder="Enter your guess here"
+        [(ngModel)]="guess"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        fill="clear"
+        [color]="canSubmit() ? 'primary' : 'light'"
+        (click)="submit()"
+        >Submit</ion-button
+      >
+    </ion-item>
+  </ion-card>
+  <replaying-drawing-canvas [drawingKey]="drawingKey" (onFinishedDrawing)="drawingFinished = true">
+  </replaying-drawing-canvas>
+</ion-content>

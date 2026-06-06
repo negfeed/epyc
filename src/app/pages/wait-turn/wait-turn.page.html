@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="backButtonAction()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Waiting for your turn</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>Thread {{ threadNumber }}</ion-list-header>
+    <ng-container *ngFor="let step of steps | async">
+      <ion-item [ngSwitch]="step.state">
+        <ion-avatar slot="start">
+          <img [src]="step.playerPhotoURL" />
+        </ion-avatar>
+        <h2>{{ step.playerName }}</h2>
+        <p *ngSwitchCase="stateEnum.DONE">Done</p>
+        <p *ngSwitchCase="stateEnum.TURN_TO_PLAY">Turn to Play ...</p>
+        <p *ngSwitchCase="stateEnum.STARTED">In Progress ...</p>
+        <p *ngSwitchCase="stateEnum.NOT_STARTED">Not Started</p>
+        <ion-icon *ngSwitchCase="stateEnum.DONE" name="checkbox-outline" slot="end"></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.TURN_TO_PLAY" name="pause" slot="end"></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.STARTED" name="play" slot="end"></ion-icon>
+        <ion-icon *ngSwitchCase="stateEnum.NOT_STARTED" name="square-outline" slot="end"></ion-icon>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>

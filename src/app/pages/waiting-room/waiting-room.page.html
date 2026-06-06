@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Waiting Room</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-list-header>Joined ({{ (joinedUsers | async)?.length }})</ion-list-header>
+    <ion-item *ngFor="let joinedUser of joinedUsers | async">
+      <ion-avatar slot="start">
+        <img [src]="joinedUser.photoURL" />
+      </ion-avatar>
+      {{ joinedUser.name }}
+      <ion-note slot="end" *ngIf="joinedUser.host">host</ion-note>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>Watching ({{ (watchingUsers | async)?.length }})</ion-list-header>
+    <ion-item *ngFor="let watchingUser of watchingUsers | async">
+      <ion-avatar slot="start">
+        <img [src]="watchingUser.photoURL" />
+      </ion-avatar>
+      {{ watchingUser.name }}
+      <ion-note slot="end" *ngIf="watchingUser.host">host</ion-note>
+    </ion-item>
+  </ion-list>
+  <ion-button expand="block" (click)="doShare()" [disabled]="!isJoinable">Share</ion-button>
+  <ion-button expand="block" *ngIf="canStart()" [disabled]="!isJoinable" (click)="doStart()"
+    >Start Game</ion-button
+  >
+  <ion-button expand="block" *ngIf="canJoin()" [disabled]="!isJoinable" (click)="doJoin()"
+    >Join Game</ion-button
+  >
+  <ion-button expand="block" *ngIf="canLeave()" [disabled]="!isJoinable" (click)="doLeave()"
+    >Leave Game</ion-button
+  >
+</ion-content>

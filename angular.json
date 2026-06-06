@@ -36,7 +36,7 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": [],
+            "scripts": ["node_modules/paper/dist/paper-core.min.js"],
             "browser": "src/main.ts"
           },
           "configurations": {
@@ -110,7 +110,7 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "scripts": ["node_modules/paper/dist/paper-core.min.js"]
           },
           "configurations": {
             "ci": {

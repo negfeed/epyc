@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Game Results</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item
+      button
+      *ngFor="let word of words | async; let i = index"
+      (click)="itemSelected(i)"
+    >
+      {{ word }}
+    </ion-item>
+  </ion-list>
+  <ion-button (click)="goHome()" expand="block">Go back to home</ion-button>
+</ion-content>

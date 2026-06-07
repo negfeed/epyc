@@ -28,10 +28,12 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
+ * Intentionally NOT enabled. The drawing canvas assumes a white background
+ * (black pen, white eraser); dark mode makes white eraser strokes visible
+ * instead of erasing. Keep the app on the default light theme.
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */

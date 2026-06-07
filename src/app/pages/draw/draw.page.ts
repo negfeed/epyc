@@ -68,7 +68,10 @@ export class DrawPage implements OnInit, OnDestroy {
   constructor() {
     console.log('Hello DrawPage');
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
-    this.atomAddress = this.gameParams.get<AtomAddress>('atomAddress');
+    this.atomAddress = {
+      threadIndex: Number(this.route.snapshot.paramMap.get('threadIndex')),
+      atomIndex: Number(this.route.snapshot.paramMap.get('atomIndex')),
+    };
     this.word = this.gameParams.get<string>('word');
   }
 

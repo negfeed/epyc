@@ -18,17 +18,22 @@ export const routes: Routes = [
       import('./pages/waiting-room/waiting-room.page').then((m) => m.WaitingRoomPage),
   },
   {
-    path: 'game/:gameKey/wait-turn',
+    // Thread index in the URL keeps each wait-turn a distinct page instance, so
+    // revisiting it across turns gets a fresh component instead of a stale cache.
+    path: 'game/:gameKey/wait-turn/:threadIndex',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/wait-turn/wait-turn.page').then((m) => m.WaitTurnPage),
   },
   {
-    path: 'game/:gameKey/draw',
+    // Atom address in the URL makes every draw round a distinct page instance
+    // (a player draws more than once per game), avoiding stale reuse of an
+    // earlier round's page/canvas/word.
+    path: 'game/:gameKey/draw/:threadIndex/:atomIndex',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/draw/draw.page').then((m) => m.DrawPage),
   },
   {
-    path: 'game/:gameKey/guess',
+    path: 'game/:gameKey/guess/:threadIndex/:atomIndex',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/guess/guess.page').then((m) => m.GuessPage),
   },

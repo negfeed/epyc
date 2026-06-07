@@ -47,17 +47,22 @@ export class GameNavigationController {
   private ngUnsubscribe: Subject<void> = null;
   private isSubscribed = false;
 
-  /** Maps a logical page name + its params to a concrete router URL. */
-  private routeFor(pageName: GamePageName, gameKey: string): string {
-    switch (pageName) {
+  /**
+   * Maps a navigation target to a concrete router URL. Per-atom and per-thread
+   * pages embed their address so each round is a distinct URL (and therefore a
+   * fresh page instance) rather than a reused cache of an earlier round.
+   */
+  private routeFor(target: NavigationTarget, gameKey: string): string {
+    const p = target.parameters;
+    switch (target.pageName) {
       case 'WaitingRoomPage':
         return `/game/${gameKey}/waiting-room`;
       case 'WaitTurnPage':
-        return `/game/${gameKey}/wait-turn`;
+        return `/game/${gameKey}/wait-turn/${p.threadIndex}`;
       case 'DrawPage':
-        return `/game/${gameKey}/draw`;
+        return `/game/${gameKey}/draw/${p.atomAddress.threadIndex}/${p.atomAddress.atomIndex}`;
       case 'GuessPage':
-        return `/game/${gameKey}/guess`;
+        return `/game/${gameKey}/guess/${p.atomAddress.threadIndex}/${p.atomAddress.atomIndex}`;
       case 'WaitGameToEndPage':
         return `/game/${gameKey}/wait-game-to-end`;
       case 'GameResultsPage':
@@ -110,7 +115,7 @@ export class GameNavigationController {
       if (!nextAtom.readyToPlay) {
         return {
           pageName: 'WaitTurnPage',
-          parameters: { gameKey: gameInstance.$key },
+          parameters: { gameKey: gameInstance.$key, threadIndex: nextAtom.address.threadIndex },
         };
       }
 
@@ -205,7 +210,7 @@ export class GameNavigationController {
             this.stopSubscription();
             // Stash transient parameters then navigate to the matching route.
             this.gameParams.set(navigationTarget.parameters);
-            this.navCtrl.navigateForward(this.routeFor(navigationTarget.pageName, gameKey));
+            this.navCtrl.navigateForward(this.routeFor(navigationTarget, gameKey));
           }
         },
         error: (err) =>

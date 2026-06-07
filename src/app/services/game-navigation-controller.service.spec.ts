@@ -92,7 +92,7 @@ describe('GameNavigationController', () => {
   it('navigates to the draw page when the game starts', () => {
     controller.observeAndNavigateToNextPage('g1', 'WaitingRoomPage');
     game$.next(startedGame());
-    expect(navCtrl.navigateForward).toHaveBeenCalledWith('/game/g1/draw');
+    expect(navCtrl.navigateForward).toHaveBeenCalledWith('/game/g1/draw/0/0');
     expect(gameParams.get('word')).toEqual('a cat');
     expect(gameParams.get('atomAddress')).toEqual({ threadIndex: 0, atomIndex: 0 });
   });

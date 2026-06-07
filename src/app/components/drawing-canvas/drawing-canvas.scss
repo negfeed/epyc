@@ -1,3 +1,10 @@
+/* Custom-element component hosts default to display:inline, which collapses the
+   canvas container's width. Make the host a full-width block. */
+:host {
+  display: block;
+  width: 100%;
+}
+
 #canvasContainer {
   width: 100%;
   position: relative;

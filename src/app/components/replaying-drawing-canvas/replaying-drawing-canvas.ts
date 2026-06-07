@@ -26,15 +26,29 @@ export class ReplayingDrawingCanvas extends DrawingCanvas implements OnDestroy {
   private stopDrawingFlag = false;
   private touchCount = 0;
 
+  // Holds a loaded drawing instance until the canvas is ready to replay it.
+  private pendingInstance: DrawingModelInterface = null;
+
   @Input()
   set drawingKey(drawingKey: string) {
     if (drawingKey !== '') {
       this.drawingModel
         .loadInstance(drawingKey)
         .pipe(first())
-        .subscribe((drawingModelInstance: DrawingModelInterface) =>
-          this.initializeDrawingState(drawingModelInstance),
-        );
+        .subscribe((drawingModelInstance: DrawingModelInterface) => {
+          if (this.isCanvasReady) {
+            this.initializeDrawingState(drawingModelInstance);
+          } else {
+            this.pendingInstance = drawingModelInstance;
+          }
+        });
+    }
+  }
+
+  protected override onCanvasReady(): void {
+    if (this.pendingInstance) {
+      this.initializeDrawingState(this.pendingInstance);
+      this.pendingInstance = null;
     }
   }
 
@@ -140,7 +154,8 @@ export class ReplayingDrawingCanvas extends DrawingCanvas implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy();
     this.stopDrawing();
   }
 }

@@ -64,6 +64,9 @@ export class RecordingDrawingCanvas
 
   private ngUnsubscribe: Subject<void> = null;
 
+  // Holds a loaded drawing instance until the canvas is ready to render it.
+  private pendingInstance: DrawingModelInterface = null;
+
   // Indicates whether the user drew something. Used by the draw page to control
   // whether the user may proceed.
   @Output() onSomethingIsDrawn = new EventEmitter<boolean>();
@@ -75,10 +78,23 @@ export class RecordingDrawingCanvas
       this.drawingModel
         .loadInstance(drawingKey)
         .pipe(first())
-        .subscribe((drawingModelInstance: DrawingModelInterface) =>
-          this.initializeDrawingState(drawingModelInstance),
-        );
+        .subscribe((drawingModelInstance: DrawingModelInterface) => {
+          // The canvas may not be initialised yet (data can arrive before the
+          // view is laid out); defer rendering until it is ready.
+          if (this.isCanvasReady) {
+            this.initializeDrawingState(drawingModelInstance);
+          } else {
+            this.pendingInstance = drawingModelInstance;
+          }
+        });
       this.drawingEventsList = this.drawingModel.loadDrawingEvents(drawingKey);
+    }
+  }
+
+  protected override onCanvasReady(): void {
+    if (this.pendingInstance) {
+      this.initializeDrawingState(this.pendingInstance);
+      this.pendingInstance = null;
     }
   }
 
@@ -115,7 +131,8 @@ export class RecordingDrawingCanvas
       });
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    super.ngOnDestroy();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

@@ -1,5 +1,5 @@
 /// <reference types="paper" />
-import { Directive, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Directive, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 // paper.js is loaded as a global browser script (see the "scripts" array in
 // angular.json), exposing the global `paper` namespace for both its runtime
 // constructors and its type definitions. This deliberately avoids importing the
@@ -32,11 +32,13 @@ export interface Offset {
  * the abstract class, which is no longer valid in modern Angular.
  */
 @Directive()
-export abstract class DrawingCanvas implements AfterViewInit {
+export abstract class DrawingCanvas implements AfterViewInit, OnDestroy {
   private readonly PROGRESS_BAR_NORMALIZED_HEIGHT: number = 0.03;
 
   @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
   private sideWidth: number;
+  private canvasReady = false;
+  private resizeObserver: ResizeObserver = null;
 
   private paperScope: paper.PaperScope = new paper.PaperScope();
 
@@ -54,21 +56,59 @@ export abstract class DrawingCanvas implements AfterViewInit {
   private progressBarPath: paper.Path = null;
 
   // Paper setup runs in ngAfterViewInit (not ngOnInit) because @ViewChild
-  // ('drawingCanvas') is only resolved after the view is initialized.
+  // ('drawingCanvas') is only resolved after the view is initialized. We size the
+  // canvas off its container's measured width via a ResizeObserver, so setup
+  // waits until the page has actually been laid out at full width (the Ionic
+  // ionViewDidEnter hook this used to rely on no longer fires). ResizeObserver
+  // also fires regardless of tab visibility, unlike requestAnimationFrame.
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit DrawingCanvas Component');
-    this.sideWidth = this.drawingCanvasRef.nativeElement.parentElement.clientWidth;
-    this.drawingCanvasRef.nativeElement.parentElement.style.height = `${this.sideWidth}px`;
-    // The height and width of the canvas should be 2 less than the parent to
-    // account for the 1px border lines.
-    this.drawingCanvasRef.nativeElement.width = this.sideWidth - 2;
-    this.drawingCanvasRef.nativeElement.height = this.sideWidth - 2;
+    const container = this.drawingCanvasRef.nativeElement.parentElement;
+    const attemptSetup = () => {
+      if (this.canvasReady) return;
+      const width = container.clientWidth;
+      if (width > 0) {
+        this.setupCanvas(width);
+        this.canvasReady = true;
+        if (this.resizeObserver) {
+          this.resizeObserver.disconnect();
+          this.resizeObserver = null;
+        }
+        this.onCanvasReady();
+      }
+    };
+    this.resizeObserver = new ResizeObserver(() => attemptSetup());
+    this.resizeObserver.observe(container);
+    attemptSetup();
+  }
 
-    this.paperScope.setup(this.drawingCanvasRef.nativeElement);
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+  }
+
+  private setupCanvas(width: number): void {
+    this.sideWidth = width;
+    const canvasEl = this.drawingCanvasRef.nativeElement;
+    // Make the container square; canvas is 2px smaller for the 1px border lines.
+    canvasEl.parentElement.style.height = `${width}px`;
+    canvasEl.width = width - 2;
+    canvasEl.height = width - 2;
+
+    this.paperScope.setup(canvasEl);
     this.paperScope.project.activeLayer.name = 'drawingLayer';
     const progressBarLayer = new paper.Layer();
     progressBarLayer.name = 'progressBarLayer';
   }
+
+  /** Whether the paper canvas has been initialised. */
+  protected get isCanvasReady(): boolean {
+    return this.canvasReady;
+  }
+
+  /** Hook invoked once the canvas is initialised; subclasses process pending data. */
+  protected onCanvasReady(): void {}
 
   constructor() {
     console.log('Hello DrawingCanvas Component');

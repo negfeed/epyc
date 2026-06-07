@@ -1,16 +1,19 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import {
   provideAuth,
   getAuth,
+  initializeAuth,
+  indexedDBLocalPersistence,
   connectAuthEmulator,
   Auth as FireAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from '@angular/fire/auth';
+import { Capacitor } from '@capacitor/core';
 import { addIcons } from 'ionicons';
 import {
   menu,
@@ -70,7 +73,12 @@ bootstrapApplication(AppComponent, {
     // Auth is provided before Firestore so that Firestore captures an
     // auth-aware credentials provider and attaches the user's token to requests.
     provideAuth(() => {
-      const auth = getAuth();
+      // On native (Capacitor WKWebView), getAuth()'s default persistence does not
+      // initialise reliably and authState never emits — initialise explicitly with
+      // IndexedDB persistence. On the web, getAuth() is correct.
+      const auth = Capacitor.isNativePlatform()
+        ? initializeAuth(getApp(), { persistence: indexedDBLocalPersistence })
+        : getAuth();
       if (useEmulators) {
         connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
       }
@@ -84,7 +92,8 @@ bootstrapApplication(AppComponent, {
       return firestore;
     }),
     provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
+            // PWA/web only — not in the native webview.
+            enabled: !isDevMode() && !Capacitor.isNativePlatform(),
             registrationStrategy: 'registerWhenStable:30000'
           }),
   ],

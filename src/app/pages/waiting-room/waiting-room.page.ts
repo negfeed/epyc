@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Share } from '@capacitor/share';
@@ -15,6 +15,7 @@ import {
   IonAvatar,
   IonNote,
   IonButton,
+  ToastController,
 } from '@ionic/angular/standalone';
 
 import {
@@ -55,11 +56,12 @@ interface DisplayUsers {
     IonButton,
   ],
 })
-export class WaitingRoomPage {
+export class WaitingRoomPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private gameModel = inject(GameModel);
   private auth = inject(Auth);
   private gameNavCtrl = inject(GameNavigationController);
+  private toastCtrl = inject(ToastController);
 
   private gameKey = '';
   isJoinable = true;
@@ -73,8 +75,8 @@ export class WaitingRoomPage {
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter WaitingRoomPage');
+  ngOnInit() {
+    console.log('ngOnInit WaitingRoomPage');
     this.ngUnsubscribe = new Subject<void>();
     const gameInstanceObservable = this.gameModel
       .loadInstance(this.gameKey)
@@ -128,13 +130,31 @@ export class WaitingRoomPage {
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'WaitingRoomPage');
   }
 
-  doShare() {
-    Share.share({
-      title: 'EPYC game invitation!',
-      text: 'Hey, wanna join me for an EPYC game?',
-      url: `https://epyc-9f15f.appspot.com/game/${this.gameKey}`,
-      dialogTitle: 'Share Game',
-    });
+  async doShare() {
+    // Link to the waiting room of THIS deployment (works on the dev server and
+    // any hosting origin), rather than the old hardcoded production domain.
+    const url = `${window.location.origin}/game/${this.gameKey}/waiting-room`;
+    const text = 'Hey, wanna join me for an EPYC game?';
+    try {
+      const { value: canShare } = await Share.canShare();
+      if (canShare) {
+        await Share.share({ title: 'EPYC game invitation!', text, url, dialogTitle: 'Share Game' });
+        return;
+      }
+    } catch {
+      // Web Share unavailable/failed (common on desktop) — fall back to clipboard.
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      this.presentToast('Invite link copied to clipboard');
+    } catch {
+      this.presentToast(url);
+    }
+  }
+
+  private async presentToast(message: string) {
+    const toast = await this.toastCtrl.create({ message, duration: 3000, position: 'middle' });
+    await toast.present();
   }
 
   canJoin(): boolean {
@@ -163,8 +183,8 @@ export class WaitingRoomPage {
     this.gameModel.start(this.gameKey);
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave WaitingRoom');
+  ngOnDestroy() {
+    console.log('ngOnDestroy WaitingRoom');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.gameNavCtrl.cancelObserveAndNavigateToNextPage();

@@ -50,33 +50,22 @@ export class AppComponent {
   anonymousPages: MenuPage[] = [{ title: 'Login', url: '/login' }];
 
   constructor() {
+    // Toggle the side menus based on auth state. Routing/guarding is handled by
+    // the auth guard on the routes — the app component must NOT imperatively
+    // redirect here, or it would clobber deep links (e.g. a shared game URL).
     this.auth.getSignedIn().subscribe((signedIn: boolean) => {
-      if (signedIn) {
-        this.menuCtrl.enable(true, 'authenticated');
-        this.menuCtrl.enable(false, 'anonymous');
-      } else {
-        this.menuCtrl.enable(true, 'anonymous');
-        this.menuCtrl.enable(false, 'authenticated');
-        this.router.navigateByUrl('/login');
-      }
+      this.menuCtrl.enable(signedIn, 'authenticated');
+      this.menuCtrl.enable(!signedIn, 'anonymous');
     });
     this.initializeApp();
   }
 
   private initializeApp() {
-    // Restore the previous session if any, otherwise land on the login page.
-    this.auth.getLoginStatus().then(
-      () => {
-        this.router.navigateByUrl('/home');
-        setTimeout(() => SplashScreen.hide(), 100);
-      },
-      (error) => {
-        console.log('error: ' + error);
-        setTimeout(() => SplashScreen.hide(), 100);
-      },
-    );
+    // Hide the native splash screen (no-op on the web).
+    SplashScreen.hide().catch(() => undefined);
 
-    // Deep links: epyc://... or https://epyc-9f15f.appspot.com/game/:gameKey
+    // Native deep links: epyc://.../game/:gameKey or a universal link. On the
+    // web the Angular router handles /game/:gameKey/... directly.
     App.addListener('appUrlOpen', (event) => {
       const match = event.url.match(/\/game\/([^/?#]+)/);
       if (match && match[1]) {

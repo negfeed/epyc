@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -29,12 +29,13 @@ import { Auth, AuthProviderId } from '../../services/auth.service';
     IonIcon,
   ],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toastCtrl = inject(ToastController);
   private auth = inject(Auth);
 
-  ionViewDidEnter() {
+  ngOnInit() {
     console.log('Hello Login Page');
   }
 
@@ -47,7 +48,10 @@ export class LoginPage {
   }
 
   private handleSuccessfulLogin() {
-    this.router.navigateByUrl('/home');
+    // Return to wherever the user was headed before being sent to login
+    // (e.g. a shared game URL), defaulting to home.
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
+    this.router.navigateByUrl(returnUrl);
   }
 
   private async handleFailedLogin(error: unknown) {

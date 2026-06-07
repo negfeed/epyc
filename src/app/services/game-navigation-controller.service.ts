@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular/standalone';
+import { AlertController, NavController } from '@ionic/angular/standalone';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -42,7 +41,7 @@ export class GameNavigationController {
   private userModel = inject(UserModel);
   private auth = inject(Auth);
   private alertCtrl = inject(AlertController);
-  private router = inject(Router);
+  private navCtrl = inject(NavController);
   private gameParams = inject(GameParams);
 
   private ngUnsubscribe: Subject<void> = null;
@@ -183,9 +182,19 @@ export class GameNavigationController {
       .loadInstance(gameKey)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((gameInstance: GameModelInterface) => {
-        console.log(`GameNavigationController: change in game state ...`);
+        // Firestore docData emits undefined until a freshly created game document
+        // has been written; ignore those transient empty emissions.
+        if (!gameInstance) {
+          return;
+        }
         const navigationTarget: NavigationTarget =
           this.getNavigationTargetFromGameState(gameInstance);
+
+        // Guard against an unresolved target (would otherwise throw and kill the
+        // subscription, leaving the user stuck on the current page).
+        if (!navigationTarget) {
+          return;
+        }
 
         if (sourcePageName === 'WaitingRoomPage' && sourcePageName !== navigationTarget.pageName) {
           this.userModel.insertJoinGame(this.auth.getUserInfo().uid, gameKey);
@@ -193,12 +202,11 @@ export class GameNavigationController {
 
         if (navigationTarget.pageName !== sourcePageName) {
           this.stopSubscription();
-          console.log(
-            `GameNavigationController: Navigating to new game page ${navigationTarget.pageName}`,
-          );
           // Stash transient parameters then navigate to the matching route.
+          // NavController (not plain Router) is used so Ionic emits the
+          // ionViewWillEnter/ionViewDidEnter lifecycle events the pages rely on.
           this.gameParams.set(navigationTarget.parameters);
-          this.router.navigateByUrl(this.routeFor(navigationTarget.pageName, gameKey));
+          this.navCtrl.navigateForward(this.routeFor(navigationTarget.pageName, gameKey));
         }
       });
   }
@@ -220,7 +228,7 @@ export class GameNavigationController {
             // Unsubscribe any previous subscription.
             this.stopSubscription();
             // Pop back to the home (root) view.
-            this.router.navigateByUrl('/home');
+            this.navCtrl.navigateRoot('/home');
           },
         },
         {

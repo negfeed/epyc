@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -36,7 +36,7 @@ import { GameParams } from '../../services/game-params.service';
     IonItem,
   ],
 })
-export class GameResultsPage {
+export class GameResultsPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private gameModel = inject(GameModel);
@@ -52,8 +52,8 @@ export class GameResultsPage {
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter GameResults');
+  ngOnInit() {
+    console.log('ngOnInit GameResults');
     this.ngUnsubscribe = new Subject<void>();
     const gameInstanceObservable = this.gameModel
       .loadInstance(this.gameKey)
@@ -81,8 +81,8 @@ export class GameResultsPage {
     this.router.navigateByUrl('/home');
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave GameResults');
+  ngOnDestroy() {
+    console.log('ngOnDestroy GameResults');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

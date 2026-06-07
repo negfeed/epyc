@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -52,7 +52,7 @@ interface DisplayThreads {
     IonIcon,
   ],
 })
-export class WaitGameToEndPage {
+export class WaitGameToEndPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private gameNavCtrl = inject(GameNavigationController);
   private gameModel = inject(GameModel);
@@ -65,8 +65,8 @@ export class WaitGameToEndPage {
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter WaitGameToEndPage');
+  ngOnInit() {
+    console.log('ngOnInit WaitGameToEndPage');
     this.ngUnsubscribe = new Subject<void>();
     const gameInstanceObservable = this.gameModel
       .loadInstance(this.gameKey)
@@ -92,8 +92,8 @@ export class WaitGameToEndPage {
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'WaitGameToEndPage');
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave WaitGameToEndPage');
+  ngOnDestroy() {
+    console.log('ngOnDestroy WaitGameToEndPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.gameNavCtrl.cancelObserveAndNavigateToNextPage();

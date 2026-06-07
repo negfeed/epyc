@@ -191,6 +191,29 @@ collapsed into a single modular `@angular/fire` implementation.
   Node-only `fs`/`path`/`canvas`/`jsdom` that break the browser bundle).
 - **RxJS 5 patch operators → RxJS 7 pipeable operators** everywhere.
 
+### Post-migration cloud wiring + runtime fixes
+After the migration, the app was wired to a dedicated Firebase project and several
+runtime bugs (only surfaced once running against a live backend) were fixed:
+- **Data layer moved to Cloud Firestore** (from Realtime Database), per request —
+  `game-model`/`user-model`/`drawing-model` rewritten; a game is one `games/{id}`
+  document, drawings are one `drawings/{id}` document, user game history is a
+  `users/{uid}/games` subcollection. Firestore calls run inside
+  `runInInjectionContext` so `@angular/fire` keeps emissions on the Angular zone.
+- **Dedicated project `epyc-ionic`** (isolated from the parallel native/Flutter
+  migrations): Firestore + security rules deployed, Google sign-in enabled,
+  `firebase.json`/`firestore.rules`/`.firebaserc` added, local-emulator dev wiring
+  behind `?emu=1`.
+- **Auth:** Google + Apple via Firebase Auth, with a `signInWithPopup` →
+  `signInWithRedirect` fallback (popup blockers / mobile web).
+- **Deep-link auth guard:** `authGuard` preserves the requested URL via
+  `returnUrl` so shared game links survive sign-in.
+- **Critical fix — Ionic view lifecycle:** `ionViewDidEnter`/`ionViewWillLeave`
+  do **not** fire for routed pages in this Angular 20 / Ionic 8 standalone setup,
+  so every page's setup code never ran (waiting room never showed "Start", etc.).
+  All pages moved to Angular's `ngOnInit`/`ngOnDestroy`. Central game navigation
+  uses `NavController` and is null-safe against transient empty Firestore
+  emissions. Covered by `game-navigation-controller.service.spec.ts`.
+
 ### Known follow-ups (tech debt)
 - **TypeScript `strict` is relaxed** (`tsconfig.json`) for the legacy port —
   re-enable `strict`/`strictTemplates`/`noPropertyAccessFromIndexSignature`

@@ -3,10 +3,12 @@ import {
   Auth as FireAuth,
   authState,
   signInWithPopup,
+  signInWithRedirect,
   signInWithCredential,
   signOut,
   GoogleAuthProvider,
   OAuthProvider,
+  AuthProvider,
   User,
 } from '@angular/fire/auth';
 import { Capacitor } from '@capacitor/core';
@@ -93,17 +95,47 @@ export class Auth {
     return this.webLogin(providerId);
   }
 
+  // Dev-only: when running against the Auth emulator, prefer the full-page
+  // redirect flow (the emulator popup can't be driven by headless e2e tooling).
+  private preferRedirect(): boolean {
+    try {
+      return localStorage.getItem('epyc-use-emulators') === '1';
+    } catch {
+      return false;
+    }
+  }
+
   private webLogin(providerId: AuthProviderId): Promise<void> {
-    const provider =
+    const provider: AuthProvider =
       providerId === 'google' ? new GoogleAuthProvider() : new OAuthProvider('apple.com');
     if (providerId === 'apple') {
       (provider as OAuthProvider).addScope('email');
       (provider as OAuthProvider).addScope('name');
     }
-    return signInWithPopup(this.fireAuth, provider).then((credential) => {
-      this.currentUser = credential.user;
-      this.loggedIn = true;
-    });
+    if (this.preferRedirect()) {
+      return signInWithRedirect(this.fireAuth, provider);
+    }
+    return signInWithPopup(this.fireAuth, provider).then(
+      (credential) => {
+        this.currentUser = credential.user;
+        this.loggedIn = true;
+      },
+      (error) => {
+        // Fall back to a full-page redirect when the popup can't be used
+        // (popup blockers, in-app/mobile browsers). The session is then
+        // restored via authState after the redirect returns.
+        const code = error?.code;
+        if (
+          code === 'auth/popup-blocked' ||
+          code === 'auth/popup-closed-by-user' ||
+          code === 'auth/cancelled-popup-request' ||
+          code === 'auth/operation-not-supported-in-this-environment'
+        ) {
+          return signInWithRedirect(this.fireAuth, provider);
+        }
+        throw error;
+      },
+    );
   }
 
   private async nativeLogin(providerId: AuthProviderId): Promise<void> {

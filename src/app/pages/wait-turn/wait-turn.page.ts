@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -63,7 +63,7 @@ interface DisplaySteps {
     IonIcon,
   ],
 })
-export class WaitTurnPage {
+export class WaitTurnPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private gameModel = inject(GameModel);
   private gameNavCtrl = inject(GameNavigationController);
@@ -79,8 +79,8 @@ export class WaitTurnPage {
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter WaitTurnPage');
+  ngOnInit() {
+    console.log('ngOnInit WaitTurnPage');
     this.ngUnsubscribe = new Subject<void>();
     const gameInstanceObservable = this.gameModel
       .loadInstance(this.gameKey)
@@ -135,8 +135,8 @@ export class WaitTurnPage {
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'WaitTurnPage');
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave WaitTurnPage');
+  ngOnDestroy() {
+    console.log('ngOnDestroy WaitTurnPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.gameNavCtrl.cancelObserveAndNavigateToNextPage();

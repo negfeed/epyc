@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -45,7 +45,7 @@ interface GameLink {
     IonButton,
   ],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   private auth = inject(Auth);
   private userModel = inject(UserModel);
   private gameModel = inject(GameModel);
@@ -73,8 +73,8 @@ export class HomePage {
     );
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter HomePage');
+  ngOnInit() {
+    console.log('ngOnInit HomePage');
     const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
     this.userModel.checkIn(authUserInfo.uid);
   }
@@ -88,7 +88,4 @@ export class HomePage {
     this.gameNavigationController.navigateToGame(gameKey);
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave HomePage');
-  }
 }

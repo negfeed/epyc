@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './services/auth.guard';
 
 export const routes: Routes = [
   {
@@ -7,43 +8,51 @@ export const routes: Routes = [
   },
   {
     path: 'home',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
   },
   {
     path: 'game/:gameKey/waiting-room',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/waiting-room/waiting-room.page').then((m) => m.WaitingRoomPage),
   },
   {
     path: 'game/:gameKey/wait-turn',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/wait-turn/wait-turn.page').then((m) => m.WaitTurnPage),
   },
   {
     path: 'game/:gameKey/draw',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/draw/draw.page').then((m) => m.DrawPage),
   },
   {
     path: 'game/:gameKey/guess',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/guess/guess.page').then((m) => m.GuessPage),
   },
   {
     path: 'game/:gameKey/wait-game-to-end',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/wait-game-to-end/wait-game-to-end.page').then((m) => m.WaitGameToEndPage),
   },
   {
     path: 'game/:gameKey/results',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/game-results/game-results.page').then((m) => m.GameResultsPage),
   },
   {
     path: 'game/:gameKey/results/:threadIndex',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/thread-results/thread-results.page').then((m) => m.ThreadResultsPage),
   },
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
 ];

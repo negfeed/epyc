@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -44,7 +44,7 @@ import { DrawingControlBarComponent } from '../../components/drawing-control-bar
     DrawingControlBarComponent,
   ],
 })
-export class DrawPage implements OnInit {
+export class DrawPage implements OnInit, OnDestroy {
   private readonly COUNTDOWN_IN_SECONDS: number = 5;
   private readonly COUNTDOWN_STEP_IN_SECONDS: number = 1;
   private readonly MILLISECONDS_IN_SECOND: number = 1000;
@@ -58,7 +58,6 @@ export class DrawPage implements OnInit {
 
   private gameKey: string;
   private atomAddress: AtomAddress;
-  private atomKey: string;
   word: string;
   drawingKey = '';
   private ngUnsubscribe: Subject<void> = null;
@@ -70,24 +69,25 @@ export class DrawPage implements OnInit {
     console.log('Hello DrawPage');
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
     this.atomAddress = this.gameParams.get<AtomAddress>('atomAddress');
-    this.atomKey = this.gameModel.getAtomKey(this.gameKey, this.atomAddress);
     this.word = this.gameParams.get<string>('word');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter DrawPage');
+  ngOnInit(): void {
+    console.log('ngOnInit DrawPage');
     this.ngUnsubscribe = new Subject<void>();
     this.gameModel
-      .loadAtom(this.atomKey)
+      .loadAtom(this.gameKey, this.atomAddress)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((gameAtom: GameAtom) => {
         if (gameAtom && gameAtom.drawingRef) {
           this.drawingKey = gameAtom.drawingRef;
         } else {
-          this.gameModel.upsertAtom(this.atomKey, { drawingRef: this.drawingModel.createInstance() });
+          this.gameModel.upsertAtom(this.gameKey, this.atomAddress, {
+            drawingRef: this.drawingModel.createInstance(),
+          });
         }
       });
-    this.gameModel.upsertAtom(this.atomKey, { state: GameAtomState.STARTED });
+    this.gameModel.upsertAtom(this.gameKey, this.atomAddress, { state: GameAtomState.STARTED });
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'DrawPage');
   }
 
@@ -111,7 +111,7 @@ export class DrawPage implements OnInit {
     if (this.countdownValue <= 0) {
       console.log('Moving away from drawing page.');
       const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      this.gameModel.upsertAtom(this.atomKey, {
+      this.gameModel.upsertAtom(this.gameKey, this.atomAddress, {
         state: GameAtomState.DONE,
         authorUid: authUserInfo.uid,
       });
@@ -123,16 +123,12 @@ export class DrawPage implements OnInit {
     }
   }
 
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave DrawPage');
+  ngOnDestroy() {
+    console.log('ngOnDestroy DrawPage');
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.countdownInProgress = false;
     this.gameNavCtrl.cancelObserveAndNavigateToNextPage();
-  }
-
-  ngOnInit(): void {
-    console.log('ngOnInit DrawPage');
   }
 
   onSomethingIsDrawn(somethingIsDrawn: boolean) {

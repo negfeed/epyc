@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -39,7 +39,7 @@ import { ReplayingDrawingCanvas } from '../../components/replaying-drawing-canva
     ReplayingDrawingCanvas,
   ],
 })
-export class GuessPage {
+export class GuessPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private gameModel = inject(GameModel);
   private auth = inject(Auth);
@@ -48,7 +48,6 @@ export class GuessPage {
 
   private gameKey: string;
   private atomAddress: AtomAddress;
-  private atomKey: string;
   drawingKey: string;
   guess = '';
   drawingFinished = false;
@@ -57,13 +56,12 @@ export class GuessPage {
     console.log('Hello GuessPage');
     this.gameKey = this.route.snapshot.paramMap.get('gameKey');
     this.atomAddress = this.gameParams.get<AtomAddress>('atomAddress');
-    this.atomKey = this.gameModel.getAtomKey(this.gameKey, this.atomAddress);
     this.drawingKey = this.gameParams.get<string>('drawingKey');
   }
 
-  ionViewDidEnter() {
+  ngOnInit() {
     this.gameNavCtrl.observeAndNavigateToNextPage(this.gameKey, 'GuessPage');
-    this.gameModel.upsertAtom(this.atomKey, { state: GameAtomState.STARTED });
+    this.gameModel.upsertAtom(this.gameKey, this.atomAddress, { state: GameAtomState.STARTED });
   }
 
   canSubmit() {
@@ -73,7 +71,7 @@ export class GuessPage {
   submit() {
     if (this.canSubmit()) {
       const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      this.gameModel.upsertAtom(this.atomKey, {
+      this.gameModel.upsertAtom(this.gameKey, this.atomAddress, {
         guess: this.guess,
         state: GameAtomState.DONE,
         authorUid: authUserInfo.uid,
@@ -85,7 +83,7 @@ export class GuessPage {
     this.gameNavCtrl.leaveGame();
   }
 
-  ionViewWillLeave() {
+  ngOnDestroy() {
     this.gameNavCtrl.cancelObserveAndNavigateToNextPage();
   }
 }

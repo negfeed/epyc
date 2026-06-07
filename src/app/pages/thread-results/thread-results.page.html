@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Thread Results</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="assets/img/robot.png" />
+      </ion-avatar>
+      <h2>Mr. Robot selected the word</h2>
+    </ion-item>
+    <ion-card-content>
+      <p class="guess-word">{{ word }}</p>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngFor="let atom of atoms">
+    <ion-item>
+      <ion-avatar slot="start">
+        <img [src]="atom.authorPhotoURL" />
+      </ion-avatar>
+      <h2>{{ atom.authorDisplayName }} {{ atom.isDrawing ? 'drew' : '' }} {{ atom.isGuess ? 'guessed' : '' }}</h2>
+    </ion-item>
+    <ion-card-content>
+      <div *ngIf="atom.isDrawing">
+        <replaying-drawing-canvas [drawingKey]="atom.drawingRef"></replaying-drawing-canvas>
+      </div>
+      <p class="guess-word" *ngIf="atom.isGuess">{{ atom.guess }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

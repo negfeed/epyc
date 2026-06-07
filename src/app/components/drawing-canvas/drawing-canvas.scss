@@ -1,0 +1,20 @@
+/* Custom-element component hosts default to display:inline, which collapses the
+   canvas container's width. Make the host a full-width block. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+#canvasContainer {
+  width: 100%;
+  position: relative;
+
+  canvas {
+    border: 1px solid lightgray;
+    position: absolute;
+    top: 0;
+    left: 0;
+    // Let pointer drags draw instead of scrolling/zooming the page on touch.
+    touch-action: none;
+  }
+}

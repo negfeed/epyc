@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="backButtonAction()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Draw {{ word }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <recording-drawing-canvas
+    [drawingKey]="drawingKey"
+    (onSomethingIsDrawn)="onSomethingIsDrawn($event)"
+  >
+  </recording-drawing-canvas>
+  <drawing-control-bar></drawing-control-bar>
+  <ion-button
+    (click)="next()"
+    [color]="!canSubmit() ? 'light' : countdownInProgress ? 'danger' : 'primary'"
+    expand="block"
+  >
+    {{ countdownInProgress ? 'Wait wait ... ' + countdownValue : 'Next' }}
+  </ion-button>
+</ion-content>

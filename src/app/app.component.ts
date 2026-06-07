@@ -1,85 +1,96 @@
-import { Component, ViewChild } from '@angular/core';
-import { App, Nav, Platform, NavController, MenuController, ViewController } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { Deeplinks } from '@ionic-native/deeplinks';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  IonApp,
+  IonRouterOutlet,
+  IonMenu,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonMenuToggle,
+  MenuController,
+  NavController,
+} from '@ionic/angular/standalone';
+import { App } from '@capacitor/app';
+import { SplashScreen } from '@capacitor/splash-screen';
 
-import { Auth } from '../providers/auth/auth';
+import { Auth } from './services/auth.service';
+
+interface MenuPage {
+  title: string;
+  url: string;
+}
 
 @Component({
-  templateUrl: 'app.html'
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  imports: [
+    CommonModule,
+    IonApp,
+    IonRouterOutlet,
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonMenuToggle,
+  ],
 })
-export class MyApp {
-  @ViewChild(Nav) nav: NavController;
-  rootPage = 'LoginPage';
-  authenticatedPages: Array<{title: string, component: any}>;
-  anonymousPages: Array<{title: string, component: any}>;
+export class AppComponent {
+  private auth = inject(Auth);
+  private navCtrl = inject(NavController);
+  private menuCtrl = inject(MenuController);
 
-  constructor(
-    private app: App,
-    private platform: Platform, 
-    private auth: Auth, 
-    private splashScreen: SplashScreen,
-    private menuCtrl: MenuController,
-    private deeplinks: Deeplinks) {
+  authenticatedPages: MenuPage[] = [{ title: 'Home', url: '/home' }];
+  anonymousPages: MenuPage[] = [{ title: 'Login', url: '/login' }];
 
-    this.authenticatedPages = [
-      { title: 'Home', component: 'HomePage' }
-    ];
-    this.anonymousPages = [
-      { title: 'Login', component: 'LoginPage' }
-    ];
+  constructor() {
+    // Toggle the side menus based on auth state. Routing/guarding is handled by
+    // the auth guard on the routes — the app component must NOT imperatively
+    // redirect here, or it would clobber deep links (e.g. a shared game URL).
     this.auth.getSignedIn().subscribe((signedIn: boolean) => {
-      if (signedIn) {
-        this.menuCtrl.enable(true, 'authenticated');
-      } else {
-        this.menuCtrl.enable(true, 'anonymous');
-        this.nav.setRoot('LoginPage');
-      }
+      this.menuCtrl.enable(signedIn, 'authenticated');
+      this.menuCtrl.enable(!signedIn, 'anonymous');
     });
-    platform.ready().then(() => this.onPlatformReady());
+    this.initializeApp();
   }
 
-  private onPlatformReady() {
-    this.auth.getLoginStatus().then(
-      () => this.handleGetLoginStatusResponse(),
-      (error) => this.handleGetLoginStatusError(error)
-    );
-    this.deeplinks.routeWithNavController(this.nav, {
-      '/game/:gameKey': 'WaitingRoomPage',
-    }).subscribe((match) => {
-      console.log('Successfully matched route:', match);
-    }, (nomatch) => {
-      console.log('Got a deeplink that didn\'t match', nomatch);
+  private initializeApp() {
+    // Hide the native splash screen (no-op on the web).
+    SplashScreen.hide().catch(() => undefined);
+
+    // Native deep links: epyc://.../game/:gameKey or a universal link. On the
+    // web the Angular router handles /game/:gameKey/... directly.
+    App.addListener('appUrlOpen', (event) => {
+      const match = event.url.match(/\/game\/([^/?#]+)/);
+      if (match && match[1]) {
+        this.navCtrl.navigateForward(`/game/${match[1]}/waiting-room`);
+      }
     });
-    this.platform.registerBackButtonAction(() => {
-      let nav = this.app.getActiveNav();
-      let activeView: ViewController = nav.getActive();
-      if (typeof activeView.instance.backButtonAction === 'function') {
-        activeView.instance.backButtonAction();
-      } else if (nav.canGoBack()) {
-        nav.pop();
+
+    // Hardware back button: exit when there is nowhere to go back to.
+    App.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
       } else {
-        this.platform.exitApp();
+        App.exitApp();
       }
     });
   }
 
-  private handleGetLoginStatusResponse() {
-    this.nav.setRoot('HomePage');
-    setTimeout(() => { this.splashScreen.hide(); }, 100);
-  }
-
-  private handleGetLoginStatusError(error) {
-    console.log('error: ' + error)
-    setTimeout(() => { this.splashScreen.hide(); }, 100);
-  }
-
-  openPage(p: any) {
-    // Get the <ion-nav> by id
-    this.nav.setRoot(p.component);
+  openPage(page: MenuPage) {
+    this.navCtrl.navigateRoot(page.url);
   }
 
   logout() {
-    this.auth.doLogout();
+    this.auth.doLogout().then(
+      () => this.navCtrl.navigateRoot('/login'),
+      (error) => console.log('logout error: ' + error),
+    );
   }
 }

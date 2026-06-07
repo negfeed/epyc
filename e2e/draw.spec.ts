@@ -24,9 +24,9 @@ test('host signs in, starts a game, and can draw on the canvas', async ({ page }
   const startGame = page.locator('page-waiting-room ion-button', { hasText: 'Start Game' });
   await expect(startGame).toBeVisible();
 
-  // Start the game -> navigates to the Draw page with a live canvas.
+  // Start the game -> navigates to the Draw page (atom-addressed URL) with a live canvas.
   await startGame.click();
-  await expect(page).toHaveURL(/\/draw$/);
+  await expect(page).toHaveURL(/\/draw\/\d+\/\d+$/);
   const canvas = page.locator('page-draw canvas');
   await expect(canvas).toBeVisible();
 

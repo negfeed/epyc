@@ -334,7 +334,11 @@ export class RecordingDrawingCanvas
   }
 
   private storeAndProcessDrawingEvent(drawingEvent: DrawingEvent) {
-    this.drawingEventsList.storeDrawingEvent(drawingEvent);
+    // Persist if the drawing list is ready; always render + signal locally so the
+    // UI stays responsive even in the brief window before the list is bound.
+    if (this.drawingEventsList) {
+      this.drawingEventsList.storeDrawingEvent(drawingEvent);
+    }
     super.processDrawingEvent(drawingEvent);
     this.onSomethingIsDrawn.emit(true);
   }

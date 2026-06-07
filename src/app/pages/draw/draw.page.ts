@@ -82,9 +82,12 @@ export class DrawPage implements OnInit, OnDestroy {
         if (gameAtom && gameAtom.drawingRef) {
           this.drawingKey = gameAtom.drawingRef;
         } else {
-          this.gameModel.upsertAtom(this.gameKey, this.atomAddress, {
-            drawingRef: this.drawingModel.createInstance(),
-          });
+          // Create the drawing and bind it immediately (createInstance returns
+          // the id synchronously) so the canvas can record strokes right away,
+          // rather than waiting for the atom update to round-trip through Firestore.
+          const drawingRef = this.drawingModel.createInstance();
+          this.drawingKey = drawingRef;
+          this.gameModel.upsertAtom(this.gameKey, this.atomAddress, { drawingRef });
         }
       });
     this.gameModel.upsertAtom(this.gameKey, this.atomAddress, { state: GameAtomState.STARTED });

@@ -2,10 +2,10 @@
   <canvas
     #drawingCanvas
     id="drawingCanvas"
-    (touchstart)="onTouchEvent($event)"
-    (touchend)="onTouchEvent($event)"
-    (touchmove)="onTouchEvent($event)"
-    (touchcancel)="onTouchEvent($event)"
+    (pointerdown)="onPointerEvent($event)"
+    (pointermove)="onPointerEvent($event)"
+    (pointerup)="onPointerEvent($event)"
+    (pointercancel)="onPointerEvent($event)"
   >
   </canvas>
 </div>

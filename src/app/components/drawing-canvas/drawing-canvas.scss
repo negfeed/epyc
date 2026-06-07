@@ -14,5 +14,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    // Let pointer drags draw instead of scrolling/zooming the page on touch.
+    touch-action: none;
   }
 }

@@ -143,12 +143,13 @@ export class ReplayingDrawingCanvas extends DrawingCanvas implements OnDestroy {
     this.stopDrawingFlag = true;
   }
 
-  onTouchEvent(event: TouchEvent) {
+  onPointerEvent(event: PointerEvent) {
     switch (event.type) {
-      case 'touchstart':
+      case 'pointerdown':
         this.touchCount++;
         break;
-      case 'touchend':
+      case 'pointerup':
+      case 'pointercancel':
         this.touchCount--;
         break;
     }

@@ -339,26 +339,37 @@ export class RecordingDrawingCanvas
     this.onSomethingIsDrawn.emit(true);
   }
 
-  onTouchEvent(event: TouchEvent) {
+  // Tracks how many pointers are currently down so pointermove (which also fires
+  // for a hovering mouse) is only treated as drawing while pressed.
+  private activePointerCount = 0;
+
+  // Pointer events cover mouse, touch and pen, so drawing works on desktop and
+  // mobile alike (the original app handled touch events only).
+  onPointerEvent(event: PointerEvent) {
     const offset: Offset = this.getCanvasPageOffset();
-    const changedCoordinates: Array<Coordinates> = [];
-    for (let index = 0; index < event.changedTouches.length; index++) {
-      changedCoordinates.push({
-        x: event.changedTouches[index].pageX - offset.left,
-        y: event.changedTouches[index].pageY - offset.top,
-      });
-    }
+    const coordinate: Coordinates = {
+      x: event.pageX - offset.left,
+      y: event.pageY - offset.top,
+    };
 
     switch (event.type) {
-      case 'touchstart':
-        this.processTouchStart(changedCoordinates);
+      case 'pointerdown':
+        this.activePointerCount++;
+        // Keep receiving move/up even if the pointer leaves the canvas.
+        (event.target as Element).setPointerCapture?.(event.pointerId);
+        this.processTouchStart([coordinate]);
         break;
-      case 'touchend':
-      case 'touchcancel':
-        this.processTouchEnd(changedCoordinates);
+      case 'pointermove':
+        if (this.activePointerCount > 0) {
+          this.processTouchMove([coordinate]);
+        }
         break;
-      case 'touchmove':
-        this.processTouchMove(changedCoordinates);
+      case 'pointerup':
+      case 'pointercancel':
+        if (this.activePointerCount > 0) {
+          this.activePointerCount = Math.max(0, this.activePointerCount - 1);
+          this.processTouchEnd([coordinate]);
+        }
         break;
     }
   }

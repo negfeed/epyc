@@ -181,33 +181,35 @@ export class GameNavigationController {
     this.gameModel
       .loadInstance(gameKey)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((gameInstance: GameModelInterface) => {
-        // Firestore docData emits undefined until a freshly created game document
-        // has been written; ignore those transient empty emissions.
-        if (!gameInstance) {
-          return;
-        }
-        const navigationTarget: NavigationTarget =
-          this.getNavigationTargetFromGameState(gameInstance);
+      .subscribe({
+        next: (gameInstance: GameModelInterface) => {
+          // Firestore docData emits undefined until a freshly created game document
+          // has been written; ignore those transient empty emissions.
+          if (!gameInstance) {
+            return;
+          }
+          const navigationTarget: NavigationTarget =
+            this.getNavigationTargetFromGameState(gameInstance);
 
-        // Guard against an unresolved target (would otherwise throw and kill the
-        // subscription, leaving the user stuck on the current page).
-        if (!navigationTarget) {
-          return;
-        }
+          // Guard against an unresolved target (would otherwise throw and kill the
+          // subscription, leaving the user stuck on the current page).
+          if (!navigationTarget) {
+            return;
+          }
 
-        if (sourcePageName === 'WaitingRoomPage' && sourcePageName !== navigationTarget.pageName) {
-          this.userModel.insertJoinGame(this.auth.getUserInfo().uid, gameKey);
-        }
+          if (sourcePageName === 'WaitingRoomPage' && sourcePageName !== navigationTarget.pageName) {
+            this.userModel.insertJoinGame(this.auth.getUserInfo().uid, gameKey);
+          }
 
-        if (navigationTarget.pageName !== sourcePageName) {
-          this.stopSubscription();
-          // Stash transient parameters then navigate to the matching route.
-          // NavController (not plain Router) is used so Ionic emits the
-          // ionViewWillEnter/ionViewDidEnter lifecycle events the pages rely on.
-          this.gameParams.set(navigationTarget.parameters);
-          this.navCtrl.navigateForward(this.routeFor(navigationTarget.pageName, gameKey));
-        }
+          if (navigationTarget.pageName !== sourcePageName) {
+            this.stopSubscription();
+            // Stash transient parameters then navigate to the matching route.
+            this.gameParams.set(navigationTarget.parameters);
+            this.navCtrl.navigateForward(this.routeFor(navigationTarget.pageName, gameKey));
+          }
+        },
+        error: (err) =>
+          console.error('GameNavigationController: game listener error', err?.code || err),
       });
   }
 

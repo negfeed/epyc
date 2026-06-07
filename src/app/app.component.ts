@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import {
   IonApp,
   IonRouterOutlet,
@@ -13,6 +12,7 @@ import {
   IonItem,
   IonMenuToggle,
   MenuController,
+  NavController,
 } from '@ionic/angular/standalone';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -43,7 +43,7 @@ interface MenuPage {
 })
 export class AppComponent {
   private auth = inject(Auth);
-  private router = inject(Router);
+  private navCtrl = inject(NavController);
   private menuCtrl = inject(MenuController);
 
   authenticatedPages: MenuPage[] = [{ title: 'Home', url: '/home' }];
@@ -69,7 +69,7 @@ export class AppComponent {
     App.addListener('appUrlOpen', (event) => {
       const match = event.url.match(/\/game\/([^/?#]+)/);
       if (match && match[1]) {
-        this.router.navigateByUrl(`/game/${match[1]}/waiting-room`);
+        this.navCtrl.navigateForward(`/game/${match[1]}/waiting-room`);
       }
     });
 
@@ -84,12 +84,12 @@ export class AppComponent {
   }
 
   openPage(page: MenuPage) {
-    this.router.navigateByUrl(page.url);
+    this.navCtrl.navigateRoot(page.url);
   }
 
   logout() {
     this.auth.doLogout().then(
-      () => this.router.navigateByUrl('/login'),
+      () => this.navCtrl.navigateRoot('/login'),
       (error) => console.log('logout error: ' + error),
     );
   }

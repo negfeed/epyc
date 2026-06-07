@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+} from '@angular/core';
 import { Memoize } from 'typescript-memoize';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
@@ -32,7 +40,10 @@ interface FingerState {
   templateUrl: 'recording-drawing-canvas.html',
   styleUrls: ['../drawing-canvas/drawing-canvas.scss'],
 })
-export class RecordingDrawingCanvas extends DrawingCanvas implements OnInit, OnDestroy {
+export class RecordingDrawingCanvas
+  extends DrawingCanvas
+  implements OnInit, OnDestroy, AfterViewInit
+{
   private readonly MINIMUM_PROCESSING_DISTANCE = 6;
 
   private fingersState: Map<string, FingerState> = new Map();
@@ -79,8 +90,11 @@ export class RecordingDrawingCanvas extends DrawingCanvas implements OnInit, OnD
     console.log('Hello RecordingDrawingCanvas Component');
   }
 
-  override ngOnInit() {
-    super.ngOnInit();
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+  }
+
+  ngOnInit() {
     this.ngUnsubscribe = new Subject<void>();
     this.drawingController.drawingMode$
       .pipe(takeUntil(this.ngUnsubscribe))

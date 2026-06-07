@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -9,6 +9,7 @@ import {
   IonContent,
   IonButton,
   IonIcon,
+  NavController,
   ToastController,
 } from '@ionic/angular/standalone';
 
@@ -31,7 +32,7 @@ import { Auth, AuthProviderId } from '../../services/auth.service';
 })
 export class LoginPage implements OnInit {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private navCtrl = inject(NavController);
   private toastCtrl = inject(ToastController);
   private auth = inject(Auth);
 
@@ -49,9 +50,10 @@ export class LoginPage implements OnInit {
 
   private handleSuccessfulLogin() {
     // Return to wherever the user was headed before being sent to login
-    // (e.g. a shared game URL), defaulting to home.
+    // (e.g. a shared game URL), defaulting to home. navigateRoot resets the
+    // Ionic page stack so the login page is removed from the stack/view.
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
-    this.router.navigateByUrl(returnUrl);
+    this.navCtrl.navigateRoot(returnUrl);
   }
 
   private async handleFailedLogin(error: unknown) {

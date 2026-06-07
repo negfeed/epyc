@@ -81,22 +81,28 @@ export class WaitingRoomPage implements OnInit, OnDestroy {
     const gameInstanceObservable = this.gameModel
       .loadInstance(this.gameKey)
       .pipe(takeUntil(this.ngUnsubscribe));
-    gameInstanceObservable.subscribe((gameInstance: GameModelInterface) => {
-      const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
-      if (!(authUserInfo.uid in gameInstance.users)) {
-        const gameUser: GameUser = {
-          uid: authUserInfo.uid,
-          displayName: authUserInfo.displayName,
-          photoURL: authUserInfo.photoURL,
-          joined: false,
-        };
-        this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
-      }
-      this.isHost = authUserInfo.uid === gameInstance.creator;
-      if (authUserInfo.uid in gameInstance.users) {
-        this.isJoined = gameInstance.users[authUserInfo.uid].joined;
-      }
-      this.isJoinable = gameInstance.state === GameState.CREATED;
+    gameInstanceObservable.subscribe({
+      next: (gameInstance: GameModelInterface) => {
+        if (!gameInstance) {
+          return;
+        }
+        const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
+        if (!(authUserInfo.uid in gameInstance.users)) {
+          const gameUser: GameUser = {
+            uid: authUserInfo.uid,
+            displayName: authUserInfo.displayName,
+            photoURL: authUserInfo.photoURL,
+            joined: false,
+          };
+          this.gameModel.upsertGameUser(this.gameKey, authUserInfo.uid, gameUser);
+        }
+        this.isHost = authUserInfo.uid === gameInstance.creator;
+        if (authUserInfo.uid in gameInstance.users) {
+          this.isJoined = gameInstance.users[authUserInfo.uid].joined;
+        }
+        this.isJoinable = gameInstance.state === GameState.CREATED;
+      },
+      error: (err) => console.error('WaitingRoom: game listener error', err?.code || err),
     });
     const users = gameInstanceObservable.pipe(
       map((gameInstance: GameModelInterface) => {

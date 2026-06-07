@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import {
@@ -11,6 +11,7 @@ import {
   IonContent,
   IonList,
   IonItem,
+  NavController,
 } from '@ionic/angular/standalone';
 
 import {
@@ -38,7 +39,7 @@ import { GameParams } from '../../services/game-params.service';
 })
 export class GameResultsPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private navCtrl = inject(NavController);
   private gameModel = inject(GameModel);
   private gameNavCtrl = inject(GameNavigationController);
   private gameParams = inject(GameParams);
@@ -74,11 +75,11 @@ export class GameResultsPage implements OnInit, OnDestroy {
 
   itemSelected(threadIndex: number) {
     this.gameParams.set({ gameInstance: this.gameInstance, threadIndex });
-    this.router.navigateByUrl(`/game/${this.gameKey}/results/${threadIndex}`);
+    this.navCtrl.navigateForward(`/game/${this.gameKey}/results/${threadIndex}`);
   }
 
   goHome() {
-    this.router.navigateByUrl('/home');
+    this.navCtrl.navigateRoot('/home');
   }
 
   ngOnDestroy() {

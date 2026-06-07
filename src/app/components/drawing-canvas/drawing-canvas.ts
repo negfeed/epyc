@@ -1,5 +1,5 @@
 /// <reference types="paper" />
-import { Directive, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Directive, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 // paper.js is loaded as a global browser script (see the "scripts" array in
 // angular.json), exposing the global `paper` namespace for both its runtime
 // constructors and its type definitions. This deliberately avoids importing the
@@ -32,7 +32,7 @@ export interface Offset {
  * the abstract class, which is no longer valid in modern Angular.
  */
 @Directive()
-export abstract class DrawingCanvas implements OnInit {
+export abstract class DrawingCanvas implements AfterViewInit {
   private readonly PROGRESS_BAR_NORMALIZED_HEIGHT: number = 0.03;
 
   @ViewChild('drawingCanvas') private drawingCanvasRef: ElementRef;
@@ -53,8 +53,10 @@ export abstract class DrawingCanvas implements OnInit {
   // The paperjs path that represents the progress bar (replay mode).
   private progressBarPath: paper.Path = null;
 
-  ngOnInit(): void {
-    console.log('ngOnInit DrawingCanvas Component');
+  // Paper setup runs in ngAfterViewInit (not ngOnInit) because @ViewChild
+  // ('drawingCanvas') is only resolved after the view is initialized.
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit DrawingCanvas Component');
     this.sideWidth = this.drawingCanvasRef.nativeElement.parentElement.clientWidth;
     this.drawingCanvasRef.nativeElement.parentElement.style.height = `${this.sideWidth}px`;
     // The height and width of the canvas should be 2 less than the parent to

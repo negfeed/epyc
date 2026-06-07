@@ -10,6 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
+    "e2e": "firebase emulators:exec --only auth,firestore --project epyc-ionic \"playwright test\"",
     "lint": "ng lint"
   },
   "private": true,
@@ -60,6 +61,7 @@
     "@angular/language-service": "^20.0.0",
     "@capacitor/cli": "8.4.0",
     "@ionic/angular-toolkit": "^12.0.0",
+    "@playwright/test": "^1.60.0",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",

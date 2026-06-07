@@ -3,7 +3,14 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import {
+  provideAuth,
+  getAuth,
+  connectAuthEmulator,
+  Auth as FireAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from '@angular/fire/auth';
 import { addIcons } from 'ionicons';
 import {
   menu,
@@ -81,4 +88,21 @@ bootstrapApplication(AppComponent, {
             registrationStrategy: 'registerWhenStable:30000'
           }),
   ],
+}).then((appRef) => {
+  // Emulator-only e2e sign-in helper: lets Playwright authenticate the app's
+  // Firebase instance against the Auth emulator without the OAuth UI. Gated on
+  // `useEmulators` (only when ?emu=1 in a dev build), so it is never present in
+  // production builds.
+  if (useEmulators) {
+    const auth = appRef.injector.get(FireAuth);
+    (
+      window as unknown as { __epycSignIn?: (e?: string, p?: string) => Promise<unknown> }
+    ).__epycSignIn = async (email = 'tester@example.com', password = 'password123') => {
+      try {
+        return await signInWithEmailAndPassword(auth, email, password);
+      } catch {
+        return await createUserWithEmailAndPassword(auth, email, password);
+      }
+    };
+  }
 });

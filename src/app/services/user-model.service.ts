@@ -1,70 +1,81 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, EnvironmentInjector, inject, runInInjectionContext } from '@angular/core';
 import {
-  Database,
-  ref,
-  objectVal,
-  listVal,
-  update,
+  Firestore,
+  collection,
+  doc,
+  docData,
+  collectionData,
+  setDoc,
+  getDoc,
   query,
-  orderByChild,
-  limitToLast,
-} from '@angular/fire/database';
+  orderBy,
+  limit,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
 
 export interface Game {
   $key?: string;
   join_timestamp_ms: number;
 }
 
-export interface Games {
-  [index: string]: Game;
-}
-
 export interface AppModelInterface {
   $key?: string;
-  $value?: number | string | boolean;
   last_checkin_timestamp_ms?: number;
-  games?: Games;
 }
 
+/**
+ * Per-user data in Firestore: a `users/{uid}` document holding the last check-in,
+ * plus a `users/{uid}/games` subcollection recording when the user joined each
+ * game (used for the "Last Few Games" list).
+ */
 @Injectable({ providedIn: 'root' })
 export class UserModel {
-  private readonly INSTANCES_PATH = '/users';
-  private db = inject(Database);
+  private readonly COLLECTION = 'users';
+  private db = inject(Firestore);
+  private injector = inject(EnvironmentInjector);
+
+  // See GameModel.run — keeps @angular/fire observables/promises on the Angular zone.
+  private run<T>(fn: () => T): T {
+    return runInInjectionContext(this.injector, fn);
+  }
 
   public loadInstance(key: string): Observable<AppModelInterface> {
-    const path = `${this.INSTANCES_PATH}/${key}`;
-    // Touch the check-in timestamp as a side effect (matches legacy behaviour).
-    update(ref(this.db, path), { last_checkin_timestamp_ms: Date.now() });
-    return objectVal<AppModelInterface>(ref(this.db, path), { keyField: '$key' });
+    const ref = doc(this.db, this.COLLECTION, key);
+    this.run(() => setDoc(ref, { last_checkin_timestamp_ms: Date.now() }, { merge: true }));
+    return this.run(() => docData(ref, { idField: '$key' }) as Observable<AppModelInterface>);
   }
 
   public checkIn(key: string): Promise<void> {
-    return update(ref(this.db, `${this.INSTANCES_PATH}/${key}`), {
-      last_checkin_timestamp_ms: Date.now(),
-    });
+    return this.run(() =>
+      setDoc(
+        doc(this.db, this.COLLECTION, key),
+        { last_checkin_timestamp_ms: Date.now() },
+        { merge: true },
+      ),
+    );
   }
 
   public insertJoinGame(key: string, gameInstanceReference: string): void {
-    const path = `${this.INSTANCES_PATH}/${key}/games/${gameInstanceReference}`;
-    objectVal<Game>(ref(this.db, path))
-      .pipe(first())
-      .subscribe((game: Game | null) => {
-        if (!game || !game.join_timestamp_ms) {
-          update(ref(this.db, path), { join_timestamp_ms: Date.now() });
-        }
-      });
+    const ref = doc(this.db, this.COLLECTION, key, 'games', gameInstanceReference);
+    this.run(() => getDoc(ref)).then((snapshot) => {
+      const game = snapshot.data() as Game | undefined;
+      if (!game || !game.join_timestamp_ms) {
+        this.run(() => setDoc(ref, { join_timestamp_ms: Date.now() }, { merge: true }));
+      }
+    });
   }
 
   public queryLastFewGames(key: string): Observable<Game[]> {
-    return listVal<Game>(
-      query(
-        ref(this.db, `${this.INSTANCES_PATH}/${key}/games`),
-        orderByChild('join_timestamp_ms'),
-        limitToLast(3),
-      ),
-      { keyField: '$key' },
+    return this.run(
+      () =>
+        collectionData(
+          query(
+            collection(this.db, this.COLLECTION, key, 'games'),
+            orderBy('join_timestamp_ms', 'desc'),
+            limit(3),
+          ),
+          { idField: '$key' },
+        ) as Observable<Game[]>,
     );
   }
 }

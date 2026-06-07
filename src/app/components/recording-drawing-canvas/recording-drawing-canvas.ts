@@ -303,7 +303,7 @@ export class RecordingDrawingCanvas extends DrawingCanvas implements OnInit, OnD
   }
 
   private storeAndProcessDrawingEvent(drawingEvent: DrawingEvent) {
-    this.drawingEventsList.storeDrawingEvent(drawingEvent, this.nextEventIndex++);
+    this.drawingEventsList.storeDrawingEvent(drawingEvent);
     super.processDrawingEvent(drawingEvent);
     this.onSomethingIsDrawn.emit(true);
   }

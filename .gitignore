@@ -34,6 +34,14 @@ log.txt
 npm-debug.log
 yarn-error.log
 
+# Firebase (CLI/emulator artifacts; local dev tooling)
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+database-debug.log
+.claude/launch.json
+
 # IDEs and editors
 .idea/
 .project

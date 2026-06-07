@@ -1,13 +1,11 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: 'AIzaSyADo4umy3bmQIG8nZ6UgJuB9y0iR-WvsUo',
-    authDomain: 'epyc-9f15f.firebaseapp.com',
-    databaseURL: 'https://epyc-9f15f.firebaseio.com',
-    projectId: 'epyc-9f15f',
-    storageBucket: 'epyc-9f15f.appspot.com',
-    messagingSenderId: '468473195385',
-    // TODO: set the Web App ID from the Firebase console.
-    appId: '',
+    apiKey: 'AIzaSyAMC5V16fwi6Kt6vCQyWk6VtergCAxWU2s',
+    authDomain: 'epyc-ionic.firebaseapp.com',
+    projectId: 'epyc-ionic',
+    storageBucket: 'epyc-ionic.firebasestorage.app',
+    messagingSenderId: '271701898940',
+    appId: '1:271701898940:web:6f22e94161062fed6d02b9',
   },
 };

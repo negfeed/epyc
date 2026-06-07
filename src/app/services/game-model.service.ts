@@ -1,7 +1,16 @@
-import { Injectable, inject } from '@angular/core';
-import { Database, ref, objectVal, push, update } from '@angular/fire/database';
+import { Injectable, EnvironmentInjector, inject, runInInjectionContext } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  doc,
+  docData,
+  setDoc,
+  updateDoc,
+  getDoc,
+  runTransaction,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { Auth, AuthUserInfo } from './auth.service';
 import { Words } from './words.service';
@@ -60,7 +69,6 @@ export interface GameThreads extends Array<GameThread> {}
 
 export interface GameModelInterface {
   $key?: string;
-  $value?: number | string | boolean;
   creation_timestamp_ms: number;
   state: GameState;
   creator: string;
@@ -80,16 +88,39 @@ export interface NextAtom {
   allAtomsDone: boolean;
 }
 
+/**
+ * Game state persisted in Cloud Firestore.
+ *
+ * A game is a single document under the `games` collection. Its `threads`
+ * (each with a nested `gameAtoms` array) and `users` map live inside that one
+ * document — games are small (a handful of players), so this avoids the read
+ * fan-out of subcollections. Atom mutations use a transaction because several
+ * players update different atoms of the same document concurrently.
+ */
 @Injectable({ providedIn: 'root' })
 export class GameModel {
-  private readonly INSTANCES_PATH = '/games';
+  private readonly COLLECTION = 'games';
 
-  private db = inject(Database);
+  private db = inject(Firestore);
   private auth = inject(Auth);
   private words = inject(Words);
+  private injector = inject(EnvironmentInjector);
+
+  /**
+   * Runs a Firebase call within the environment injection context. Service
+   * methods are invoked from component lifecycle hooks / event handlers (outside
+   * an injection context), and @angular/fire only schedules its observables on
+   * the Angular zone when called inside one. Without this, snapshot callbacks
+   * fire outside NgZone and downstream navigation/CD never runs.
+   */
+  private run<T>(fn: () => T): T {
+    return runInInjectionContext(this.injector, fn);
+  }
 
   public createInstance(): string {
-    const users: GameUsers = {};
+    // doc() with no id generates a client-side id without writing, so we can
+    // return the key synchronously (matching the old RTDB push().key contract).
+    const ref = doc(collection(this.db, this.COLLECTION));
     const authUserInfo: AuthUserInfo = this.auth.getUserInfo();
     const gameUser: GameUser = {
       uid: authUserInfo.uid,
@@ -97,20 +128,23 @@ export class GameModel {
       photoURL: authUserInfo.photoURL,
       joined: true,
     };
-    users[authUserInfo.uid] = gameUser;
     const gameInstance: GameModelInterface = {
       state: GameState.CREATED,
       creator: authUserInfo.uid,
       creation_timestamp_ms: Date.now(),
-      users,
+      users: { [authUserInfo.uid]: gameUser },
     };
-    return push(ref(this.db, this.INSTANCES_PATH), gameInstance).key as string;
+    this.run(() => setDoc(ref, gameInstance));
+    return ref.id;
   }
 
   public loadInstance(key: string): Observable<GameModelInterface> {
-    return objectVal<GameModelInterface>(ref(this.db, `${this.INSTANCES_PATH}/${key}`), {
-      keyField: '$key',
-    });
+    return this.run(
+      () =>
+        docData(doc(this.db, this.COLLECTION, key), {
+          idField: '$key',
+        }) as Observable<GameModelInterface>,
+    );
   }
 
   private buildEmptyThread(playerCount: number): GameThread {
@@ -146,27 +180,31 @@ export class GameModel {
   }
 
   public start(key: string) {
-    const instanceRef = ref(this.db, `${this.INSTANCES_PATH}/${key}`);
-    objectVal<GameModelInterface>(instanceRef)
-      .pipe(first())
-      .subscribe((gameModel: GameModelInterface) => {
-        const usersUidOrder: Array<string> = [];
-        for (const uid in gameModel.users) {
-          if (gameModel.users[uid].joined) {
-            usersUidOrder.push(uid);
-          }
+    const instanceRef = doc(this.db, this.COLLECTION, key);
+    this.run(() => getDoc(instanceRef)).then((snapshot) => {
+      const gameModel = snapshot.data() as GameModelInterface;
+      const usersUidOrder: Array<string> = [];
+      for (const uid in gameModel.users) {
+        if (gameModel.users[uid].joined) {
+          usersUidOrder.push(uid);
         }
-        this.shuffleUsers(usersUidOrder);
-        update(instanceRef, {
+      }
+      this.shuffleUsers(usersUidOrder);
+      this.run(() =>
+        updateDoc(instanceRef, {
           state: GameState.STARTED,
           usersOrder: usersUidOrder,
           threads: this.buildEmptyThreads(usersUidOrder.length),
-        });
-      });
+        }),
+      );
+    });
   }
 
   public upsertGameUser(gameKey: string, userKey: string, gameUser: GameUser): Promise<void> {
-    return update(ref(this.db, `${this.INSTANCES_PATH}/${gameKey}/users/${userKey}`), gameUser);
+    // Deep-merge into users.<uid> without clobbering sibling users or fields.
+    return this.run(() =>
+      setDoc(doc(this.db, this.COLLECTION, gameKey), { users: { [userKey]: gameUser } }, { merge: true }),
+    );
   }
 
   public static atomPlayerIndex(atomAddress: AtomAddress, playersCount: number): number {
@@ -221,15 +259,38 @@ export class GameModel {
     return { address: nextAtomAddressToPlay, allAtomsDone, readyToPlay };
   }
 
-  public getAtomKey(gameKey: string, atomAddress: AtomAddress): string {
-    return `${this.INSTANCES_PATH}/${gameKey}/threads/${atomAddress.threadIndex}/gameAtoms/${atomAddress.atomIndex}`;
+  /** Streams a single atom by deriving it from the game document. */
+  public loadAtom(gameKey: string, atomAddress: AtomAddress): Observable<GameAtom> {
+    return this.loadInstance(gameKey).pipe(
+      map((game) => game?.threads?.[atomAddress.threadIndex]?.gameAtoms?.[atomAddress.atomIndex]),
+    );
   }
 
-  public loadAtom(atomKey: string): Observable<GameAtom> {
-    return objectVal<GameAtom>(ref(this.db, atomKey));
-  }
-
-  public upsertAtom(atomKey: string, gameAtom: GameAtom): Promise<void> {
-    return update(ref(this.db, atomKey), gameAtom);
+  /**
+   * Merges a partial atom update into the nested threads array. Firestore can't
+   * address an array element by index, so we read-modify-write the threads array
+   * inside a transaction to stay safe against concurrent atom updates.
+   */
+  public upsertAtom(
+    gameKey: string,
+    atomAddress: AtomAddress,
+    gameAtom: GameAtom,
+  ): Promise<void> {
+    const ref = doc(this.db, this.COLLECTION, gameKey);
+    return this.run(() =>
+      runTransaction(this.db, async (tx) => {
+        const snapshot = await tx.get(ref);
+        const game = snapshot.data() as GameModelInterface;
+        if (!game || !game.threads) {
+          return;
+        }
+        const existing = game.threads[atomAddress.threadIndex].gameAtoms[atomAddress.atomIndex];
+        game.threads[atomAddress.threadIndex].gameAtoms[atomAddress.atomIndex] = {
+          ...existing,
+          ...gameAtom,
+        };
+        tx.update(ref, { threads: game.threads });
+      }),
+    );
   }
 }

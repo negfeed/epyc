@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "271701898940",
+    "project_id": "epyc-ionic",
+    "storage_bucket": "epyc-ionic.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271701898940:android:37b976829a5265c36d02b9",
+        "android_client_info": {
+          "package_name": "com.negfeed.epyc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271701898940-2s0d9q3dni1ncpqsjgqqtns8mp31ql8r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.negfeed.epyc",
+            "certificate_hash": "dea4b099efba31b1ca0f4bf030eb1ebf771969cc"
+          }
+        },
+        {
+          "client_id": "271701898940-h1qetv5a2luhv1tvogj1p3mn7muevtuc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb64LNNndqSDe12Wg7HlfeIQ7XIQc6Yy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271701898940-h1qetv5a2luhv1tvogj1p3mn7muevtuc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271701898940-qq7mgh4sglpjasn3b2fc76jjd341u1gp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.negfeed.epyc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

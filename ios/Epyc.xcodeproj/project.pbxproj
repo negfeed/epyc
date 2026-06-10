@@ -1,0 +1,785 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		043A8FBC0208760280644CF9 /* FirestoreRefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7280162D0FAAFFECE7E6 /* FirestoreRefs.swift */; };
+		058AF1BCEC5C4473D5E74F89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A543A2CDCFDAA38FC4E91C4C /* Assets.xcassets */; };
+		0BAA5997FEAF5280676C45D4 /* WaitTurnViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B51C3893D6C40D8AC576C7 /* WaitTurnViewModel.swift */; };
+		1997C87E184291B632320CBC /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88575B24395A28762F2040F8 /* AppRouter.swift */; };
+		19B539552146FB9CC9EF7737 /* GuessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBA5BA7512E269E3E3EBE7F /* GuessView.swift */; };
+		1C21017B0A488BB5BC09E6D5 /* GameRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1846B8D80F0F048620E57979 /* GameRepository.swift */; };
+		1C49C2D0B5ECD6749259C54C /* RecordingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FCA9177B494D92D3112433 /* RecordingCanvasView.swift */; };
+		20A8782F0500202194B1719E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 621C158541B4B94BB05DDF47 /* GoogleService-Info.plist */; };
+		21D2F268CF02F49B0F889C2D /* ThreadResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE555763DCA3773DD90D90C /* ThreadResultsViewModel.swift */; };
+		2881C056FE7135A7DF92C6F1 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F8F1575363044963BE2B15 /* SmokeTests.swift */; };
+		2F6F76338D6B830D47FCBBCA /* GuessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505024EBBAC4FB60A1013E8 /* GuessViewModel.swift */; };
+		3537A698500B04A874AB0B1D /* WaitGameToEndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BB9A906F288E0DF548157F /* WaitGameToEndView.swift */; };
+		3CA81346CF439851ACD3DBE1 /* ReplayCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53AB40EE2084F8E5760DE65 /* ReplayCanvasView.swift */; };
+		4C2BF91A07239D1A45646882 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 94E0AFFF9A19B11ED71A66F4 /* FirebaseAuth */; };
+		527CD2999886B4AEEC6ABED9 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAC98DC5F9ABB1B9AE7D6C7 /* LoginViewModel.swift */; };
+		544D5981F7FCA0C14954F4AF /* EpycApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938B5489F31F806CAFF063A /* EpycApp.swift */; };
+		5A3DAFBEC4FD81480200AFC5 /* DrawingControlBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46CDBBE49A8E6ABA89AEB31 /* DrawingControlBar.swift */; };
+		63DA2CB72C0072C5951F6951 /* ThreadResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A07E0A10558D1EFB42310 /* ThreadResultsView.swift */; };
+		688AF9FCBAF6D70E227FB900 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC3A2A65B2DE885E00A967A /* AuthService.swift */; };
+		7187AE84AFACF3802A2F076A /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6AE3E59CCCB1BB6820D85 /* UserRepository.swift */; };
+		7C10F25F65001B60E7FB3296 /* WaitingRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095238C8D3CEC6E33E2D7995 /* WaitingRoomView.swift */; };
+		8C19B969A78563296F5E1BF6 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120AC448FBAED9F3D081CD8B /* DrawView.swift */; };
+		9EBD73C889991E1218BB53BA /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2B7AE2659E65908B19A813 /* DIContainer.swift */; };
+		AB853126ADD93C8FBB80940A /* EpycCore in Frameworks */ = {isa = PBXBuildFile; productRef = 14A616FDCF6AAFB18F743287 /* EpycCore */; };
+		B372D0509EC710FE4AF9F06A /* EpycCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6B310FD2C438E18EE9CF3F3B /* EpycCore */; };
+		B48E8DF8CD53D6994DC57020 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60CEDC2EBB87D8602B8EEF4 /* RootView.swift */; };
+		BA9129D01431AF35D14CD470 /* GameMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE77E11A6C2FD9AEBAD0ECB7 /* GameMapping.swift */; };
+		C65615E2B8031FDB5659D1B9 /* WaitingRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDCA5EB1F233EEE374F9E39 /* WaitingRoomViewModel.swift */; };
+		C71787958996BA5D624F1879 /* GameResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6267697DFF4EAD9C536940 /* GameResultsViewModel.swift */; };
+		C778EB28C04A3DD47C36C19D /* DrawingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807C82C3AD99475DAAF8200F /* DrawingEngine.swift */; };
+		C86DC8F6AFBB839C37636BF3 /* GameResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFBE980E444CD894E2EB35B2 /* GameResultsView.swift */; };
+		CD902FB8FEA289ABF769A3C0 /* WaitGameToEndViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92AB5CCDE8C53C4FA1D82CDD /* WaitGameToEndViewModel.swift */; };
+		CFE88BD88BD8AF5558BF3F32 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCAB4BDF6DE78CD9B9682713 /* LoginView.swift */; };
+		D03743345D168110165D44E8 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 095BBAF2605A8B01F3CF279C /* GoogleSignIn */; };
+		D1BA2C28AB69219EF5B1E0E3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FB4EDB92AA97277A175A82 /* HomeView.swift */; };
+		D8B60817E1E15FA1CD555092 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E949DD016DC7A16724EA0C1 /* HomeViewModel.swift */; };
+		D98F74594E46A49DBEF699DB /* DrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F70EA7841D8148983E26CA /* DrawViewModel.swift */; };
+		DCECA1663C4114C321BAB471 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DE03C2AF2C5CFB9ADDA6C1C3 /* FirebaseFirestore */; };
+		E81E4658F27A37C13AD3C85F /* WaitTurnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA843D691AEE0771ACF6E4 /* WaitTurnView.swift */; };
+		F22ED73AAC0731C76BFF8129 /* DrawingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA773C86C55C9BA9B3E15A8 /* DrawingRepository.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A4CA0A9FA039C5ED87F51A02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B859BF07D70B43D289D51F0F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 705B025EC7C7482D9B93E37B;
+			remoteInfo = Epyc;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		095238C8D3CEC6E33E2D7995 /* WaitingRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingRoomView.swift; sourceTree = "<group>"; };
+		0F2B7AE2659E65908B19A813 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
+		120AC448FBAED9F3D081CD8B /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
+		1846B8D80F0F048620E57979 /* GameRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRepository.swift; sourceTree = "<group>"; };
+		21FB4EDB92AA97277A175A82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		224F7280162D0FAAFFECE7E6 /* FirestoreRefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreRefs.swift; sourceTree = "<group>"; };
+		28BB9A906F288E0DF548157F /* WaitGameToEndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitGameToEndView.swift; sourceTree = "<group>"; };
+		2A8A07E0A10558D1EFB42310 /* ThreadResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadResultsView.swift; sourceTree = "<group>"; };
+		2BCA843D691AEE0771ACF6E4 /* WaitTurnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitTurnView.swift; sourceTree = "<group>"; };
+		2CA773C86C55C9BA9B3E15A8 /* DrawingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingRepository.swift; sourceTree = "<group>"; };
+		370235B113C2441B1D4FB1FE /* Epyc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Epyc.entitlements; sourceTree = "<group>"; };
+		37F8F1575363044963BE2B15 /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
+		3DBA5BA7512E269E3E3EBE7F /* GuessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessView.swift; sourceTree = "<group>"; };
+		44FCA9177B494D92D3112433 /* RecordingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingCanvasView.swift; sourceTree = "<group>"; };
+		48E0E92B97D2A64AF00B08E5 /* Epyc.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Epyc.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F6267697DFF4EAD9C536940 /* GameResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResultsViewModel.swift; sourceTree = "<group>"; };
+		5CC3A2A65B2DE885E00A967A /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		5E949DD016DC7A16724EA0C1 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		621C158541B4B94BB05DDF47 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		807C82C3AD99475DAAF8200F /* DrawingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingEngine.swift; sourceTree = "<group>"; };
+		88575B24395A28762F2040F8 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		88A7FE1C0E7866F3B8E3507D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8C3521761FFC21333C8F8AA3 /* EpycTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EpycTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92AB5CCDE8C53C4FA1D82CDD /* WaitGameToEndViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitGameToEndViewModel.swift; sourceTree = "<group>"; };
+		96F7B604F81E3FBB7DD1C6F1 /* EpycCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EpycCore; path = EpycCore; sourceTree = SOURCE_ROOT; };
+		A543A2CDCFDAA38FC4E91C4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B3F70EA7841D8148983E26CA /* DrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawViewModel.swift; sourceTree = "<group>"; };
+		B53AB40EE2084F8E5760DE65 /* ReplayCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayCanvasView.swift; sourceTree = "<group>"; };
+		BDAC98DC5F9ABB1B9AE7D6C7 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		C46CDBBE49A8E6ABA89AEB31 /* DrawingControlBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingControlBar.swift; sourceTree = "<group>"; };
+		CCAB4BDF6DE78CD9B9682713 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		CE77E11A6C2FD9AEBAD0ECB7 /* GameMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMapping.swift; sourceTree = "<group>"; };
+		D3B51C3893D6C40D8AC576C7 /* WaitTurnViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitTurnViewModel.swift; sourceTree = "<group>"; };
+		D505024EBBAC4FB60A1013E8 /* GuessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessViewModel.swift; sourceTree = "<group>"; };
+		D938B5489F31F806CAFF063A /* EpycApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpycApp.swift; sourceTree = "<group>"; };
+		DBDCA5EB1F233EEE374F9E39 /* WaitingRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingRoomViewModel.swift; sourceTree = "<group>"; };
+		E60CEDC2EBB87D8602B8EEF4 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		EEC6AE3E59CCCB1BB6820D85 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
+		EEE555763DCA3773DD90D90C /* ThreadResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadResultsViewModel.swift; sourceTree = "<group>"; };
+		EFBE980E444CD894E2EB35B2 /* GameResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResultsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7F49E4FCDAFA40BE1A069CB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B372D0509EC710FE4AF9F06A /* EpycCore in Frameworks */,
+				4C2BF91A07239D1A45646882 /* FirebaseAuth in Frameworks */,
+				DCECA1663C4114C321BAB471 /* FirebaseFirestore in Frameworks */,
+				D03743345D168110165D44E8 /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAEF1A7D1A3959C5E6983B29 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB853126ADD93C8FBB80940A /* EpycCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		09645759369ECCC49B11F1F2 /* WaitTurn */ = {
+			isa = PBXGroup;
+			children = (
+				2BCA843D691AEE0771ACF6E4 /* WaitTurnView.swift */,
+				D3B51C3893D6C40D8AC576C7 /* WaitTurnViewModel.swift */,
+			);
+			path = WaitTurn;
+			sourceTree = "<group>";
+		};
+		09D4BEF076B8B5205A466114 /* WaitingRoom */ = {
+			isa = PBXGroup;
+			children = (
+				095238C8D3CEC6E33E2D7995 /* WaitingRoomView.swift */,
+				DBDCA5EB1F233EEE374F9E39 /* WaitingRoomViewModel.swift */,
+			);
+			path = WaitingRoom;
+			sourceTree = "<group>";
+		};
+		3A955ED097714DA4024B3E91 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				2CA773C86C55C9BA9B3E15A8 /* DrawingRepository.swift */,
+				1846B8D80F0F048620E57979 /* GameRepository.swift */,
+				EEC6AE3E59CCCB1BB6820D85 /* UserRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		3DCA0D0F005A5457A9CEA87A /* Draw */ = {
+			isa = PBXGroup;
+			children = (
+				120AC448FBAED9F3D081CD8B /* DrawView.swift */,
+				B3F70EA7841D8148983E26CA /* DrawViewModel.swift */,
+			);
+			path = Draw;
+			sourceTree = "<group>";
+		};
+		4DB22412F0747F6E6F4FD1BC /* EpycTests */ = {
+			isa = PBXGroup;
+			children = (
+				37F8F1575363044963BE2B15 /* SmokeTests.swift */,
+			);
+			path = EpycTests;
+			sourceTree = "<group>";
+		};
+		58A42FB7E02C735D5BA51E95 = {
+			isa = PBXGroup;
+			children = (
+				F0837E010E47D8688D1DB010 /* Epyc */,
+				4DB22412F0747F6E6F4FD1BC /* EpycTests */,
+				F5F692D7412F9E3118CE54A4 /* Packages */,
+				AB97BE70A201D514784B64F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5BAF5920695393D4284B1C0B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				CCAB4BDF6DE78CD9B9682713 /* LoginView.swift */,
+				BDAC98DC5F9ABB1B9AE7D6C7 /* LoginViewModel.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		69098DC7D51E6AF4E0FF7E79 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				3DCA0D0F005A5457A9CEA87A /* Draw */,
+				A34A2D36C2599A84ECBE3653 /* GameResults */,
+				7DCD611A39ADE1FAB2FDFD28 /* Guess */,
+				757C9AC3EDC89D63C5E4DB36 /* Home */,
+				5BAF5920695393D4284B1C0B /* Login */,
+				9E381536C83711AA8C2CE82C /* ThreadResults */,
+				E5ACE123D4798366349C6619 /* WaitGameToEnd */,
+				09D4BEF076B8B5205A466114 /* WaitingRoom */,
+				09645759369ECCC49B11F1F2 /* WaitTurn */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		757C9AC3EDC89D63C5E4DB36 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				21FB4EDB92AA97277A175A82 /* HomeView.swift */,
+				5E949DD016DC7A16724EA0C1 /* HomeViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		799A765E6062B2985795CFD4 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				C46CDBBE49A8E6ABA89AEB31 /* DrawingControlBar.swift */,
+				807C82C3AD99475DAAF8200F /* DrawingEngine.swift */,
+				44FCA9177B494D92D3112433 /* RecordingCanvasView.swift */,
+				B53AB40EE2084F8E5760DE65 /* ReplayCanvasView.swift */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		7DCD611A39ADE1FAB2FDFD28 /* Guess */ = {
+			isa = PBXGroup;
+			children = (
+				3DBA5BA7512E269E3E3EBE7F /* GuessView.swift */,
+				D505024EBBAC4FB60A1013E8 /* GuessViewModel.swift */,
+			);
+			path = Guess;
+			sourceTree = "<group>";
+		};
+		83C6F0517C1874172F12D295 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				224F7280162D0FAAFFECE7E6 /* FirestoreRefs.swift */,
+				CE77E11A6C2FD9AEBAD0ECB7 /* GameMapping.swift */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
+		87CF47DD4C21E19BF45383FE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				ADE2439FFA962BF58F81F783 /* Auth */,
+				83C6F0517C1874172F12D295 /* Firebase */,
+				3A955ED097714DA4024B3E91 /* Repositories */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		9E381536C83711AA8C2CE82C /* ThreadResults */ = {
+			isa = PBXGroup;
+			children = (
+				2A8A07E0A10558D1EFB42310 /* ThreadResultsView.swift */,
+				EEE555763DCA3773DD90D90C /* ThreadResultsViewModel.swift */,
+			);
+			path = ThreadResults;
+			sourceTree = "<group>";
+		};
+		A34A2D36C2599A84ECBE3653 /* GameResults */ = {
+			isa = PBXGroup;
+			children = (
+				EFBE980E444CD894E2EB35B2 /* GameResultsView.swift */,
+				4F6267697DFF4EAD9C536940 /* GameResultsViewModel.swift */,
+			);
+			path = GameResults;
+			sourceTree = "<group>";
+		};
+		AB97BE70A201D514784B64F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48E0E92B97D2A64AF00B08E5 /* Epyc.app */,
+				8C3521761FFC21333C8F8AA3 /* EpycTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ADE2439FFA962BF58F81F783 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				5CC3A2A65B2DE885E00A967A /* AuthService.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		DB47632500B08A2922069012 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A543A2CDCFDAA38FC4E91C4C /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		DD4B4A8B9998C4DF3CC9EC54 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				88575B24395A28762F2040F8 /* AppRouter.swift */,
+				0F2B7AE2659E65908B19A813 /* DIContainer.swift */,
+				D938B5489F31F806CAFF063A /* EpycApp.swift */,
+				E60CEDC2EBB87D8602B8EEF4 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E5ACE123D4798366349C6619 /* WaitGameToEnd */ = {
+			isa = PBXGroup;
+			children = (
+				28BB9A906F288E0DF548157F /* WaitGameToEndView.swift */,
+				92AB5CCDE8C53C4FA1D82CDD /* WaitGameToEndViewModel.swift */,
+			);
+			path = WaitGameToEnd;
+			sourceTree = "<group>";
+		};
+		F0837E010E47D8688D1DB010 /* Epyc */ = {
+			isa = PBXGroup;
+			children = (
+				370235B113C2441B1D4FB1FE /* Epyc.entitlements */,
+				621C158541B4B94BB05DDF47 /* GoogleService-Info.plist */,
+				88A7FE1C0E7866F3B8E3507D /* Info.plist */,
+				DD4B4A8B9998C4DF3CC9EC54 /* App */,
+				87CF47DD4C21E19BF45383FE /* Core */,
+				799A765E6062B2985795CFD4 /* Drawing */,
+				69098DC7D51E6AF4E0FF7E79 /* Features */,
+				DB47632500B08A2922069012 /* Resources */,
+			);
+			path = Epyc;
+			sourceTree = "<group>";
+		};
+		F5F692D7412F9E3118CE54A4 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				96F7B604F81E3FBB7DD1C6F1 /* EpycCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		681924A74EB894FE673B42E5 /* EpycTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACFD8E5A3EE1BB7AF656C8BD /* Build configuration list for PBXNativeTarget "EpycTests" */;
+			buildPhases = (
+				7A0A655200E7BFC554602C1F /* Sources */,
+				DAEF1A7D1A3959C5E6983B29 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD849CD2CA36A69F901FB87A /* PBXTargetDependency */,
+			);
+			name = EpycTests;
+			packageProductDependencies = (
+				14A616FDCF6AAFB18F743287 /* EpycCore */,
+			);
+			productName = EpycTests;
+			productReference = 8C3521761FFC21333C8F8AA3 /* EpycTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		705B025EC7C7482D9B93E37B /* Epyc */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1D682115313C9F1018E83F6 /* Build configuration list for PBXNativeTarget "Epyc" */;
+			buildPhases = (
+				BB02843F78FF423E93AE4A80 /* Sources */,
+				9123B4C5E939CCBCD9DEC0C6 /* Resources */,
+				7F49E4FCDAFA40BE1A069CB2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Epyc;
+			packageProductDependencies = (
+				6B310FD2C438E18EE9CF3F3B /* EpycCore */,
+				94E0AFFF9A19B11ED71A66F4 /* FirebaseAuth */,
+				DE03C2AF2C5CFB9ADDA6C1C3 /* FirebaseFirestore */,
+				095BBAF2605A8B01F3CF279C /* GoogleSignIn */,
+			);
+			productName = Epyc;
+			productReference = 48E0E92B97D2A64AF00B08E5 /* Epyc.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B859BF07D70B43D289D51F0F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					705B025EC7C7482D9B93E37B = {
+						DevelopmentTeam = 8A7C669LHV;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5367D5E99A6A448C0DF910FB /* Build configuration list for PBXProject "Epyc" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 58A42FB7E02C735D5BA51E95;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A4C0E4DB19464F3B8FBF2AB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				FF25DEF75FA61F06731A9084 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				08209CE39B82B390625906A2 /* XCLocalSwiftPackageReference "EpycCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AB97BE70A201D514784B64F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				705B025EC7C7482D9B93E37B /* Epyc */,
+				681924A74EB894FE673B42E5 /* EpycTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9123B4C5E939CCBCD9DEC0C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				058AF1BCEC5C4473D5E74F89 /* Assets.xcassets in Resources */,
+				20A8782F0500202194B1719E /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A0A655200E7BFC554602C1F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2881C056FE7135A7DF92C6F1 /* SmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BB02843F78FF423E93AE4A80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1997C87E184291B632320CBC /* AppRouter.swift in Sources */,
+				688AF9FCBAF6D70E227FB900 /* AuthService.swift in Sources */,
+				9EBD73C889991E1218BB53BA /* DIContainer.swift in Sources */,
+				8C19B969A78563296F5E1BF6 /* DrawView.swift in Sources */,
+				D98F74594E46A49DBEF699DB /* DrawViewModel.swift in Sources */,
+				5A3DAFBEC4FD81480200AFC5 /* DrawingControlBar.swift in Sources */,
+				C778EB28C04A3DD47C36C19D /* DrawingEngine.swift in Sources */,
+				F22ED73AAC0731C76BFF8129 /* DrawingRepository.swift in Sources */,
+				544D5981F7FCA0C14954F4AF /* EpycApp.swift in Sources */,
+				043A8FBC0208760280644CF9 /* FirestoreRefs.swift in Sources */,
+				BA9129D01431AF35D14CD470 /* GameMapping.swift in Sources */,
+				1C21017B0A488BB5BC09E6D5 /* GameRepository.swift in Sources */,
+				C86DC8F6AFBB839C37636BF3 /* GameResultsView.swift in Sources */,
+				C71787958996BA5D624F1879 /* GameResultsViewModel.swift in Sources */,
+				19B539552146FB9CC9EF7737 /* GuessView.swift in Sources */,
+				2F6F76338D6B830D47FCBBCA /* GuessViewModel.swift in Sources */,
+				D1BA2C28AB69219EF5B1E0E3 /* HomeView.swift in Sources */,
+				D8B60817E1E15FA1CD555092 /* HomeViewModel.swift in Sources */,
+				CFE88BD88BD8AF5558BF3F32 /* LoginView.swift in Sources */,
+				527CD2999886B4AEEC6ABED9 /* LoginViewModel.swift in Sources */,
+				1C49C2D0B5ECD6749259C54C /* RecordingCanvasView.swift in Sources */,
+				3CA81346CF439851ACD3DBE1 /* ReplayCanvasView.swift in Sources */,
+				B48E8DF8CD53D6994DC57020 /* RootView.swift in Sources */,
+				63DA2CB72C0072C5951F6951 /* ThreadResultsView.swift in Sources */,
+				21D2F268CF02F49B0F889C2D /* ThreadResultsViewModel.swift in Sources */,
+				7187AE84AFACF3802A2F076A /* UserRepository.swift in Sources */,
+				3537A698500B04A874AB0B1D /* WaitGameToEndView.swift in Sources */,
+				CD902FB8FEA289ABF769A3C0 /* WaitGameToEndViewModel.swift in Sources */,
+				E81E4658F27A37C13AD3C85F /* WaitTurnView.swift in Sources */,
+				0BAA5997FEAF5280676C45D4 /* WaitTurnViewModel.swift in Sources */,
+				7C10F25F65001B60E7FB3296 /* WaitingRoomView.swift in Sources */,
+				C65615E2B8031FDB5659D1B9 /* WaitingRoomViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD849CD2CA36A69F901FB87A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 705B025EC7C7482D9B93E37B /* Epyc */;
+			targetProxy = A4CA0A9FA039C5ED87F51A02 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0B9421F284772CFD7E963224 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2E982BA97AAC3DC6A260A6C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Epyc/Epyc.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8A7C669LHV;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Epyc/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.negfeed.epycnative;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		320C5D05778B530876EBD989 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.negfeed.EpycTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Epyc.app/Epyc";
+			};
+			name = Debug;
+		};
+		57A00EB318876EE5346DEB7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B6424A89AE54C953A978C8A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.negfeed.EpycTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Epyc.app/Epyc";
+			};
+			name = Release;
+		};
+		C3DB7CF7550D973CBD3A64E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Epyc/Epyc.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8A7C669LHV;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Epyc/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.negfeed.epycnative;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5367D5E99A6A448C0DF910FB /* Build configuration list for PBXProject "Epyc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B9421F284772CFD7E963224 /* Debug */,
+				57A00EB318876EE5346DEB7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A1D682115313C9F1018E83F6 /* Build configuration list for PBXNativeTarget "Epyc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3DB7CF7550D973CBD3A64E2 /* Debug */,
+				2E982BA97AAC3DC6A260A6C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ACFD8E5A3EE1BB7AF656C8BD /* Build configuration list for PBXNativeTarget "EpycTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				320C5D05778B530876EBD989 /* Debug */,
+				B6424A89AE54C953A978C8A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		08209CE39B82B390625906A2 /* XCLocalSwiftPackageReference "EpycCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = EpycCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A4C0E4DB19464F3B8FBF2AB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
+		FF25DEF75FA61F06731A9084 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		095BBAF2605A8B01F3CF279C /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF25DEF75FA61F06731A9084 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		14A616FDCF6AAFB18F743287 /* EpycCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EpycCore;
+		};
+		6B310FD2C438E18EE9CF3F3B /* EpycCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EpycCore;
+		};
+		94E0AFFF9A19B11ED71A66F4 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A4C0E4DB19464F3B8FBF2AB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		DE03C2AF2C5CFB9ADDA6C1C3 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A4C0E4DB19464F3B8FBF2AB4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = B859BF07D70B43D289D51F0F /* Project object */;
+}

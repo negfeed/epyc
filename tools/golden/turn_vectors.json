@@ -1,0 +1,2507 @@
+{
+  "meta": {
+    "source": "src/providers/game-model + game-navigation-controller",
+    "generated_from": "tools/gen_golden.js"
+  },
+  "enums": {
+    "GameState": {
+      "CREATED": 1,
+      "STARTED": 2,
+      "ABANDONED": 3,
+      "FINISHED": 4
+    },
+    "AtomType": {
+      "DRAWING": 1,
+      "GUESS": 2
+    },
+    "AtomState": {
+      "NOT_STARTED": 1,
+      "STARTED": 2,
+      "DONE": 3
+    }
+  },
+  "atomPlayerIndex": [
+    {
+      "n": 2,
+      "threadIndex": 0,
+      "atomIndex": 0,
+      "playerIndex": 0
+    },
+    {
+      "n": 2,
+      "threadIndex": 0,
+      "atomIndex": 1,
+      "playerIndex": 1
+    },
+    {
+      "n": 2,
+      "threadIndex": 0,
+      "atomIndex": 2,
+      "playerIndex": 0
+    },
+    {
+      "n": 2,
+      "threadIndex": 1,
+      "atomIndex": 0,
+      "playerIndex": 1
+    },
+    {
+      "n": 2,
+      "threadIndex": 1,
+      "atomIndex": 1,
+      "playerIndex": 0
+    },
+    {
+      "n": 2,
+      "threadIndex": 1,
+      "atomIndex": 2,
+      "playerIndex": 1
+    },
+    {
+      "n": 3,
+      "threadIndex": 0,
+      "atomIndex": 0,
+      "playerIndex": 0
+    },
+    {
+      "n": 3,
+      "threadIndex": 0,
+      "atomIndex": 1,
+      "playerIndex": 2
+    },
+    {
+      "n": 3,
+      "threadIndex": 0,
+      "atomIndex": 2,
+      "playerIndex": 1
+    },
+    {
+      "n": 3,
+      "threadIndex": 0,
+      "atomIndex": 3,
+      "playerIndex": 0
+    },
+    {
+      "n": 3,
+      "threadIndex": 1,
+      "atomIndex": 0,
+      "playerIndex": 1
+    },
+    {
+      "n": 3,
+      "threadIndex": 1,
+      "atomIndex": 1,
+      "playerIndex": 0
+    },
+    {
+      "n": 3,
+      "threadIndex": 1,
+      "atomIndex": 2,
+      "playerIndex": 2
+    },
+    {
+      "n": 3,
+      "threadIndex": 1,
+      "atomIndex": 3,
+      "playerIndex": 1
+    },
+    {
+      "n": 3,
+      "threadIndex": 2,
+      "atomIndex": 0,
+      "playerIndex": 2
+    },
+    {
+      "n": 3,
+      "threadIndex": 2,
+      "atomIndex": 1,
+      "playerIndex": 1
+    },
+    {
+      "n": 3,
+      "threadIndex": 2,
+      "atomIndex": 2,
+      "playerIndex": 0
+    },
+    {
+      "n": 3,
+      "threadIndex": 2,
+      "atomIndex": 3,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 0,
+      "atomIndex": 0,
+      "playerIndex": 0
+    },
+    {
+      "n": 4,
+      "threadIndex": 0,
+      "atomIndex": 1,
+      "playerIndex": 3
+    },
+    {
+      "n": 4,
+      "threadIndex": 0,
+      "atomIndex": 2,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 0,
+      "atomIndex": 3,
+      "playerIndex": 1
+    },
+    {
+      "n": 4,
+      "threadIndex": 0,
+      "atomIndex": 4,
+      "playerIndex": 0
+    },
+    {
+      "n": 4,
+      "threadIndex": 1,
+      "atomIndex": 0,
+      "playerIndex": 1
+    },
+    {
+      "n": 4,
+      "threadIndex": 1,
+      "atomIndex": 1,
+      "playerIndex": 0
+    },
+    {
+      "n": 4,
+      "threadIndex": 1,
+      "atomIndex": 2,
+      "playerIndex": 3
+    },
+    {
+      "n": 4,
+      "threadIndex": 1,
+      "atomIndex": 3,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 1,
+      "atomIndex": 4,
+      "playerIndex": 1
+    },
+    {
+      "n": 4,
+      "threadIndex": 2,
+      "atomIndex": 0,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 2,
+      "atomIndex": 1,
+      "playerIndex": 1
+    },
+    {
+      "n": 4,
+      "threadIndex": 2,
+      "atomIndex": 2,
+      "playerIndex": 0
+    },
+    {
+      "n": 4,
+      "threadIndex": 2,
+      "atomIndex": 3,
+      "playerIndex": 3
+    },
+    {
+      "n": 4,
+      "threadIndex": 2,
+      "atomIndex": 4,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 3,
+      "atomIndex": 0,
+      "playerIndex": 3
+    },
+    {
+      "n": 4,
+      "threadIndex": 3,
+      "atomIndex": 1,
+      "playerIndex": 2
+    },
+    {
+      "n": 4,
+      "threadIndex": 3,
+      "atomIndex": 2,
+      "playerIndex": 1
+    },
+    {
+      "n": 4,
+      "threadIndex": 3,
+      "atomIndex": 3,
+      "playerIndex": 0
+    },
+    {
+      "n": 4,
+      "threadIndex": 3,
+      "atomIndex": 4,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 0,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 1,
+      "playerIndex": 4
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 2,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 3,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 4,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 0,
+      "atomIndex": 5,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 0,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 1,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 2,
+      "playerIndex": 4
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 3,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 4,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 1,
+      "atomIndex": 5,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 0,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 1,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 2,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 3,
+      "playerIndex": 4
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 4,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 2,
+      "atomIndex": 5,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 0,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 1,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 2,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 3,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 4,
+      "playerIndex": 4
+    },
+    {
+      "n": 5,
+      "threadIndex": 3,
+      "atomIndex": 5,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 0,
+      "playerIndex": 4
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 1,
+      "playerIndex": 3
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 2,
+      "playerIndex": 2
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 3,
+      "playerIndex": 1
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 4,
+      "playerIndex": 0
+    },
+    {
+      "n": 5,
+      "threadIndex": 4,
+      "atomIndex": 5,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 0,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 1,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 2,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 3,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 4,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 5,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 0,
+      "atomIndex": 6,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 0,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 1,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 2,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 3,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 4,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 5,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 1,
+      "atomIndex": 6,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 0,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 1,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 2,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 3,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 4,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 5,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 2,
+      "atomIndex": 6,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 0,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 1,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 2,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 3,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 4,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 5,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 3,
+      "atomIndex": 6,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 0,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 1,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 2,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 3,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 4,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 5,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 4,
+      "atomIndex": 6,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 0,
+      "playerIndex": 5
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 1,
+      "playerIndex": 4
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 2,
+      "playerIndex": 3
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 3,
+      "playerIndex": 2
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 4,
+      "playerIndex": 1
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 5,
+      "playerIndex": 0
+    },
+    {
+      "n": 6,
+      "threadIndex": 5,
+      "atomIndex": 6,
+      "playerIndex": 5
+    }
+  ],
+  "simulations": [
+    {
+      "playersCount": 2,
+      "atomCountPerThread": 3,
+      "addressSeqs": {
+        "0": [
+          {
+            "threadIndex": 0,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 2
+          }
+        ],
+        "1": [
+          {
+            "threadIndex": 1,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 2
+          }
+        ]
+      },
+      "rounds": [
+        {
+          "states": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "playersCount": 3,
+      "atomCountPerThread": 4,
+      "addressSeqs": {
+        "0": [
+          {
+            "threadIndex": 0,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 3
+          }
+        ],
+        "1": [
+          {
+            "threadIndex": 1,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 3
+          }
+        ],
+        "2": [
+          {
+            "threadIndex": 2,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 3
+          }
+        ]
+      },
+      "rounds": [
+        {
+          "states": [
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "playersCount": 4,
+      "atomCountPerThread": 5,
+      "addressSeqs": {
+        "0": [
+          {
+            "threadIndex": 0,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 4
+          }
+        ],
+        "1": [
+          {
+            "threadIndex": 1,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 4
+          }
+        ],
+        "2": [
+          {
+            "threadIndex": 2,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 4
+          }
+        ],
+        "3": [
+          {
+            "threadIndex": 3,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 4
+          }
+        ]
+      },
+      "rounds": [
+        {
+          "states": [
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "playersCount": 5,
+      "atomCountPerThread": 6,
+      "addressSeqs": {
+        "0": [
+          {
+            "threadIndex": 0,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 4,
+            "atomIndex": 4
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 5
+          }
+        ],
+        "1": [
+          {
+            "threadIndex": 1,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 4,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 4
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 5
+          }
+        ],
+        "2": [
+          {
+            "threadIndex": 2,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 4,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 4
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 5
+          }
+        ],
+        "3": [
+          {
+            "threadIndex": 3,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 4,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 4
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 5
+          }
+        ],
+        "4": [
+          {
+            "threadIndex": 4,
+            "atomIndex": 0
+          },
+          {
+            "threadIndex": 0,
+            "atomIndex": 1
+          },
+          {
+            "threadIndex": 1,
+            "atomIndex": 2
+          },
+          {
+            "threadIndex": 2,
+            "atomIndex": 3
+          },
+          {
+            "threadIndex": 3,
+            "atomIndex": 4
+          },
+          {
+            "threadIndex": 4,
+            "atomIndex": 5
+          }
+        ]
+      },
+      "rounds": [
+        {
+          "states": [
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 0
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 1
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 2
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              1,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 3
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              1,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 4
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "DRAW"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              1
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              1
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": {
+                "threadIndex": 0,
+                "atomIndex": 5
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": {
+                "threadIndex": 1,
+                "atomIndex": 5
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": {
+                "threadIndex": 2,
+                "atomIndex": 5
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": {
+                "threadIndex": 3,
+                "atomIndex": 5
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": {
+                "threadIndex": 4,
+                "atomIndex": 5
+              },
+              "readyToPlay": true,
+              "allAtomsDone": false,
+              "destination": "GUESS"
+            }
+          ]
+        },
+        {
+          "states": [
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ]
+          ],
+          "players": [
+            {
+              "playerIndex": 0,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 1,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 2,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 3,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            },
+            {
+              "playerIndex": 4,
+              "nextAtom": null,
+              "readyToPlay": false,
+              "allAtomsDone": true,
+              "destination": "GAME_RESULTS"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

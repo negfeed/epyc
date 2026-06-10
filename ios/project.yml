@@ -1,0 +1,72 @@
+# XcodeGen project definition (the committed source of truth for the Xcode project).
+# Regenerate the .xcodeproj with:  brew install xcodegen && cd ios && xcodegen
+name: Epyc
+options:
+  bundleIdPrefix: com.negfeed
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "11.6.0"
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: "8.0.0"
+  EpycCore:
+    path: EpycCore
+
+targets:
+  Epyc:
+    type: application
+    platform: iOS
+    sources:
+      - path: Epyc
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.negfeed.epycnative
+        # Sign with the developer's team so the app gets a real application-identifier
+        # (the default keychain access group Google Sign-In requires). Change this to
+        # your own Team ID, or set it in Xcode → Signing & Capabilities.
+        DEVELOPMENT_TEAM: 8A7C669LHV
+        CODE_SIGN_STYLE: Automatic
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: Epyc/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Epyc/Epyc.entitlements
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.9"
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+    dependencies:
+      - package: EpycCore
+      - package: Firebase
+        product: FirebaseAuth
+      - package: Firebase
+        product: FirebaseFirestore
+      - package: GoogleSignIn
+        product: GoogleSignIn
+
+  EpycTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: EpycTests
+    dependencies:
+      - target: Epyc
+      - package: EpycCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Epyc:
+    build:
+      targets:
+        Epyc: all
+    test:
+      targets:
+        - EpycTests
+    run:
+      config: Debug

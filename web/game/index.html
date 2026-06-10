@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join an EPYC game</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; text-align: center;
+           padding: 12vh 24px; color: #1b1b1f; background: #f7f5ff; }
+    h1 { font-size: 3rem; margin: 0; letter-spacing: 1px; }
+    p { color: #555; }
+    a.btn { display: inline-block; margin-top: 24px; padding: 14px 28px; border-radius: 999px;
+            background: #2f73f2; color: #fff; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>EPYC</h1>
+  <p>Open this invite in the EPYC app.</p>
+  <a class="btn" id="open" href="#">Open in app</a>
+  <p style="margin-top:32px;font-size:.9rem;">
+    Don't have the app yet? Install it, then tap the invite link again.
+  </p>
+  <script>
+    // Fallback for users who land here in a browser (the app, when installed,
+    // intercepts /game/* via Universal Links / App Links before this page loads).
+    var id = location.pathname.split('/').filter(Boolean).pop() || '';
+    document.getElementById('open').href = 'com.negfeed.epycnative://game/' + id;
+  </script>
+</body>
+</html>

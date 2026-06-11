@@ -1,5 +1,9 @@
 # EPYC
-A multiplayer Pictionary game implemented using Ionic 3 and Firebase.
+A multiplayer "Eat Poop You Cat" / telephone-pictionary game, built with Flutter and Firebase.
+
+The app lives in [`flutter/`](flutter/). See [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md)
+for the assessment behind the rewrite from the original Ionic 3 app (now removed —
+see git history).
 
 ## Demo
 Below you can find a video demoing this app.

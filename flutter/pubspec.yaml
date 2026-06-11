@@ -1,0 +1,52 @@
+name: epyc
+description: "EPYC — a multiplayer Eat-Poop-You-Cat / telephone-pictionary game (Flutter rewrite)."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Routing (+ deep links)
+  go_router: ^14.2.0
+  app_links: ^6.1.1
+
+  # Firebase
+  firebase_core: ^4.10.0
+  firebase_auth: ^6.5.2
+  cloud_firestore: ^6.5.0
+
+  # Auth: Google + Apple are handled via firebase_auth's signInWithProvider
+  # (no extra google_sign_in / sign_in_with_apple plugins needed).
+
+  # Sharing
+  share_plus: ^13.1.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Icons & splash (Phase 6 — reuse ../resources art)
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/img/
+
+# Phase 6 will enable these (source art lives in ../resources):
+# flutter_native_splash:
+#   color: "#000080"
+#   image: assets/splash/splash.png
+# flutter_launcher_icons:
+#   image_path: "assets/icon/icon.png"

@@ -1,7 +1,7 @@
 # EPYC — Flutter rewrite
 
-A faithful Flutter rewrite of the EPYC telephone-pictionary game. The original
-Ionic 3 / Angular 5 app stays intact in the parent repo for reference. See
+A faithful Flutter rewrite of the EPYC telephone-pictionary game, replacing the
+original Ionic 3 / Angular 5 app (removed — see git history). See
 [`../MIGRATION_PLAN.md`](../MIGRATION_PLAN.md) for the full assessment.
 
 - **Package / bundle id:** `com.negfeed.epycflutter` (iOS + Android)

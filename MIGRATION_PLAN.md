@@ -4,6 +4,8 @@
 >
 > This is the **highest-effort** modernization path. The risk section says so plainly: it is more expensive to build *and* to maintain than either a Flutter rewrite or an in-place Ionic/Capacitor upgrade.
 
+> **Note:** the legacy Ionic/Cordova code (`src/`, `config.xml`, `resources/`, …) referenced throughout this document has since been **removed** now that the native apps are in place. Those `src/…` links describe the original implementation and resolve against the repository's **git history**.
+
 ---
 
 ## 1. What EPYC is

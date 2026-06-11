@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Security rules for the EPYC Firestore schema (see ../MIGRATION_PLAN.md §3).
+// Deploy with: firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Games are readable by any signed-in user (needed to join via invite link)
+    // and writable by signed-in users. The turn/state machine is enforced
+    // client-side; tighten here if abuse is a concern (e.g. validate that only
+    // the atom's owning player flips its state, and that no user joins after the
+    // game has STARTED).
+    match /games/{gameId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+                    && request.resource.data.creator == request.auth.uid;
+      allow update: if signedIn();
+      allow delete: if false;
+    }
+
+    // Each user document and its games subcollection are private to that user.
+    match /users/{uid} {
+      allow read, write: if isSelf(uid);
+      match /games/{gameId} {
+        allow read, write: if isSelf(uid);
+      }
+    }
+
+    // Drawings are readable by any signed-in user (other players replay them)
+    // and appendable by signed-in users. Events are immutable once written.
+    match /drawings/{drawingId} {
+      allow read: if signedIn();
+      allow create, update: if signedIn();
+      allow delete: if false;
+
+      match /events/{eventId} {
+        allow read: if signedIn();
+        allow create: if signedIn();
+        allow update, delete: if false; // append-only time-series
+      }
+    }
+  }
+}

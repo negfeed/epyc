@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// EPYC Firestore security rules.
+//
+// Model (see MIGRATION_PLAN.md §3):
+//   users/{uid}
+//   games/{gameId}                         (players: [uid], creatorUid, nested threads/gameAtoms maps)
+//   drawings/{drawingId}                    (authorUid)
+//   drawings/{drawingId}/events/{seq}
+//
+// Principles:
+//   - Only authenticated users can read or write anything.
+//   - A user owns their own users/{uid} document.
+//   - Any signed-in user may READ a game (invite links let watchers see the lobby).
+//   - Members (uid in players) may update the game document; a non-member may add
+//     ONLY themselves to players (join). Per-atom authorUid integrity is enforced
+//     client-side by the turn engine, matching the legacy app (which had no
+//     server-side validation of atom authorship).
+//   - Drawings are readable by any signed-in user (guessers replay them); event
+//     writes are restricted to the drawing's author.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // ---- users ----
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update, delete: if isSelf(uid);
+    }
+
+    // ---- games (threads/gameAtoms are nested maps on this document) ----
+    match /games/{gameId} {
+      function incoming() { return request.resource.data; }
+      function isMember() { return signedIn() && request.auth.uid in resource.data.players; }
+      function isCreator() { return signedIn() && request.auth.uid == resource.data.creatorUid; }
+      function joiningSelf() {
+        // non-member may add only themselves to players
+        return signedIn()
+          && incoming().players.hasAll(resource.data.players)
+          && incoming().players.hasOnly(resource.data.players.concat([request.auth.uid]));
+      }
+
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && incoming().creatorUid == request.auth.uid
+        && request.auth.uid in incoming().players;
+      allow update: if isMember() || isCreator() || joiningSelf();
+      allow delete: if isCreator();
+    }
+
+    // ---- drawings ----
+    match /drawings/{drawingId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.authorUid == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.authorUid == request.auth.uid;
+
+      match /events/{seq} {
+        function parentDrawing() {
+          return get(/databases/$(database)/documents/drawings/$(drawingId)).data;
+        }
+        allow read: if signedIn();
+        allow write: if signedIn() && parentDrawing().authorUid == request.auth.uid;
+      }
+    }
+  }
+}

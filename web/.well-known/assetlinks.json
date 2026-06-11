@@ -1,0 +1,12 @@
+[
+  {
+    "relation": [ "delegate_permission/common.handle_all_urls" ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.negfeed.epycnative",
+      "sha256_cert_fingerprints": [
+        "F6:1C:69:16:2F:42:94:C7:F4:08:C8:6D:1C:46:42:59:3C:47:C0:C6:9C:15:33:63:3F:BE:07:E7:1F:50:27:16"
+      ]
+    }
+  }
+]

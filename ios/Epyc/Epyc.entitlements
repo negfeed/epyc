@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Keychain access group: required by Google Sign-In to store tokens. The
+       $(AppIdentifierPrefix) prefix resolves to the team prefix on signed builds
+       and to empty on simulator "Sign to Run Locally" builds. -->
+  <key>keychain-access-groups</key>
+  <array>
+    <string>$(AppIdentifierPrefix)com.negfeed.epycnative</string>
+  </array>
+
+  <!--
+    Apple sign-in / Universal Links removed for now (require a PAID Apple Developer
+    Program membership). Re-add when ready to make https invite links open the app:
+      <key>com.apple.developer.applesignin</key>
+      <array><string>Default</string></array>
+      <key>com.apple.developer.associated-domains</key>
+      <array><string>applinks:epycnative.negfeed.com</string></array>
+  -->
+</dict>
+</plist>

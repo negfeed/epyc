@@ -1,0 +1,7 @@
+<resources>
+    <!-- Base theme; Compose handles in-app theming. NoActionBar for edge-to-edge. -->
+    <style name="Theme.Epyc" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

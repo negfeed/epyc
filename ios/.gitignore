@@ -1,0 +1,12 @@
+# Xcode / SwiftPM
+*.xcuserstate
+xcuserdata/
+DerivedData/
+build/
+.build/
+.swiftpm/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# The .xcodeproj is generated from project.yml via XcodeGen. It is committed for
+# convenience (opens without XcodeGen installed); regenerate with `xcodegen`.

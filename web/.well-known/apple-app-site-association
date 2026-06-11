@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "8A7C669LHV.com.negfeed.epycnative",
+        "paths": [ "/game/*" ]
+      }
+    ]
+  }
+}

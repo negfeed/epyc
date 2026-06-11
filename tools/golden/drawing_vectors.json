@@ -1,0 +1,415 @@
+{
+  "meta": {
+    "source": "src/components/replaying-drawing-canvas + drawing-canvas + recording-drawing-canvas",
+    "generated_from": "tools/gen_golden.js"
+  },
+  "constants": {
+    "MAX_GAP_MS": 1000,
+    "REPLAY_PERIOD_MS": 33,
+    "MIN_PROCESSING_DISTANCE_PX": 6
+  },
+  "replays": [
+    {
+      "name": "simple_stroke",
+      "events": [
+        {
+          "type": "point",
+          "timestamp": 1000,
+          "pathName": "1",
+          "point": {
+            "x": 0.1,
+            "y": 0.1
+          }
+        },
+        {
+          "type": "point",
+          "timestamp": 1040,
+          "pathName": "1",
+          "point": {
+            "x": 0.2,
+            "y": 0.2
+          }
+        },
+        {
+          "type": "point",
+          "timestamp": 1080,
+          "pathName": "1",
+          "point": {
+            "x": 0.3,
+            "y": 0.25
+          }
+        },
+        {
+          "type": "point",
+          "timestamp": 1120,
+          "pathName": "1",
+          "point": {
+            "x": 0.4,
+            "y": 0.2
+          }
+        }
+      ],
+      "totalPeriods": 4,
+      "normalizedTimestamps": [
+        0,
+        40,
+        80,
+        120
+      ],
+      "ticks": [
+        {
+          "period": 0,
+          "elapsedMs": 0,
+          "drawnCount": 1
+        },
+        {
+          "period": 1,
+          "elapsedMs": 33,
+          "drawnCount": 1
+        },
+        {
+          "period": 2,
+          "elapsedMs": 66,
+          "drawnCount": 2
+        },
+        {
+          "period": 3,
+          "elapsedMs": 99,
+          "drawnCount": 3
+        },
+        {
+          "period": 4,
+          "elapsedMs": 132,
+          "drawnCount": 4
+        }
+      ]
+    },
+    {
+      "name": "gap_and_erase_undo",
+      "events": [
+        {
+          "type": "point",
+          "timestamp": 0,
+          "pathName": "1",
+          "point": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "point",
+          "timestamp": 50,
+          "pathName": "1",
+          "point": {
+            "x": 0.6,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "erase",
+          "timestamp": 5050,
+          "pathName": "2",
+          "point": {
+            "x": 0.6,
+            "y": 0.5
+          }
+        },
+        {
+          "type": "undo",
+          "timestamp": 5083
+        },
+        {
+          "type": "redo",
+          "timestamp": 5116
+        }
+      ],
+      "totalPeriods": 34,
+      "normalizedTimestamps": [
+        0,
+        50,
+        1050,
+        1083,
+        1116
+      ],
+      "ticks": [
+        {
+          "period": 0,
+          "elapsedMs": 0,
+          "drawnCount": 1
+        },
+        {
+          "period": 1,
+          "elapsedMs": 33,
+          "drawnCount": 1
+        },
+        {
+          "period": 2,
+          "elapsedMs": 66,
+          "drawnCount": 2
+        },
+        {
+          "period": 3,
+          "elapsedMs": 99,
+          "drawnCount": 2
+        },
+        {
+          "period": 4,
+          "elapsedMs": 132,
+          "drawnCount": 2
+        },
+        {
+          "period": 5,
+          "elapsedMs": 165,
+          "drawnCount": 2
+        },
+        {
+          "period": 6,
+          "elapsedMs": 198,
+          "drawnCount": 2
+        },
+        {
+          "period": 7,
+          "elapsedMs": 231,
+          "drawnCount": 2
+        },
+        {
+          "period": 8,
+          "elapsedMs": 264,
+          "drawnCount": 2
+        },
+        {
+          "period": 9,
+          "elapsedMs": 297,
+          "drawnCount": 2
+        },
+        {
+          "period": 10,
+          "elapsedMs": 330,
+          "drawnCount": 2
+        },
+        {
+          "period": 11,
+          "elapsedMs": 363,
+          "drawnCount": 2
+        },
+        {
+          "period": 12,
+          "elapsedMs": 396,
+          "drawnCount": 2
+        },
+        {
+          "period": 13,
+          "elapsedMs": 429,
+          "drawnCount": 2
+        },
+        {
+          "period": 14,
+          "elapsedMs": 462,
+          "drawnCount": 2
+        },
+        {
+          "period": 15,
+          "elapsedMs": 495,
+          "drawnCount": 2
+        },
+        {
+          "period": 16,
+          "elapsedMs": 528,
+          "drawnCount": 2
+        },
+        {
+          "period": 17,
+          "elapsedMs": 561,
+          "drawnCount": 2
+        },
+        {
+          "period": 18,
+          "elapsedMs": 594,
+          "drawnCount": 2
+        },
+        {
+          "period": 19,
+          "elapsedMs": 627,
+          "drawnCount": 2
+        },
+        {
+          "period": 20,
+          "elapsedMs": 660,
+          "drawnCount": 2
+        },
+        {
+          "period": 21,
+          "elapsedMs": 693,
+          "drawnCount": 2
+        },
+        {
+          "period": 22,
+          "elapsedMs": 726,
+          "drawnCount": 2
+        },
+        {
+          "period": 23,
+          "elapsedMs": 759,
+          "drawnCount": 2
+        },
+        {
+          "period": 24,
+          "elapsedMs": 792,
+          "drawnCount": 2
+        },
+        {
+          "period": 25,
+          "elapsedMs": 825,
+          "drawnCount": 2
+        },
+        {
+          "period": 26,
+          "elapsedMs": 858,
+          "drawnCount": 2
+        },
+        {
+          "period": 27,
+          "elapsedMs": 891,
+          "drawnCount": 2
+        },
+        {
+          "period": 28,
+          "elapsedMs": 924,
+          "drawnCount": 2
+        },
+        {
+          "period": 29,
+          "elapsedMs": 957,
+          "drawnCount": 2
+        },
+        {
+          "period": 30,
+          "elapsedMs": 990,
+          "drawnCount": 2
+        },
+        {
+          "period": 31,
+          "elapsedMs": 1023,
+          "drawnCount": 2
+        },
+        {
+          "period": 32,
+          "elapsedMs": 1056,
+          "drawnCount": 3
+        },
+        {
+          "period": 33,
+          "elapsedMs": 1089,
+          "drawnCount": 4
+        },
+        {
+          "period": 34,
+          "elapsedMs": 1122,
+          "drawnCount": 5
+        }
+      ]
+    }
+  ],
+  "minDistance": [
+    {
+      "last": {
+        "x": 0,
+        "y": 0
+      },
+      "cur": {
+        "x": 5,
+        "y": 0
+      },
+      "beyond": false
+    },
+    {
+      "last": {
+        "x": 0,
+        "y": 0
+      },
+      "cur": {
+        "x": 6,
+        "y": 0
+      },
+      "beyond": false
+    },
+    {
+      "last": {
+        "x": 0,
+        "y": 0
+      },
+      "cur": {
+        "x": 7,
+        "y": 0
+      },
+      "beyond": true
+    },
+    {
+      "last": {
+        "x": 0,
+        "y": 0
+      },
+      "cur": {
+        "x": 5,
+        "y": 5
+      },
+      "beyond": true
+    },
+    {
+      "last": {
+        "x": 1,
+        "y": 1
+      },
+      "cur": {
+        "x": 1,
+        "y": 1
+      },
+      "beyond": false
+    }
+  ],
+  "coordinates": {
+    "side": 360,
+    "cases": [
+      {
+        "screen": {
+          "x": 0,
+          "y": 0
+        },
+        "normalized": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "screen": {
+          "x": 180,
+          "y": 90
+        },
+        "normalized": {
+          "x": 0.5,
+          "y": 0.25
+        }
+      },
+      {
+        "screen": {
+          "x": 360,
+          "y": 360
+        },
+        "normalized": {
+          "x": 1,
+          "y": 1
+        }
+      },
+      {
+        "screen": {
+          "x": 36,
+          "y": 3.6
+        },
+        "normalized": {
+          "x": 0.1,
+          "y": 0.01
+        }
+      }
+    ]
+  }
+}

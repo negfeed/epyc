@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "126762497107",
+    "project_id": "epyc-native",
+    "storage_bucket": "epyc-native.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126762497107:android:b63ba6dd665cbe083502a6",
+        "android_client_info": {
+          "package_name": "com.negfeed.epyc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126762497107-qcu7n4br2b10d8mm70tjdigiahtetr26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA00yPxsgqcJjUYU3MbHpkcA02hnx1qho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126762497107-qcu7n4br2b10d8mm70tjdigiahtetr26.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126762497107-au37r6ku5jiekr143gptm696pfl73kpj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.negfeed.epyc"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126762497107:android:da440361bdfff33d3502a6",
+        "android_client_info": {
+          "package_name": "com.negfeed.epycnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126762497107-geovt46n05eseciocrq71n5o1sbtte04.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.negfeed.epycnative",
+            "certificate_hash": "dea4b099efba31b1ca0f4bf030eb1ebf771969cc"
+          }
+        },
+        {
+          "client_id": "126762497107-qcu7n4br2b10d8mm70tjdigiahtetr26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA00yPxsgqcJjUYU3MbHpkcA02hnx1qho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126762497107-qcu7n4br2b10d8mm70tjdigiahtetr26.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126762497107-au37r6ku5jiekr143gptm696pfl73kpj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.negfeed.epyc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
